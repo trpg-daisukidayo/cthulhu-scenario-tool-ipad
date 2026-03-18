@@ -2204,6 +2204,134 @@
     border-bottom: 1px solid var(--border);
   }
 
+  /* ─── イベント拡大ボタン ─── */
+  .rs-event-expand {
+    background: none;
+    border: none;
+    color: var(--text3);
+    font-size: 11px;
+    cursor: pointer;
+    padding: 1px 3px;
+    flex-shrink: 0;
+    line-height: 1;
+    opacity: 0.6;
+    transition: opacity 0.12s, color 0.12s;
+    margin-top: 1px;
+  }
+  .rs-event-expand:hover { opacity: 1; color: var(--accent3); }
+  @media (max-width: 1180px) {
+    .rs-event-expand { font-size: 14px; padding: 2px 5px; min-width: 28px; min-height: 28px; opacity: 0.8; }
+  }
+
+  /* ─── イベント詳細モーダル ─── */
+  .event-detail-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    z-index: 400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(3px);
+    animation: fadeIn 0.18s ease;
+    padding: 20px;
+  }
+  @media (max-width: 1180px) {
+    .event-detail-modal-overlay {
+      align-items: flex-end;
+      padding: 0;
+    }
+  }
+  .event-detail-modal {
+    background: var(--panel);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    width: 560px;
+    max-width: 100%;
+    max-height: 80dvh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 48px rgba(0,0,0,0.7);
+    overflow: hidden;
+  }
+  @media (max-width: 1180px) {
+    .event-detail-modal {
+      width: 100%;
+      max-width: 100%;
+      border-radius: 14px 14px 0 0;
+      max-height: 88dvh;
+      border-left: none;
+      border-right: none;
+      border-bottom: none;
+    }
+  }
+  .event-detail-modal-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    background: var(--panel2);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .event-detail-modal-check {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    accent-color: var(--accent2);
+    cursor: pointer;
+  }
+  .event-detail-modal-title {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent3);
+    font-family: 'Noto Serif JP', serif;
+    line-height: 1.4;
+  }
+  .event-detail-modal-done .event-detail-modal-title {
+    text-decoration: line-through;
+    color: var(--text3);
+  }
+  .event-detail-modal-close {
+    background: none;
+    border: 1px solid var(--border2);
+    color: var(--text3);
+    cursor: pointer;
+    font-size: 14px;
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: color 0.12s, border-color 0.12s;
+  }
+  .event-detail-modal-close:hover { color: var(--text); border-color: var(--accent); }
+  @media (max-width: 1180px) {
+    .event-detail-modal-close { width: 38px; height: 38px; font-size: 16px; }
+  }
+  .event-detail-modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 22px;
+    font-size: 15px;
+    color: var(--text2);
+    line-height: 2.0;
+    white-space: pre-wrap;
+  }
+  @media (max-width: 1180px) {
+    .event-detail-modal-body { font-size: 16px; padding: 20px 18px 32px; line-height: 2.1; }
+  }
+  .event-detail-modal-body::-webkit-scrollbar { width: 5px; }
+  .event-detail-modal-body::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 3px; }
+  .event-detail-modal-empty {
+    color: var(--text3);
+    font-style: italic;
+    font-size: 13px;
+  }
+
   /* ─── イベントタブ メインエリア ─── */
   .event-card {
     background: var(--panel);
@@ -3589,6 +3717,7 @@ function renderRsList(s) {
               onchange="toggleEventDone('${ev.id}',this.checked)">
             <span class="rs-event-title" onclick="rsToggleEventDetail('${ev.id}')"
               title="${esc(ev.title||'（未入力）')}">${esc(ev.title||'（未入力）')}</span>
+            <button class="rs-event-expand" onclick="openEventDetailModal('${ev.id}')" title="詳細を拡大表示">⤢</button>
             <span class="rs-event-chevron ${expanded ? 'open' : ''}"
               onclick="rsToggleEventDetail('${ev.id}')">▶</span>
           </div>
@@ -3725,6 +3854,63 @@ function rsToggleEventDetail(id) {
     rsEventExpanded.add(id);
   }
   renderRsList(getCurrentScenario());
+}
+
+// ─── イベント詳細モーダル ───
+function openEventDetailModal(id) {
+  const s = getCurrentScenario();
+  if (!s) return;
+  const ev = (s.events || []).find(e => e.id === id);
+  if (!ev) return;
+
+  // 既存モーダルがあれば除去
+  document.getElementById('eventDetailModalOverlay')?.remove();
+
+  const overlay = document.createElement('div');
+  overlay.id = 'eventDetailModalOverlay';
+  overlay.className = 'event-detail-modal-overlay';
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) closeEventDetailModal();
+  });
+
+  const isDone = !!ev.done;
+  overlay.innerHTML = `
+    <div class="event-detail-modal ${isDone ? 'event-detail-modal-done' : ''}">
+      <div class="event-detail-modal-header">
+        <input type="checkbox" class="event-detail-modal-check" id="evModalCheck"
+          ${isDone ? 'checked' : ''}
+          onchange="toggleEventDoneFromModal('${id}', this.checked)">
+        <div class="event-detail-modal-title">${esc(ev.title || '（タイトル未入力）')}</div>
+        <button class="event-detail-modal-close" onclick="closeEventDetailModal()">✕</button>
+      </div>
+      <div class="event-detail-modal-body" id="evModalBody">
+        ${ev.detail
+          ? rubyToHtml(ev.detail)
+          : '<span class="event-detail-modal-empty">詳細テキストなし</span>'}
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  // ESCキーで閉じる
+  overlay._keyHandler = e => { if (e.key === 'Escape') closeEventDetailModal(); };
+  document.addEventListener('keydown', overlay._keyHandler);
+}
+
+function closeEventDetailModal() {
+  const overlay = document.getElementById('eventDetailModalOverlay');
+  if (!overlay) return;
+  document.removeEventListener('keydown', overlay._keyHandler);
+  overlay.remove();
+}
+
+function toggleEventDoneFromModal(id, checked) {
+  // 本体側のチェック状態を更新
+  toggleEventDone(id, checked);
+  // モーダルのタイトルスタイルを同期
+  const modal = document.querySelector('.event-detail-modal');
+  if (modal) modal.classList.toggle('event-detail-modal-done', checked);
 }
 
 function rsSelectItem(type, id) {
