@@ -2590,6 +2590,7 @@
   }
   .ch-bold  { font-weight: 900; color: var(--text); }
   .ch-under { text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 4px; }
+  .ch-small { font-size: 0.8em; }
   .ch-col-red    { color: #e07070; }
   .ch-col-orange { color: #e09050; }
   .ch-col-green  { color: #70c070; }
@@ -3000,6 +3001,7 @@
           <button class="tb-btn" onmousedown="event.preventDefault()" onclick="wrapInline('box')"    title="枠で囲む [box]〜[/box]">▢ 枠</button>
           <button class="tb-btn" onmousedown="event.preventDefault()" onclick="wrapInline('bold')"   title="太字 **〜**" style="font-weight:700;">𝐁 太字</button>
           <button class="tb-btn" onmousedown="event.preventDefault()" onclick="wrapInline('under')"  title="アンダーライン __〜__" style="text-decoration:underline;">U 下線</button>
+          <button class="tb-btn" onmousedown="event.preventDefault()" onclick="wrapInline('small')"  title="文字を小さく [s]〜[/s]" style="font-size:10px;">Ａ 小</button>
           <div class="ch-toolbar-sep"></div>
           <button class="tb-btn" onmousedown="event.preventDefault()" onclick="wrapInline('red')"    title="赤"  style="color:#e07070;border-color:#7a3030;min-width:24px">赤</button>
           <button class="tb-btn" onmousedown="event.preventDefault()" onclick="wrapInline('orange')" title="橙"  style="color:#e09050;border-color:#7a5020;min-width:24px">橙</button>
@@ -3100,6 +3102,7 @@
   <button class="float-tb-btn" onmousedown="event.preventDefault()" onclick="floatWrap('box')"    title="枠で囲む">▢ 枠</button>
   <button class="float-tb-btn" onmousedown="event.preventDefault()" onclick="floatWrap('bold')"   title="太字" style="font-weight:700;">𝐁</button>
   <button class="float-tb-btn" onmousedown="event.preventDefault()" onclick="floatWrap('under')"  title="下線" style="text-decoration:underline;">U</button>
+  <button class="float-tb-btn" onmousedown="event.preventDefault()" onclick="floatWrap('small')"  title="小文字" style="font-size:10px;">Ａ</button>
   <div class="float-tb-sep"></div>
   <button class="float-tb-btn" onmousedown="event.preventDefault()" onclick="floatWrap('red')"    style="color:#e07070;">赤</button>
   <button class="float-tb-btn" onmousedown="event.preventDefault()" onclick="floatWrap('orange')" style="color:#e09050;">橙</button>
@@ -5004,6 +5007,7 @@ function rubyToHtml(str, scenario) {
     return `\x00TAG${idx}\x00`;
   };
   s = s.replace(/\[box\][\s\S]*?\[\/box\]/g, protectTag);
+  s = s.replace(/\[s\][\s\S]*?\[\/s\]/g, protectTag);
   s = s.replace(/\[c:[a-z]+\][\s\S]*?\[\/c\]/g, protectTag);
   s = s.replace(/\[\[[a-z]+:[^\]]+\]\]/g, protectTag);
 
@@ -5026,6 +5030,8 @@ function rubyToHtml(str, scenario) {
     (_, t) => `<span class="ch-bold">${t}</span>`);
   s = s.replace(/__([\s\S]*?)__/g,
     (_, t) => `<span class="ch-under">${t}</span>`);
+  s = s.replace(/\[s\]([\s\S]*?)\[\/s\]/g,
+    (_, t) => `<span class="ch-small">${t}</span>`);
   s = s.replace(/\[c:(red|orange|green|blue|purple)\]([\s\S]*?)\[\/c\]/g,
     (_, col, t) => `<span class="ch-col-${col}">${t}</span>`);
 
@@ -5157,6 +5163,7 @@ const INLINE_TAGS = {
   box:    { open: '[box]',      close: '[/box]' },
   bold:   { open: '**',         close: '**'     },
   under:  { open: '__',         close: '__'     },
+  small:  { open: '[s]',        close: '[/s]'   },
   red:    { open: '[c:red]',    close: '[/c]'   },
   orange: { open: '[c:orange]', close: '[/c]'   },
   green:  { open: '[c:green]',  close: '[/c]'   },
