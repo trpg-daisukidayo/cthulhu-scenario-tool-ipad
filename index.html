@@ -2825,34 +2825,29 @@
       font-size: 22px;
     }
   }
-  /* ─── 編集モード切替 FAB（iPad専用・左下固定） ─── */
+  /* iPad 編集モード切替ボタン（ヘッダー内） */
   .edit-mode-fab {
     display: none; /* JS で iPad 時のみ表示 */
-    position: fixed;
-    left: 20px;
-    bottom: 24px;
-    z-index: 180;
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    border: 2px solid var(--border2);
     background: var(--panel2);
+    border: 1px solid var(--border2);
     color: var(--text3);
-    font-size: 20px;
+    padding: 6px 10px;
+    font-size: 16px;
     cursor: pointer;
+    border-radius: 4px;
+    line-height: 1;
+    min-width: 36px;
+    min-height: 36px;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 18px rgba(0,0,0,0.55);
-    transition: background 0.18s, border-color 0.18s, color 0.18s, transform 0.15s;
     flex-shrink: 0;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
   }
-  .edit-mode-fab:active { transform: scale(0.93); }
-  /* 編集モード中はアクセントカラー */
+  .edit-mode-fab:hover { color: var(--accent3); border-color: var(--accent); }
   .edit-mode-fab.editing {
     background: linear-gradient(135deg, #5c4010, #8b6914);
     border-color: var(--accent2);
     color: var(--accent3);
-    box-shadow: 0 4px 20px rgba(139,105,20,0.45);
   }
   /* iPad 閲覧モード時：モードトグルを非表示 */
   body.ipad-view-mode .mode-toggle { display: none !important; }
@@ -2912,6 +2907,7 @@
       </div>
     </div>
     <button class="drawer-toggle" onclick="toggleRightSidebar()" title="クイック参照パネル" aria-label="クイック参照パネルを開閉" style="margin-left:4px" id="drawerToggleBtn">⊞</button>
+    <button class="edit-mode-fab" id="editModeFab" onclick="toggleIpadEditMode()" title="閲覧モード（タップで編集）">👁</button>
   </div>
 </header>
 
@@ -3148,9 +3144,6 @@
   <img id="lightboxImg" src="" alt="" onclick="event.stopPropagation()">
 </div>
 <div class="ch-skill-tooltip" id="skillTooltip"></div>
-
-<!-- 編集モード切替 FAB -->
-<button class="edit-mode-fab" id="editModeFab" onclick="toggleIpadEditMode()" title="編集モード切替">👁</button>
 
 <!-- MODAL -->
 <div class="modal-overlay" id="modalOverlay" style="display:none" onclick="closeModal(event)">
