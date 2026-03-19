@@ -1535,6 +1535,8 @@
       z-index: 160;
       transition: left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       box-shadow: none;
+      /* ステータスバー（日付・時計）に被らないよう上部に余白 */
+      padding-top: max(env(safe-area-inset-top, 0px), 48px);
     }
     .sidebar.open {
       left: 0;
