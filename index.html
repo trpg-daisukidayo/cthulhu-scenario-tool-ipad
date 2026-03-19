@@ -1086,6 +1086,36 @@
     border-left: 2px solid #3a6a20;
     letter-spacing: 0.5px;
   }
+
+  /* ─── 章ナビゲーション ─── */
+  .ch-nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    gap: 12px;
+  }
+  .ch-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 16px;
+    background: var(--panel2);
+    border: 1px solid var(--border2);
+    border-radius: 4px;
+    color: var(--text2);
+    font-size: 13px;
+    cursor: pointer;
+    font-family: 'Noto Serif JP', serif;
+    transition: all 0.15s;
+    max-width: 45%;
+    overflow: hidden;
+  }
+  .ch-nav-btn:hover { border-color: var(--accent2); color: var(--accent3); background: var(--panel); }
+  .ch-nav-btn-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ch-nav-spacer { flex: 1; }
   .preview-bold {
     font-size: 17px;
     font-weight: 700;
@@ -2677,65 +2707,6 @@
   .float-tb-btn:hover { background: var(--bg3); border-color: var(--border); color: var(--text); }
   .float-tb-sep { width: 1px; height: 14px; background: var(--border); margin: 0 2px; flex-shrink: 0; }
 
-  /* ─── シナリオギャラリー ─── */
-  .gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
-    padding: 4px;
-  }
-  .gallery-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 6px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    cursor: pointer;
-    transition: border-color 0.15s, background 0.15s;
-    background: var(--bg3);
-    position: relative;
-  }
-  .gallery-item:hover { border-color: var(--accent2); background: var(--panel); }
-  .gallery-item.active { border-color: var(--accent2); background: var(--panel); box-shadow: 0 0 0 2px var(--accent2); }
-  .gallery-item-img {
-    width: 100%;
-    aspect-ratio: 3/2;
-    object-fit: cover;
-    border-radius: 3px;
-    border: 1px solid var(--border);
-  }
-  .gallery-item-placeholder {
-    width: 100%;
-    aspect-ratio: 3/2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--panel2);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    font-size: 24px;
-    opacity: 0.3;
-  }
-  .gallery-item-tooltip {
-    display: none;
-    position: absolute;
-    bottom: calc(100% + 6px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--panel);
-    border: 1px solid var(--border2);
-    border-radius: 4px;
-    padding: 4px 10px;
-    font-size: 11px;
-    color: var(--text2);
-    white-space: nowrap;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-    z-index: 10;
-    pointer-events: none;
-  }
-  .gallery-item:hover .gallery-item-tooltip { display: block; }
-
   .lightbox-overlay {
     display: none;
     position: fixed;
@@ -2937,11 +2908,9 @@
     white-space:nowrap;
     flex-shrink:1;
     min-width:0;
-    cursor:pointer;
-  " onclick="openScenarioGallery()" title="シナリオギャラリーを開く">
+  ">
     <span style="font-size:11px;opacity:0.5;flex-shrink:0">📜</span>
     <span id="headerScenarioNameText" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500"></span>
-    <span style="font-size:9px;opacity:0.4;flex-shrink:0">▼</span>
   </div>
   <div class="header-actions">
     <!-- PC：通常ボタン並び -->
@@ -3518,7 +3487,6 @@ function extractImages(scenarios) {
     (s.investigators||[]).forEach(inv => {
       if (inv.image) { images[`inv_${inv.id}`] = inv.image; delete inv.image; }
     });
-    if (s.info?.titleImage) { images[`title_${s.id}`] = s.info.titleImage; delete s.info.titleImage; }
   });
   return { slim, images };
 }
@@ -3576,7 +3544,6 @@ function injectImages(scenarios, images) {
     (s.investigators||[]).forEach(inv => {
       if (images[`inv_${inv.id}`]) inv.image = images[`inv_${inv.id}`];
     });
-    if (images[`title_${s.id}`] && s.info) s.info.titleImage = images[`title_${s.id}`];
   });
 }
 
@@ -4649,21 +4616,6 @@ function renderInfoEdit(area) {
         </div>
         <div class="field-row">
           <div class="field-group">
-            <div class="field-label">タイトル画像</div>
-            <div style="display:flex;align-items:flex-start;gap:12px">
-              ${s.info.titleImage
-                ? `<img src="${s.info.titleImage}" style="height:80px;border-radius:4px;border:1px solid var(--border);object-fit:cover;cursor:pointer" onclick="triggerTitleImageUpload()" title="クリックで変更">
-                   <div style="display:flex;flex-direction:column;gap:6px">
-                     <button class="btn-sm" onclick="triggerTitleImageUpload()">画像を変更</button>
-                     <button class="btn-danger" style="font-size:10px" onclick="removeTitleImage()">削除</button>
-                   </div>`
-                : `<button class="btn-sm" onclick="triggerTitleImageUpload()">🖼 画像を追加</button>`}
-              <input type="file" id="titleImageInput" accept="image/*" style="display:none" onchange="handleTitleImageUpload(event)">
-            </div>
-          </div>
-        </div>
-        <div class="field-row">
-          <div class="field-group">
             <div class="field-label">プレイ人数</div>
             <input type="text" id="splayers" value="${esc(s.info.players)}" placeholder="例: 2〜4人" oninput="updateInfo('players',this.value)">
           </div>
@@ -4743,12 +4695,6 @@ function renderInfoView(area) {
           ${esc(s.name||'無題のシナリオ')}
         </div>
 
-        <!-- タイトル画像 -->
-        ${s.info.titleImage ? `
-          <div style="text-align:center;margin-bottom:20px">
-            <img src="${s.info.titleImage}" class="zoomable" style="max-width:100%;max-height:320px;border-radius:6px;border:1px solid var(--border);object-fit:contain;cursor:zoom-in" onclick="openLightbox('${s.info.titleImage}')" title="クリックで拡大">
-          </div>` : ''}
-
         <!-- メタ情報 -->
         ${meta ? `<div style="font-size:15px;color:var(--text2);margin-bottom:10px;line-height:2">${esc(meta)}</div>` : ''}
 
@@ -4823,60 +4769,6 @@ function updateScenarioField(key, val) {
   save();
   renderScenarioList();
   if (key === 'name') updateHeaderScenarioName();
-}
-
-// ─── タイトル画像 ───
-function triggerTitleImageUpload() {
-  document.getElementById('titleImageInput')?.click();
-}
-function handleTitleImageUpload(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    const s = getCurrentScenario();
-    s.info.titleImage = e.target.result;
-    markImageDirty(`title_${s.id}`);
-    save();
-    const area = document.getElementById('contentArea');
-    renderInfoEdit(area);
-  };
-  reader.readAsDataURL(file);
-  event.target.value = '';
-}
-function removeTitleImage() {
-  const s = getCurrentScenario();
-  delete s.info.titleImage;
-  save();
-  const area = document.getElementById('contentArea');
-  renderInfoEdit(area);
-}
-
-// ─── シナリオギャラリー ───
-function openScenarioGallery() {
-  const scenarios = Object.values(state.scenarios);
-  if (scenarios.length === 0) return;
-  const items = scenarios.map(s => {
-    const isActive = s.id === state.currentId;
-    const imgHtml = s.info?.titleImage
-      ? `<img class="gallery-item-img" src="${s.info.titleImage}" alt="${esc(s.name)}">`
-      : `<div class="gallery-item-placeholder">📜</div>`;
-    return `
-      <div class="gallery-item ${isActive ? 'active' : ''}" onclick="gallerySelect('${s.id}')">
-        ${imgHtml}
-        <div class="gallery-item-tooltip">${esc(s.name || '無題のシナリオ')}</div>
-      </div>`;
-  }).join('');
-  showModal('📜 シナリオギャラリー', `
-    <div class="gallery-grid">${items}</div>
-  `, [{ label: '閉じる', cls: 'btn-sm', action: 'closeModal()' }]);
-  const modal = document.querySelector('.modal');
-  if (modal) modal.style.width = 'min(860px, 90vw)';
-}
-
-function gallerySelect(id) {
-  closeModal();
-  selectScenario(id);
 }
 
 // ═══════════════════════════════════════════════
@@ -4984,6 +4876,7 @@ function renderEditPane(ch, s) {
           ? `<div style="color:var(--text3);font-size:12px;padding:12px 0">上のツールバーからブロックを追加してください</div>`
           : ch.blocks.map((bl,bi) => renderBlockEditor(bl, bi, ch.id, ch.blocks.length)).join('')}
       </div>
+      ${_chNavHtml(s, ch.id)}
     </div>
   `;
   // スクロール位置を復元
@@ -5156,6 +5049,7 @@ function renderViewPane(ch, s) {
     <div class="ch-preview fade-in" id="chPreviewPane">
       <div class="preview-title">${esc(ch.title)||'（タイトル未設定）'}</div>
       ${blocksHtml || `<div style="color:var(--text3);font-size:13px">内容がありません。編集モードでブロックを追加してください。</div>`}
+      ${_chNavHtml(s, ch.id)}
     </div>
   `;
 
@@ -5170,6 +5064,25 @@ function renderViewPane(ch, s) {
       if (pane) pane.scrollTop = savedView;
     });
   }
+}
+
+function _chNavHtml(s, chId) {
+  const chapters = s.chapters || [];
+  const idx = chapters.findIndex(c => c.id === chId);
+  const prev = chapters[idx - 1];
+  const next = chapters[idx + 1];
+  if (!prev && !next) return '';
+  const prevBtn = prev
+    ? `<button class="ch-nav-btn" onclick="selectChapter('${prev.id}')">
+        ◀ <span class="ch-nav-btn-label">${esc(prev.title || `第${idx}章`)}</span>
+       </button>`
+    : `<div class="ch-nav-spacer"></div>`;
+  const nextBtn = next
+    ? `<button class="ch-nav-btn" onclick="selectChapter('${next.id}')">
+        <span class="ch-nav-btn-label">${esc(next.title || `第${idx+2}章`)}</span> ▶
+       </button>`
+    : `<div class="ch-nav-spacer"></div>`;
+  return `<div class="ch-nav-bar">${prevBtn}${nextBtn}</div>`;
 }
 
 function renderChJumpBar(ch) {
@@ -6407,6 +6320,14 @@ function renderSbRule() {
     if (!books[book]) books[book] = [];
     books[book].push(r);
   });
+
+  // 各書籍内をページ順にソート
+  const pageNum = r => {
+    if (!r.page) return Infinity;
+    const m = String(r.page).match(/\d+/);
+    return m ? parseInt(m[0]) : Infinity;
+  };
+  Object.values(books).forEach(items => items.sort((a, b) => pageNum(a) - pageNum(b)));
 
   body.innerHTML = Object.entries(books).map(([book, items]) => {
     const bookOpen = _sbRuleBookExpanded.has(book);
