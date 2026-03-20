@@ -9669,13 +9669,6 @@ function _skillTap(event, skillName) {
     // 1回目タップ → ツールチップ表示
     _skillTapActive = skillName;
     showSkillTooltip(event, skillName);
-    // ツールチップに「タップで詳細」ヒントを追加
-    if (tooltip) {
-      const hint = document.createElement('div');
-      hint.style.cssText = 'font-size:10px;color:var(--accent2);margin-top:6px;text-align:right;opacity:0.8';
-      hint.textContent = 'タップで詳細 →';
-      tooltip.appendChild(hint);
-    }
   }
 }
 
