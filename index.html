@@ -7833,10 +7833,18 @@ function openSkillEditor(mode, key) {
   const isBuiltin = mode === 'builtin';
   const isNew     = mode === 'new';
   const sk = (!isBuiltin && !isNew) ? (state.customSkills||[]).find(s => s.id === key) : null;
+  const src = isBuiltin ? ((state.skillDetails||{})[key] || {}) : (sk || {});
 
-  const detail    = isBuiltin ? ((state.skillDetails||{})[key]?.detail    || '') : (sk?.detail    || '');
-  const baseValue = isBuiltin ? ((state.skillDetails||{})[key]?.baseValue ?? '') : (sk?.baseValue ?? '');
-  const category  = isBuiltin ? ((state.skillDetails||{})[key]?.category  || '') : (sk?.category  || '');
+  const baseValue  = src.baseValue  ?? '';
+  const category   = src.category   || '';
+  const detail     = src.detail     || '';
+  const opposition = src.opposition || '';
+  const regular    = src.regular    || '';
+  const hard       = src.hard       || '';
+  const cannotPush = src.cannotPush || false;
+  const pushExample= src.pushExample|| '';
+  const pushFail   = src.pushFail   || '';
+  const pushMadness= src.pushMadness|| '';
 
   const isParent = isBuiltin
     ? BUILTIN_PARENT_SKILLS.includes(key)
@@ -7869,6 +7877,7 @@ function openSkillEditor(mode, key) {
 
   const titleMap = { builtin: key+' の詳細設定', custom: '技能を編集', new: '技能を追加' };
   const btnMap   = { builtin: '保存', custom: '保存', new: '追加' };
+  const sep = `<div style="height:1px;background:var(--border);margin:10px 0"></div>`;
 
   showModal(titleMap[mode], `
     <div class="field-group">
@@ -7886,8 +7895,38 @@ function openSkillEditor(mode, key) {
       </div>
     </div>
     <div class="field-group">
-      <div class="field-label">詳細・説明</div>
-      <textarea id="csk-detail" rows="4" placeholder="技能の説明...">${esc(detail)}</textarea>
+      <div class="field-label">技能説明</div>
+      <textarea id="csk-detail" rows="3" placeholder="技能の概要説明...">${esc(detail)}</textarea>
+    </div>
+    <div class="field-group">
+      <div class="field-label">対抗技能 / 難易度</div>
+      <input type="text" id="csk-opposition" value="${esc(opposition)}" placeholder="例: 心理学、威圧など">
+    </div>
+    ${sep}
+    <div class="field-group">
+      <div class="field-label">■ レギュラー成功</div>
+      <textarea id="csk-regular" rows="2" placeholder="レギュラー成功時の効果...">${esc(regular)}</textarea>
+    </div>
+    <div class="field-group">
+      <div class="field-label">■ ハード成功</div>
+      <textarea id="csk-hard" rows="2" placeholder="ハード成功時の効果...">${esc(hard)}</textarea>
+    </div>
+    ${sep}
+    <div class="field-group">
+      <div class="field-label">プッシュの例</div>
+      <textarea id="csk-push-example" rows="2" placeholder="プッシュの例..." ${cannotPush ? 'disabled style="opacity:0.4"' : ''}>${esc(pushExample)}</textarea>
+      <label style="display:flex;align-items:center;gap:6px;margin-top:6px;font-size:12px;color:var(--text3);cursor:pointer">
+        <input type="checkbox" id="csk-cannot-push" ${cannotPush ? 'checked' : ''} onchange="document.getElementById('csk-push-example').disabled=this.checked;document.getElementById('csk-push-example').style.opacity=this.checked?'0.4':'1'">
+        戦闘技能のためプッシュできない
+      </label>
+    </div>
+    <div class="field-group">
+      <div class="field-label">プッシュに失敗した不都合の例</div>
+      <textarea id="csk-push-fail" rows="2" placeholder="失敗時の不都合...">${esc(pushFail)}</textarea>
+    </div>
+    <div class="field-group">
+      <div class="field-label">狂気に陥った探索者がプッシュに失敗した場合</div>
+      <textarea id="csk-push-madness" rows="2" placeholder="狂気時の失敗...">${esc(pushMadness)}</textarea>
     </div>
     ${specsHtml}
   `, [
@@ -7897,10 +7936,19 @@ function openSkillEditor(mode, key) {
 }
 
 function saveSkillEditor(mode, key, isParent) {
-  const baseInput = document.getElementById('csk-base')?.value;
-  const category  = document.getElementById('csk-category')?.value.trim() || '';
-  const detail    = document.getElementById('csk-detail')?.value || '';
-  const baseValue = baseInput !== '' ? Number(baseInput) : null;
+  const baseInput   = document.getElementById('csk-base')?.value;
+  const category    = document.getElementById('csk-category')?.value.trim() || '';
+  const detail      = document.getElementById('csk-detail')?.value || '';
+  const opposition  = document.getElementById('csk-opposition')?.value.trim() || '';
+  const regular     = document.getElementById('csk-regular')?.value || '';
+  const hard        = document.getElementById('csk-hard')?.value || '';
+  const cannotPush  = document.getElementById('csk-cannot-push')?.checked || false;
+  const pushExample = document.getElementById('csk-push-example')?.value || '';
+  const pushFail    = document.getElementById('csk-push-fail')?.value || '';
+  const pushMadness = document.getElementById('csk-push-madness')?.value || '';
+  const baseValue   = baseInput !== '' ? Number(baseInput) : null;
+
+  const data = { detail, opposition, regular, hard, cannotPush, pushExample, pushFail, pushMadness, baseValue, category };
 
   let specializations = [];
   if (isParent) {
@@ -7911,19 +7959,20 @@ function saveSkillEditor(mode, key, isParent) {
       if (spName) specializations.push({ name: spName, baseValue: spBase !== '' ? Number(spBase) : null });
     });
   }
+  data.specializations = specializations;
 
   if (mode === 'builtin') {
     if (!state.skillDetails) state.skillDetails = {};
-    state.skillDetails[key] = { detail, baseValue, category, specializations };
+    state.skillDetails[key] = data;
   } else {
     const name = document.getElementById('csk-name')?.value.trim() || '';
     if (!name) { alert('技能名を入力してください'); return; }
     if (!state.customSkills) state.customSkills = [];
     if (key) {
       const sk = state.customSkills.find(s => s.id === key);
-      if (sk) Object.assign(sk, { name, baseValue, category, detail, specializations });
+      if (sk) Object.assign(sk, { name, ...data });
     } else {
-      state.customSkills.push({ id: uid(), name, baseValue, category, detail, specializations });
+      state.customSkills.push({ id: uid(), name, ...data });
     }
   }
   save();
@@ -9863,9 +9912,23 @@ function showSkillDetail(skillName) {
     : (specEntry ? specEntry.base_value : null);
 
   const baseValue = activeSk?.baseValue ?? specBaseValue ?? builtinBase;
-  // 詳細：完全一致 → 親技能の詳細の順
-  const detail   = activeSk?.detail || parentSk?.detail || '';
-  const category = activeSk?.category || parentSk?.category || '';
+  const src = activeSk || parentSk || {};
+  const detail      = src.detail      || '';
+  const opposition  = src.opposition  || '';
+  const regular     = src.regular     || '';
+  const hard        = src.hard        || '';
+  const cannotPush  = src.cannotPush  || false;
+  const pushExample = src.pushExample || '';
+  const pushFail    = src.pushFail    || '';
+  const pushMadness = src.pushMadness || '';
+  const category    = src.category    || '';
+
+  const sep = `<div style="height:1px;background:var(--border);margin:10px 0"></div>`;
+  const row = (label, val, color) => val
+    ? `<div style="margin-bottom:8px">
+        <div style="font-size:10px;color:${color||'var(--text3)'};margin-bottom:2px;letter-spacing:0.5px">${label}</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.8;white-space:pre-wrap">${esc(val)}</div>
+       </div>` : '';
 
   // 探索者の技能値
   const s = getCurrentScenario();
@@ -9874,7 +9937,6 @@ function showSkillDetail(skillName) {
     const thumb = inv.image
       ? `<img src="${inv.image}" style="width:20px;height:20px;border-radius:3px;object-fit:cover;flex-shrink:0;border:1px solid var(--border)">`
       : `<span style="font-size:12px">🔍</span>`;
-    // 完全一致 → 子技能名単体 → 専門化マッチ
     let sk = (inv.skills||[]).find(s => s.name === skillName);
     if (!sk && childName) sk = (inv.skills||[]).find(s => s.name === childName);
     if (!sk && parentName) {
@@ -9904,10 +9966,191 @@ function showSkillDetail(skillName) {
       <div style="font-family:'Cinzel',serif;font-size:9px;color:var(--text3);letter-spacing:2px;margin-bottom:8px">◆ SKILL</div>
       <div style="font-size:17px;font-weight:700;color:var(--accent3);margin-bottom:4px">〈${esc(skillName)}〉</div>
       ${baseValue !== null && baseValue !== undefined
-        ? `<div style="font-size:11px;color:var(--text3);margin-bottom:6px">初期値: <span style="font-family:'Share Tech Mono',monospace;color:var(--accent2)">${baseValue}${typeof baseValue==='number'?'%':''}</span>${category?'　'+esc(category):''}</div>` : ''}
-      ${detail ? `<div style="font-size:13px;color:var(--text2);line-height:1.9;margin-bottom:12px;white-space:pre-wrap">${esc(detail)}</div>` : '<div style="font-size:12px;color:var(--text3);margin-bottom:12px;font-style:italic">詳細未設定</div>'}
-      ${invs.length > 0 ? `<div style="font-family:'Cinzel',serif;font-size:9px;color:var(--text3);letter-spacing:1px;margin-bottom:6px">INVESTIGATORS</div>${invRows}` : ''}
+        ? `<div style="font-size:11px;color:var(--text3);margin-bottom:8px">初期値: <span style="font-family:'Share Tech Mono',monospace;color:var(--accent2)">${baseValue}${typeof baseValue==='number'?'%':''}</span>${category?'　'+esc(category):''}</div>` : ''}
+      ${detail ? `<div style="font-size:13px;color:var(--text2);line-height:1.9;margin-bottom:10px;white-space:pre-wrap">${esc(detail)}</div>` : ''}
+      ${opposition ? row('対抗技能 / 難易度', opposition, 'var(--accent2)') : ''}
+      ${regular || hard ? `
+        ${sep}
+        ${row('■ レギュラー成功', regular, '#70c070')}
+        ${row('■ ハード成功', hard, '#70a8e0')}` : ''}
+      ${(!cannotPush && (pushExample || pushFail || pushMadness)) ? `
+        ${sep}
+        ${row('プッシュの例', pushExample)}
+        ${row('プッシュに失敗した不都合の例', pushFail, '#e09050')}
+        ${row('狂気に陥った場合', pushMadness, '#c080e0')}` : ''}
+      ${cannotPush ? `${sep}<div style="font-size:11px;color:var(--text3);font-style:italic">⚔ 戦闘技能のためプッシュできない</div>` : ''}
+      ${invs.length > 0 ? `${sep}<div style="font-family:'Cinzel',serif;font-size:9px;color:var(--text3);letter-spacing:1px;margin-bottom:6px">INVESTIGATORS</div>${invRows}` : ''}
     </div>`;
+}
+
+
+// ═══════════════════════════════════════════════
+// EVENTS TAB
+// ═══════════════════════════════════════════════
+function getEvents() {
+  const s = getCurrentScenario();
+  if (!s.events) s.events = [];
+  return s.events;
+}
+
+function renderEventsTab() {
+  const events = getEvents();
+  // 選択中イベントがなければ先頭を選ぶ
+  if (!state.currentEvent && events.length > 0) state.currentEvent = events[0].id;
+  renderEventsTabBar(events);
+  renderEventsContent(events);
+}
+
+function renderEventsTabBar(events) {
+  const bar = document.getElementById('eventsTabBar');
+  if (!bar) return;
+  const modeToggle = `
+    <div class="mode-toggle" style="margin-left:auto;flex-shrink:0;padding:0 8px;">
+      <button class="mode-btn ${eventMode==='edit'?'active':''}" onclick="setEventMode('edit')">✏ 編集</button>
+      <button class="mode-btn ${eventMode==='view'?'active':''}" onclick="setEventMode('view')">👁 閲覧</button>
+    </div>`;
+  if (events.length === 0) {
+    bar.innerHTML = `
+      <div style="padding:8px 12px;font-size:11px;color:var(--text3)">イベントがありません</div>
+      <div class="ch-tab-add" onclick="addEvent()" title="イベントを追加">＋</div>
+      ${modeToggle}`;
+    return;
+  }
+  bar.innerHTML = events.map((ev, i) => {
+    const active = ev.id === state.currentEvent ? 'active' : '';
+    const label  = ev.title || `イベント${i+1}`;
+    const doneIcon = ev.done ? '<span style="color:var(--accent2);margin-right:3px">✓</span>' : '';
+    return `<div class="ch-tab ${active}" onclick="selectEvent('${ev.id}')" style="${ev.done?'opacity:0.55':''}">
+      <span class="ch-tab-num">${i+1}</span>
+      ${doneIcon}<span>${esc(label)}</span>
+    </div>`;
+  }).join('')
+  + `<div class="ch-tab-add" onclick="addEvent()" title="イベントを追加">＋</div>`
+  + modeToggle;
+}
+
+function renderEventsContent(events) {
+  const area = document.getElementById('eventsContent');
+  if (!area) return;
+
+  if (events.length === 0) {
+    area.innerHTML = `
+      <div class="ch-empty-tab">
+        <div style="font-size:40px;opacity:0.15">⚡</div>
+        <div style="font-size:13px">「＋」ボタンでイベントを追加してください</div>
+      </div>`;
+    return;
+  }
+
+  const ev = events.find(e => e.id === state.currentEvent);
+  if (!ev) return;
+  const evIdx = events.indexOf(ev);
+
+  if (eventMode === 'edit') {
+    area.innerHTML = `
+      <div class="section-card fade-in" style="max-width:720px;margin:0 auto;">
+        <div class="section-body" style="padding:16px;display:flex;flex-direction:column;gap:14px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <input type="checkbox" style="width:16px;height:16px;accent-color:var(--accent2);cursor:pointer;flex-shrink:0"
+              ${ev.done?'checked':''} onchange="toggleEventDone('${ev.id}',this.checked)" title="完了">
+            <input type="text" value="${esc(ev.title||'')}"
+              placeholder="イベント見出し..."
+              style="flex:1;font-size:18px;font-weight:700;color:var(--accent3);background:transparent;border:none;border-bottom:1px solid var(--border2);padding:4px 2px 8px;font-family:'Noto Serif JP',serif;"
+              oninput="updateEvent('${ev.id}','title',this.value)">
+            <button class="btn-sm" onclick="moveEvent('${ev.id}',-1)" ${evIdx===0?'disabled':''} title="前へ">◀</button>
+            <button class="btn-sm" onclick="moveEvent('${ev.id}',1)" ${evIdx===events.length-1?'disabled':''} title="後ろへ">▶</button>
+            <button class="btn-danger" onclick="deleteEvent('${ev.id}')">削除</button>
+          </div>
+          <div>
+            <div class="field-label" style="margin-bottom:6px">詳細・メモ</div>
+            <textarea style="min-height:240px;font-size:13px;line-height:1.9;color:var(--text2);background:transparent;border:1px solid var(--border);border-radius:3px;padding:10px;width:100%;font-family:'Noto Serif JP',serif;resize:vertical;"
+              placeholder="イベントの詳細・発生条件・演出メモなど..."
+              oninput="updateEvent('${ev.id}','detail',this.value)">${esc(ev.detail||'')}</textarea>
+          </div>
+        </div>
+      </div>`;
+  } else {
+    // 閲覧モード
+    const doneStyle = ev.done ? 'opacity:0.6;' : '';
+    area.innerHTML = `
+      <div class="ch-preview fade-in" style="${doneStyle}">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px;">
+          <input type="checkbox" style="width:16px;height:16px;accent-color:var(--accent2);cursor:pointer;flex-shrink:0"
+            ${ev.done?'checked':''} onchange="toggleEventDone('${ev.id}',this.checked)" title="完了">
+          <div class="preview-title" style="margin:0;padding:0;border:none;flex:1;${ev.done?'text-decoration:line-through;':''}">${esc(ev.title||'（見出し未入力）')}</div>
+        </div>
+        ${ev.detail
+          ? `<div class="preview-text">${rubyToHtml(ev.detail)}</div>`
+          : `<div style="color:var(--text3);font-size:13px">詳細がありません。編集モードで入力してください。</div>`}
+      </div>`;
+  }
+}
+
+function setEventMode(mode) {
+  eventMode = mode;
+  renderEventsContent(getEvents());
+  renderEventsTabBar(getEvents());
+}
+
+function selectEvent(id) {
+  state.currentEvent = id;
+  const events = getEvents();
+  renderEventsTabBar(events);
+  renderEventsContent(events);
+}
+
+function addEvent() {
+  const events = getEvents();
+  const newEv = { id: uid(), title: '', detail: '', done: false };
+  events.push(newEv);
+  state.currentEvent = newEv.id;
+  save();
+  renderEventsTab();
+  renderRsList(getCurrentScenario());
+}
+
+function updateEvent(id, key, val) {
+  const ev = getEvents().find(e => e.id === id);
+  if (!ev) return;
+  ev[key] = val;
+  save();
+  // タブバーの表示名とサイドバーだけ更新（コンテンツ再描画なし）
+  renderEventsTabBar(getEvents());
+  renderRsList(getCurrentScenario());
+}
+
+function toggleEventDone(id, done) {
+  const ev = getEvents().find(e => e.id === id);
+  if (!ev) return;
+  ev.done = done;
+  save();
+  renderEventsTabBar(getEvents());
+  renderRsList(getCurrentScenario());
+}
+
+function moveEvent(id, dir) {
+  const events = getEvents();
+  const i = events.findIndex(e => e.id === id);
+  const j = i + dir;
+  if (j < 0 || j >= events.length) return;
+  [events[i], events[j]] = [events[j], events[i]];
+  save();
+  renderEventsTabBar(events);
+}
+
+function deleteEvent(id) {
+  const s = getCurrentScenario();
+  const events = s.events || [];
+  const idx = events.findIndex(e => e.id === id);
+  s.events = events.filter(e => e.id !== id);
+  if (state.currentEvent === id) {
+    state.currentEvent = s.events.length > 0
+      ? s.events[Math.max(0, idx - 1)].id
+      : null;
+  }
+  save();
+  renderEventsTab();
+  renderRsList(s);
 }
 
 // ═══════════════════════════════════════════════
