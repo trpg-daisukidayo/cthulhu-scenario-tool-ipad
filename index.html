@@ -6571,7 +6571,10 @@ function rubyToHtml(str, scenario) {
     tagPlaceholders.push(match);
     return `\x00TAG${idx}\x00`;
   };
-  // リンク記法のみ保護（入れ子にならないため）
+  // 色・小文字・ボックスタグをルビ処理前に保護
+  s = s.replace(/\[c:[a-z]+\][\s\S]*?\[\/c\]/g, protectTag);
+  s = s.replace(/\[s\][\s\S]*?\[\/s\]/g, protectTag);
+  s = s.replace(/\[box\][\s\S]*?\[\/box\]/g, protectTag);
   s = s.replace(/\[\[[a-z]+:[^\]]+\]\]/g, protectTag);
 
   // ｜base[よみ] パターン — 半角角括弧
