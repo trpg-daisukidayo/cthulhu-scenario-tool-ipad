@@ -6564,28 +6564,31 @@ function rubyToHtml(str, scenario) {
     skillPlaceholders.push(`<span class="ch-skill" data-skill="${skill.replace(/"/g,'&quot;')}" onmouseenter="showSkillTooltip(event,'${skillEsc}')" onmouseleave="hideSkillTooltip()" onclick="_skillTap(event,'${skillEsc}')">〈${skill}〉</span>`);
     return `\x00SKILL${idx}\x00`;
   });
-  // [box]〜[/box] / **〜** / __〜__ / [c:col]〜[/c] / [[link]] を保護
+  // ─── ① タグ保護（ルビより先に保護して誤マッチを防ぐ） ───
   const tagPlaceholders = [];
   const protectTag = (match) => {
     const idx = tagPlaceholders.length;
     tagPlaceholders.push(match);
     return `\x00TAG${idx}\x00`;
   };
-  // 色・小文字・ボックスタグをルビ処理前に保護
-  s = s.replace(/\[c:[a-z]+\][\s\S]*?\[\/c\]/g, protectTag);
-  s = s.replace(/\[s\][\s\S]*?\[\/s\]/g, protectTag);
-  s = s.replace(/\[box\][\s\S]*?\[\/box\]/g, protectTag);
+  // 入れ子を内側から繰り返し保護（[box]はルビ処理が必要なため保護しない）
+  let prevS = null;
+  while (prevS !== s) {
+    prevS = s;
+    s = s.replace(/\[c:[a-z]+\][^\x00]*?\[\/c\]/g, protectTag);
+    s = s.replace(/\[s\][^\x00]*?\[\/s\]/g, protectTag);
+  }
   s = s.replace(/\[\[[a-z]+:[^\]]+\]\]/g, protectTag);
 
+  // ─── ② ルビ処理（タグ保護済みなので干渉なし） ───
   // ｜base[よみ] パターン — 半角角括弧
   s = s.replace(/｜([^\[\n]+?)\[([^\]\n]*?)\]/g,
     (_, base, rt) => `<ruby>${base}<rt>${rt}</rt></ruby>`);
-
-  // base[よみ] パターン（｜なし・直前の漢字仮名連続をbaseに）
-  s = s.replace(/([\u4e00-\u9fff\u3040-\u30ff\uff00-\uffef\u3400-\u4dbf]+)\[([^\]\n]+?)\]/g,
+  // base[よみ] パターン（直前の漢字仮名連続 + 読みはひらがな・カタカナのみ）
+  s = s.replace(/([\u4e00-\u9fff\u3040-\u30ff\uff00-\uffef\u3400-\u4dbf]+)\[([\u3040-\u30ff\u31f0-\u31ff\uff65-\uff9fー]+)\]/g,
     (_, base, rt) => `<ruby>${base}<rt>${rt}</rt></ruby>`);
 
-  // プレースホルダーを復元
+  // ─── ③ プレースホルダーを復元 ───
   s = s.replace(/\x00TAG(\d+)\x00/g,   (_, i) => tagPlaceholders[+i]);
   s = s.replace(/\x00SKILL(\d+)\x00/g, (_, i) => skillPlaceholders[+i]);
 
