@@ -4246,6 +4246,7 @@
     <div class="sb-panel" id="sbPanel-rule">
       <div class="sidebar-section" style="display:flex;align-items:center;padding:8px 10px;">
         <span style="font-family:'Cinzel',serif;font-size:9px;color:var(--text3);letter-spacing:2px;flex:1">RULE LIBRARY</span>
+        <button class="lib-item-btn" style="font-size:10px;padding:2px 6px;color:#70c090;border-color:#2a5a3a;margin-left:3px" onclick="openSkillLibraryModal()" title="技能リスト設定">⚙ 技能</button>
         <button class="lib-item-btn" style="font-size:10px;padding:2px 6px;color:#a0b8d0;border-color:#2a4a6a" onclick="exportRuleLibrary()" title="ルールライブラリをエクスポート">📤</button>
         <button class="lib-item-btn" style="font-size:10px;padding:2px 6px;color:#a0b8d0;border-color:#2a4a6a;margin-left:3px" onclick="importRuleLibrary()" title="ルールライブラリをインポート">📥</button>
         <button class="lib-item-btn" style="font-size:10px;padding:2px 8px;color:#c8a840;border-color:#5a4010;margin-left:3px" onclick="openRuleEditor(null)">＋ 追加</button>
@@ -4516,44 +4517,51 @@ const COC7_SKILLS = {
   ],
   specializations: [
     // 科学
-    { parent_ja:"科学", child_ja:"暗号学" }, { parent_ja:"科学", child_ja:"化学" },
-    { parent_ja:"科学", child_ja:"気象学" }, { parent_ja:"科学", child_ja:"工学" },
-    { parent_ja:"科学", child_ja:"植物学" }, { parent_ja:"科学", child_ja:"数学" },
-    { parent_ja:"科学", child_ja:"生物学" }, { parent_ja:"科学", child_ja:"地質学" },
-    { parent_ja:"科学", child_ja:"天文学" }, { parent_ja:"科学", child_ja:"動物学" },
-    { parent_ja:"科学", child_ja:"物理学" }, { parent_ja:"科学", child_ja:"法医学" },
-    { parent_ja:"科学", child_ja:"薬学" },
-    // 近接戦闘
-    { parent_ja:"近接戦闘", child_ja:"斧" }, { parent_ja:"近接戦闘", child_ja:"格闘" },
-    { parent_ja:"近接戦闘", child_ja:"絞殺ひも" }, { parent_ja:"近接戦闘", child_ja:"チェーンソー" },
-    { parent_ja:"近接戦闘", child_ja:"刀剣" }, { parent_ja:"近接戦闘", child_ja:"フレイル" },
-    { parent_ja:"近接戦闘", child_ja:"むち" }, { parent_ja:"近接戦闘", child_ja:"槍" },
-    // 射撃
-    { parent_ja:"射撃", child_ja:"拳銃" }, { parent_ja:"射撃", child_ja:"ライフル/ショットガン" },
-    { parent_ja:"射撃", child_ja:"サブマシンガン" }, { parent_ja:"射撃", child_ja:"マシンガン" },
-    { parent_ja:"射撃", child_ja:"弓" }, { parent_ja:"射撃", child_ja:"火炎放射器" },
-    { parent_ja:"射撃", child_ja:"重火器" },
+    { parent_ja:"科学", child_ja:"暗号学", base_value:1 }, { parent_ja:"科学", child_ja:"化学", base_value:1 },
+    { parent_ja:"科学", child_ja:"気象学", base_value:1 }, { parent_ja:"科学", child_ja:"工学", base_value:1 },
+    { parent_ja:"科学", child_ja:"植物学", base_value:1 }, { parent_ja:"科学", child_ja:"数学", base_value:1 },
+    { parent_ja:"科学", child_ja:"生物学", base_value:1 }, { parent_ja:"科学", child_ja:"地質学", base_value:1 },
+    { parent_ja:"科学", child_ja:"天文学", base_value:1 }, { parent_ja:"科学", child_ja:"動物学", base_value:1 },
+    { parent_ja:"科学", child_ja:"物理学", base_value:1 }, { parent_ja:"科学", child_ja:"法医学", base_value:1 },
+    { parent_ja:"科学", child_ja:"薬学", base_value:1 },
+    // 近接戦闘（技能ごとに異なる）
+    { parent_ja:"近接戦闘", child_ja:"斧",         base_value:15 },
+    { parent_ja:"近接戦闘", child_ja:"格闘",       base_value:25 },
+    { parent_ja:"近接戦闘", child_ja:"絞殺ひも",   base_value:15 },
+    { parent_ja:"近接戦闘", child_ja:"チェーンソー", base_value:10 },
+    { parent_ja:"近接戦闘", child_ja:"刀剣",       base_value:20 },
+    { parent_ja:"近接戦闘", child_ja:"フレイル",   base_value:10 },
+    { parent_ja:"近接戦闘", child_ja:"むち",       base_value:5  },
+    { parent_ja:"近接戦闘", child_ja:"槍",         base_value:20 },
+    // 射撃（技能ごとに異なる）
+    { parent_ja:"射撃", child_ja:"拳銃",             base_value:20 },
+    { parent_ja:"射撃", child_ja:"ライフル/ショットガン", base_value:25 },
+    { parent_ja:"射撃", child_ja:"サブマシンガン",   base_value:15 },
+    { parent_ja:"射撃", child_ja:"マシンガン",       base_value:10 },
+    { parent_ja:"射撃", child_ja:"弓",               base_value:15 },
+    { parent_ja:"射撃", child_ja:"火炎放射器",       base_value:10 },
+    { parent_ja:"射撃", child_ja:"重火器",           base_value:10 },
     // 芸術/製作
-    { parent_ja:"芸術/製作", child_ja:"演劇" }, { parent_ja:"芸術/製作", child_ja:"執筆" },
-    { parent_ja:"芸術/製作", child_ja:"写真術" }, { parent_ja:"芸術/製作", child_ja:"ダンス" },
-    { parent_ja:"芸術/製作", child_ja:"絵画" }, { parent_ja:"芸術/製作", child_ja:"彫刻" },
-    { parent_ja:"芸術/製作", child_ja:"文書偽造" }, { parent_ja:"芸術/製作", child_ja:"陶芸" },
-    { parent_ja:"芸術/製作", child_ja:"書道" }, { parent_ja:"芸術/製作", child_ja:"料理" },
-    { parent_ja:"芸術/製作", child_ja:"大工仕事" }, { parent_ja:"芸術/製作", child_ja:"理髪" },
+    { parent_ja:"芸術/製作", child_ja:"演劇",     base_value:5 }, { parent_ja:"芸術/製作", child_ja:"執筆",     base_value:5 },
+    { parent_ja:"芸術/製作", child_ja:"写真術",   base_value:5 }, { parent_ja:"芸術/製作", child_ja:"ダンス",   base_value:5 },
+    { parent_ja:"芸術/製作", child_ja:"絵画",     base_value:5 }, { parent_ja:"芸術/製作", child_ja:"彫刻",     base_value:5 },
+    { parent_ja:"芸術/製作", child_ja:"文書偽造", base_value:5 }, { parent_ja:"芸術/製作", child_ja:"陶芸",     base_value:5 },
+    { parent_ja:"芸術/製作", child_ja:"書道",     base_value:5 }, { parent_ja:"芸術/製作", child_ja:"料理",     base_value:5 },
+    { parent_ja:"芸術/製作", child_ja:"大工仕事", base_value:5 }, { parent_ja:"芸術/製作", child_ja:"理髪",     base_value:5 },
     // サバイバル
-    { parent_ja:"サバイバル", child_ja:"山岳" }, { parent_ja:"サバイバル", child_ja:"洋上" },
-    { parent_ja:"サバイバル", child_ja:"砂漠" }, { parent_ja:"サバイバル", child_ja:"森林" },
-    { parent_ja:"サバイバル", child_ja:"極地" },
+    { parent_ja:"サバイバル", child_ja:"山岳", base_value:10 }, { parent_ja:"サバイバル", child_ja:"洋上", base_value:10 },
+    { parent_ja:"サバイバル", child_ja:"砂漠", base_value:10 }, { parent_ja:"サバイバル", child_ja:"森林", base_value:10 },
+    { parent_ja:"サバイバル", child_ja:"極地", base_value:10 },
     // 操縦
-    { parent_ja:"操縦", child_ja:"航空機" }, { parent_ja:"操縦", child_ja:"ボート" },
+    { parent_ja:"操縦", child_ja:"航空機", base_value:1 }, { parent_ja:"操縦", child_ja:"ボート", base_value:1 },
     // 伝承
-    { parent_ja:"伝承", child_ja:"吸血鬼" }, { parent_ja:"伝承", child_ja:"人狼" },
-    { parent_ja:"伝承", child_ja:"ネクロノミコン" }, { parent_ja:"伝承", child_ja:"夢" },
+    { parent_ja:"伝承", child_ja:"吸血鬼",       base_value:5 }, { parent_ja:"伝承", child_ja:"人狼",         base_value:5 },
+    { parent_ja:"伝承", child_ja:"ネクロノミコン", base_value:5 }, { parent_ja:"伝承", child_ja:"夢",           base_value:5 },
     // ほかの言語
-    { parent_ja:"ほかの言語", child_ja:"英語" }, { parent_ja:"ほかの言語", child_ja:"ドイツ語" },
-    { parent_ja:"ほかの言語", child_ja:"フランス語" }, { parent_ja:"ほかの言語", child_ja:"アラビア語" },
-    { parent_ja:"ほかの言語", child_ja:"ラテン語" }, { parent_ja:"ほかの言語", child_ja:"中国語" },
-    { parent_ja:"ほかの言語", child_ja:"日本語" },
+    { parent_ja:"ほかの言語", child_ja:"英語",       base_value:1 }, { parent_ja:"ほかの言語", child_ja:"ドイツ語",   base_value:1 },
+    { parent_ja:"ほかの言語", child_ja:"フランス語", base_value:1 }, { parent_ja:"ほかの言語", child_ja:"アラビア語", base_value:1 },
+    { parent_ja:"ほかの言語", child_ja:"ラテン語",   base_value:1 }, { parent_ja:"ほかの言語", child_ja:"中国語",     base_value:1 },
+    { parent_ja:"ほかの言語", child_ja:"日本語",     base_value:1 },
   ]
 };
 
@@ -4573,6 +4581,8 @@ let state = {
   library: [],         // 神話生物ライブラリ
   npcTemplates: [],    // NPCテンプレート
   ruleLibrary: [],     // ルールライブラリ（全シナリオ共通）
+  customSkills: [],    // カスタム技能リスト
+  skillDetails: {},    // 組み込み技能の詳細
   currentId: null,
   activeTab: 'info',
   currentChapter: null,
@@ -4772,6 +4782,8 @@ function save() {
     dbPut('meta', 'library',      state.library.map(cr => { const c={...cr}; delete c.image; return c; })),
     dbPut('meta', 'npcTemplates', state.npcTemplates.map(n => { const c={...n}; delete c.image; return c; })),
     dbPut('meta', 'ruleLibrary',  state.ruleLibrary),
+    dbPut('meta', 'customSkills', state.customSkills),
+    dbPut('meta', 'skillDetails', state.skillDetails),
   ];
 
   // 差分保存：dirty フラグが立っているキーだけ書き込む
@@ -4819,12 +4831,14 @@ async function load() {
   await openDB();
 
   // ── IndexedDB から読み込み ──
-  const [scenarios, folders, library, npcTemplates, ruleLibrary, images] = await Promise.all([
+  const [scenarios, folders, library, npcTemplates, ruleLibrary, customSkills, skillDetails, images] = await Promise.all([
     dbGet('meta', 'scenarios'),
     dbGet('meta', 'folders'),
     dbGet('meta', 'library'),
     dbGet('meta', 'npcTemplates'),
     dbGet('meta', 'ruleLibrary'),
+    dbGet('meta', 'customSkills'),
+    dbGet('meta', 'skillDetails'),
     dbGetAll('images'),
   ]);
 
@@ -4833,6 +4847,8 @@ async function load() {
   if (library)      state.library       = library;
   if (npcTemplates) state.npcTemplates  = npcTemplates;
   if (ruleLibrary)  state.ruleLibrary   = ruleLibrary;
+  if (customSkills) state.customSkills  = customSkills;
+  if (skillDetails) state.skillDetails  = skillDetails;
 
   // ── localStorage からのマイグレーション（初回のみ） ──
   if (!scenarios) {
@@ -6539,7 +6555,8 @@ function rubyToHtml(str, scenario) {
   const skillPlaceholders = [];
   s = s.replace(/〈([^〉\n]+?)〉/g, (_, skill) => {
     const idx = skillPlaceholders.length;
-    skillPlaceholders.push(`<span class="ch-skill" data-skill="${skill.replace(/"/g,'&quot;')}" onmouseenter="showSkillTooltip(event,'${skill.replace(/'/g,'\\\'')}')" onmouseleave="hideSkillTooltip()">〈${skill}〉</span>`);
+        const skillEsc = skill.replace(/"/g,'&quot;').replace(/'/g,"\'");
+    skillPlaceholders.push(`<span class="ch-skill" data-skill="${skill.replace(/"/g,'&quot;')}" onmouseenter="showSkillTooltip(event,'${skillEsc}')" onmouseleave="hideSkillTooltip()" onclick="showSkillDetail('${skillEsc}')">〈${skill}〉</span>`);
     return `\x00SKILL${idx}\x00`;
   });
   // [box]〜[/box] / **〜** / __〜__ / [c:col]〜[/c] / [[link]] を保護
@@ -7714,6 +7731,217 @@ function toggleLibrary()  { switchSbTab('creature'); }
 // ─── ルールライブラリ（書籍フォルダ式） ───
 let _sbRuleBookExpanded = new Set();
 let _sbRuleItemExpanded = new Set();
+
+const BUILTIN_PARENT_SKILLS = [
+  '科学','近接戦闘','射撃','芸術/製作','サバイバル','操縦','伝承','ほかの言語'
+];
+
+function renderSbSkill() {}
+function showCustomSkillPreview(id) {}
+
+function openSkillLibraryModal() {
+  const custom = state.customSkills || [];
+  const builtinNormal = COC7_SKILLS.skills
+    .filter(sk => !BUILTIN_PARENT_SKILLS.includes(sk.name_ja))
+    .map(sk => sk.name_ja);
+
+  const customRows = custom.length === 0
+    ? '<div style="padding:8px 0;font-size:11px;color:var(--text3);font-style:italic">カスタム技能なし</div>'
+    : custom.map(sk => {
+        const hasSpecs = (sk.specializations||[]).length > 0;
+        return `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)">
+          <div style="flex:1;min-width:0;cursor:pointer" onclick="openSkillEditor('custom','${sk.id}')">
+            <div style="font-size:13px;color:var(--accent3)">${esc(sk.name||'（名前未入力）')}</div>
+            <div style="font-size:10px;color:var(--text3)">
+              初期値: ${sk.baseValue !== null && sk.baseValue !== undefined ? sk.baseValue+'%' : '—'}
+              ${hasSpecs ? '　専門分野: '+(sk.specializations||[]).length+'件' : ''}
+              ${sk.category ? '　'+esc(sk.category) : ''}
+            </div>
+          </div>
+          <button class="btn-danger" style="font-size:10px;padding:3px 8px" onclick="deleteCustomSkill('${sk.id}')">✕</button>
+        </div>`;
+      }).join('');
+
+  const builtinParentRows = BUILTIN_PARENT_SKILLS.map(name => {
+    const hasDetail = !!((state.skillDetails||{})[name]?.detail);
+    return `<div style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-bottom:1px solid var(--border);cursor:pointer" onclick="openSkillEditor('builtin','${name}')">
+      <span style="flex:1;font-size:12px;color:var(--text2)">${esc(name)}</span>
+      <span style="font-size:10px;color:var(--text3)">専門化</span>
+      ${hasDetail ? '<span style="font-size:9px;color:var(--accent2)">詳細あり</span>' : ''}
+    </div>`;
+  }).join('');
+
+  const builtinNormalRows = builtinNormal.map(name => {
+    const hasDetail = !!((state.skillDetails||{})[name]?.detail);
+    return `<div style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-bottom:1px solid var(--border);cursor:pointer" onclick="openSkillEditor('builtin','${name}')">
+      <span style="flex:1;font-size:12px;color:var(--text2)">${esc(name)}</span>
+      ${hasDetail ? '<span style="font-size:9px;color:var(--accent2)">詳細あり</span>' : ''}
+    </div>`;
+  }).join('');
+
+  showModal('⚙ 技能ライブラリ設定', `
+    <div style="margin-bottom:12px">
+      <div style="font-family:'Cinzel',serif;font-size:9px;color:var(--text3);letter-spacing:2px;margin-bottom:8px">CUSTOM SKILLS</div>
+      ${customRows}
+      <button class="btn-primary" style="margin-top:10px;font-size:11px" onclick="openSkillEditor('new','')">＋ カスタム技能を追加</button>
+    </div>
+    <div style="height:1px;background:var(--border);margin:12px 0"></div>
+    <div>
+      <div style="font-family:'Cinzel',serif;font-size:9px;color:var(--text3);letter-spacing:2px;margin-bottom:6px">BUILT-IN — 専門化技能</div>
+      ${builtinParentRows}
+    </div>
+    <div style="margin-top:10px">
+      <div style="font-family:'Cinzel',serif;font-size:9px;color:var(--text3);letter-spacing:2px;margin-bottom:6px">BUILT-IN — 通常技能</div>
+      <div style="max-height:160px;overflow-y:auto">${builtinNormalRows}</div>
+    </div>
+  `, [{ label:'閉じる', cls:'btn-sm', action:'closeModal()' }]);
+  requestAnimationFrame(() => {
+    const modal = document.querySelector('.modal');
+    if (modal) modal.style.width = 'min(640px, 90vw)';
+  });
+}
+
+function openSkillEditor(mode, key) {
+  const isBuiltin = mode === 'builtin';
+  const isNew     = mode === 'new';
+  const sk = (!isBuiltin && !isNew) ? (state.customSkills||[]).find(s => s.id === key) : null;
+
+  const detail    = isBuiltin ? ((state.skillDetails||{})[key]?.detail    || '') : (sk?.detail    || '');
+  const baseValue = isBuiltin ? ((state.skillDetails||{})[key]?.baseValue ?? '') : (sk?.baseValue ?? '');
+  const category  = isBuiltin ? ((state.skillDetails||{})[key]?.category  || '') : (sk?.category  || '');
+
+  const isParent = isBuiltin
+    ? BUILTIN_PARENT_SKILLS.includes(key)
+    : ((sk?.specializations||[]).length > 0 || BUILTIN_PARENT_SKILLS.includes(sk?.name||''));
+
+  let specs = [];
+  if (isParent) {
+    if (isBuiltin) {
+      const saved = (state.skillDetails||{})[key]?.specializations;
+      specs = saved || COC7_SKILLS.specializations
+        .filter(sp => sp.parent_ja === key)
+        .map(sp => ({ name: sp.child_ja, baseValue: '' }));
+    } else {
+      specs = sk?.specializations || [];
+    }
+  }
+
+  const specsHtml = isParent ? `
+    <div class="field-group" style="margin-top:8px">
+      <div class="field-label" style="display:flex;align-items:center;justify-content:space-between">
+        専門分野
+        <button class="lib-item-btn" style="font-size:10px;padding:2px 8px;color:#70c090;border-color:#2a5a3a" onclick="_addSpecRow()">＋ 追加</button>
+      </div>
+      <div id="specList" style="max-height:160px;overflow-y:auto;border:1px solid var(--border);border-radius:3px;padding:4px">
+        ${specs.length === 0
+          ? '<div id="specEmpty" style="font-size:11px;color:var(--text3);padding:6px;font-style:italic">専門分野なし</div>'
+          : specs.map((sp,i) => _specRowHtml(sp.name, sp.baseValue ?? '', i)).join('')}
+      </div>
+    </div>` : '';
+
+  const titleMap = { builtin: key+' の詳細設定', custom: '技能を編集', new: '技能を追加' };
+  const btnMap   = { builtin: '保存', custom: '保存', new: '追加' };
+
+  showModal(titleMap[mode], `
+    <div class="field-group">
+      <div class="field-label">技能名</div>
+      <input type="text" id="csk-name" value="${esc(isBuiltin ? key : (sk?.name||''))}" placeholder="例: 錬金術技能" ${isBuiltin ? 'readonly style="opacity:0.6"' : ''}>
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <div class="field-label">初期値（%）</div>
+        <input type="number" id="csk-base" value="${esc(String(baseValue))}" placeholder="例: 1" min="0" max="100" style="width:80px">
+      </div>
+      <div class="field-group">
+        <div class="field-label">カテゴリ</div>
+        <input type="text" id="csk-category" value="${esc(category)}" placeholder="例: 知識">
+      </div>
+    </div>
+    <div class="field-group">
+      <div class="field-label">詳細・説明</div>
+      <textarea id="csk-detail" rows="4" placeholder="技能の説明...">${esc(detail)}</textarea>
+    </div>
+    ${specsHtml}
+  `, [
+    { label:'戻る', cls:'btn-sm', action:'openSkillLibraryModal()' },
+    { label: btnMap[mode], cls:'btn-primary', action:`saveSkillEditor('${mode}','${isBuiltin ? key : (sk?.id||'')}',${isParent})` }
+  ]);
+}
+
+function saveSkillEditor(mode, key, isParent) {
+  const baseInput = document.getElementById('csk-base')?.value;
+  const category  = document.getElementById('csk-category')?.value.trim() || '';
+  const detail    = document.getElementById('csk-detail')?.value || '';
+  const baseValue = baseInput !== '' ? Number(baseInput) : null;
+
+  let specializations = [];
+  if (isParent) {
+    document.querySelectorAll('#specList .spec-row').forEach(row => {
+      const inputs = row.querySelectorAll('input');
+      const spName = inputs[0]?.value.trim();
+      const spBase = inputs[1]?.value;
+      if (spName) specializations.push({ name: spName, baseValue: spBase !== '' ? Number(spBase) : null });
+    });
+  }
+
+  if (mode === 'builtin') {
+    if (!state.skillDetails) state.skillDetails = {};
+    state.skillDetails[key] = { detail, baseValue, category, specializations };
+  } else {
+    const name = document.getElementById('csk-name')?.value.trim() || '';
+    if (!name) { alert('技能名を入力してください'); return; }
+    if (!state.customSkills) state.customSkills = [];
+    if (key) {
+      const sk = state.customSkills.find(s => s.id === key);
+      if (sk) Object.assign(sk, { name, baseValue, category, detail, specializations });
+    } else {
+      state.customSkills.push({ id: uid(), name, baseValue, category, detail, specializations });
+    }
+  }
+  save();
+  openSkillLibraryModal();
+}
+
+function openCustomSkillEditor(id, prefillName, prefillBase, prefillParent) {
+  openSkillEditor(id ? 'custom' : 'new', id || '');
+}
+
+function saveCustomSkill(id) {
+  const isParent = (state.customSkills||[]).find(s=>s.id===id)?.specializations?.length > 0;
+  saveSkillEditor('custom', id, isParent);
+}
+
+function deleteCustomSkill(id) {
+  if (!confirm('この技能を削除しますか？')) return;
+  state.customSkills = (state.customSkills||[]).filter(s => s.id !== id);
+  save();
+  openSkillLibraryModal();
+}
+
+function _specRowHtml(name, baseValue, idx) {
+  return `<div class="spec-row" style="display:flex;align-items:center;gap:6px;padding:3px 4px;border-bottom:1px solid var(--border)">
+    <input type="text" value="${esc(name)}" placeholder="専門分野名" style="flex:1;font-size:12px;padding:2px 6px">
+    <input type="number" value="${esc(String(baseValue))}" placeholder="%" min="0" max="100" style="width:52px;font-size:12px;padding:2px 4px" title="初期値（%）">
+    <button onclick="this.closest('.spec-row').remove();_refreshSpecEmpty()" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:12px;padding:2px 4px">✕</button>
+  </div>`;
+}
+
+function _addSpecRow() {
+  const list = document.getElementById('specList');
+  if (!list) return;
+  const empty = document.getElementById('specEmpty');
+  if (empty) empty.remove();
+  list.insertAdjacentHTML('beforeend', _specRowHtml('', '', Date.now()));
+  list.lastElementChild?.querySelector('input')?.focus();
+}
+
+function _refreshSpecEmpty() {
+  const list = document.getElementById('specList');
+  if (!list) return;
+  if (list.querySelectorAll('.spec-row').length === 0) {
+    list.innerHTML = `<div id="specEmpty" style="font-size:11px;color:var(--text3);padding:6px;font-style:italic">専門分野なし</div>`;
+  }
+}
 
 function renderSbRule() {
   const body = document.getElementById('sbRuleBody');
@@ -9241,13 +9469,60 @@ function showSkillTooltip(event, skillName) {
   // 基本値の説明（技能のみ）
   let baseStr = '';
   if (!isStat && !isDerived) {
-    const masterSkill = COC7_SKILLS.skills.find(sk => sk.name_ja === skillName);
-    const specEntry   = COC7_SKILLS.specializations.find(sp => sp.child_ja === skillName);
-    const baseVal = masterSkill
-      ? (masterSkill.base_value !== null ? masterSkill.base_value : (masterSkill.base_formula || '—'))
-      : (specEntry ? specEntry.base_value : null);
-    if (baseVal !== null && baseVal !== undefined) {
-      baseStr = `<span style="font-size:10px;color:var(--text3);margin-bottom:6px;display:block">初期値: ${baseVal}${typeof baseVal==='number'?'%':''}</span>`;
+    // カスタム技能・skillDetailsを優先参照（完全一致）
+    const customSk   = (state.customSkills||[]).find(cs => cs.name === skillName);
+    const skillDetail = (state.skillDetails||{})[skillName];
+    const activeSk = customSk || (skillDetail ? { ...skillDetail, name: skillName } : null);
+    if (activeSk) {
+      const bv = activeSk.baseValue;
+      baseStr = `<span style="font-size:10px;color:var(--text3);margin-bottom:6px;display:block">初期値: ${bv !== null && bv !== undefined ? bv+'%' : '—'}${activeSk.category ? '　'+esc(activeSk.category) : ''}</span>`;
+    } else {
+      // 「科学（生物学）」or「科学(生物学)」→ 親技能のspecializationsも参照
+      const parenMatch = skillName.match(/^(.+?)[（(](.+)[）)]$/);
+      const parentName = parenMatch ? parenMatch[1] : null;
+      const childName  = parenMatch ? parenMatch[2] : skillName;
+      if (parentName) {
+        // skillDetailsの親技能から専門分野を検索
+        const detailParent = (state.skillDetails||{})[parentName];
+        if (detailParent) {
+          const spEntry = (detailParent.specializations||[]).find(sp => sp.name === childName);
+          if (spEntry && spEntry.baseValue !== null && spEntry.baseValue !== undefined) {
+            baseStr = `<span style="font-size:10px;color:var(--text3);margin-bottom:6px;display:block">初期値: ${spEntry.baseValue}%</span>`;
+          }
+        }
+        // カスタム親技能のspecializationsも検索
+        if (!baseStr) {
+          const customParent = (state.customSkills||[]).find(cs => cs.name === parentName);
+          if (customParent) {
+            const spEntry = (customParent.specializations||[]).find(sp => sp.name === childName);
+            if (spEntry && spEntry.baseValue !== null && spEntry.baseValue !== undefined) {
+              baseStr = `<span style="font-size:10px;color:var(--text3);margin-bottom:6px;display:block">初期値: ${spEntry.baseValue}%</span>`;
+            }
+          }
+        }
+      }
+      if (!baseStr) {
+        const lookupName  = parenMatch ? childName : skillName;
+        const masterSkill = COC7_SKILLS.skills.find(sk => sk.name_ja === skillName);
+        const specEntry   = COC7_SKILLS.specializations.find(sp => sp.child_ja === lookupName || sp.child_ja === skillName);
+        const baseVal = masterSkill
+          ? (masterSkill.base_value !== null ? masterSkill.base_value : (masterSkill.base_formula || '—'))
+          : (specEntry ? specEntry.base_value : null);
+        if (baseVal !== null && baseVal !== undefined) {
+          baseStr = `<span style="font-size:10px;color:var(--text3);margin-bottom:6px;display:block">初期値: ${baseVal}${typeof baseVal==='number'?'%':''}</span>`;
+        } else {
+          // 親技能の初期値を探す
+          const PARENT_ALIAS = { '芸術/製作':'芸術','製作':'製作','他の言語':'他の言語','操縦':'操縦','科学':'科学','格闘':'格闘','射撃':'射撃','乗馬':'乗馬','サバイバル':'サバイバル' };
+          const keyword = PARENT_ALIAS[skillName];
+          if (keyword) {
+            const parentSkill = COC7_SKILLS.skills.find(sk => sk.name_ja === keyword);
+            const pBase = parentSkill?.base_value;
+            if (pBase !== null && pBase !== undefined) {
+              baseStr = `<span style="font-size:10px;color:var(--text3);margin-bottom:6px;display:block">初期値: ${pBase}%（専門化技能）</span>`;
+            }
+          }
+        }
+      }
     }
   } else if (isDerived) {
     const formulaMap = { '幸運': 'POW×5', '知識': 'EDU×5', 'アイデア': 'INT' };
@@ -9285,8 +9560,13 @@ function showSkillTooltip(event, skillName) {
         }
       } else {
         // 通常技能
-        let sk = (inv.skills||[]).find(s => s.name === skillName);
+        // 「科学（生物学）」→「生物学」でも探す
+        const parenMatch2 = skillName.match(/^(.+?)[（(](.+)[）)]$/);
+        const childName = parenMatch2 ? parenMatch2[2] : null;
+        let sk = (inv.skills||[]).find(s => s.name === skillName)
+               || (childName ? (inv.skills||[]).find(s => s.name === childName) : null);
         if (!sk) {
+          // ① COC7_SKILLSのspecializationsで parent_ja が skillName に完全一致するものを探す
           const childMatches = (inv.skills||[]).filter(s => {
             const spec = COC7_SKILLS.specializations.find(sp => sp.child_ja === s.name && sp.parent_ja === skillName);
             return !!spec;
@@ -9296,11 +9576,44 @@ function showSkillTooltip(event, skillName) {
             html += `<span style="font-size:10px;color:var(--accent2)">${childMatches.map(s=>`${esc(s.name)}:${s.val}%`).join(' / ')}</span></div>`;
             return;
           }
+
+          // ② 親技能の別表記マッピング（例: 「芸術/製作」→「芸術」を含む技能）
+          const PARENT_ALIAS = {
+            '芸術/製作': '芸術',
+            '製作': '製作',
+            '他の言語': '他の言語',
+            '操縦': '操縦',
+            '科学': '科学',
+            '格闘': '格闘',
+            '射撃': '射撃',
+            '乗馬': '乗馬',
+            'サバイバル': 'サバイバル',
+          };
+          const parentKeyword = PARENT_ALIAS[skillName] || skillName;
+          const partialMatches = (inv.skills||[]).filter(s =>
+            s.name.startsWith(parentKeyword + '（') || s.name.startsWith(parentKeyword + '(')
+          );
+          if (partialMatches.length > 0) {
+            html += `<div class="tip-row has">${thumb}<span>${name}</span>`;
+            html += `<span style="font-size:10px;color:var(--accent2)">${partialMatches.map(s=>`${esc(s.name)}:${s.val}%`).join(' / ')}</span></div>`;
+            return;
+          }
         }
         if (sk) {
           html += `<div class="tip-row has">${thumb}<span>${name}</span><span class="tip-val">${sk.val||0}%</span></div>`;
         } else {
-          html += `<div class="tip-row none">${thumb}<span>${name}</span><span style="font-size:10px">—</span></div>`;
+          // 初期値を表示（「科学（生物学）」→「生物学」で検索）
+          const pm = skillName.match(/^(.+?)[（(](.+)[）)]$/);
+          const lookupChild = pm ? pm[2] : skillName;
+          const ms2 = COC7_SKILLS.skills.find(ms => ms.name_ja === skillName);
+          const se2 = COC7_SKILLS.specializations.find(sp => sp.child_ja === lookupChild || sp.child_ja === skillName);
+          const bv2 = ms2
+            ? (ms2.base_value !== null ? ms2.base_value : null)
+            : (se2 ? se2.base_value : null);
+          const baseHint = bv2 !== null && bv2 !== undefined
+            ? `<span style="font-size:10px;opacity:0.5">（初期値${bv2}%）</span>`
+            : `<span style="font-size:10px">—</span>`;
+          html += `<div class="tip-row none">${thumb}<span>${name}</span>${baseHint}</div>`;
         }
       }
     });
@@ -9315,6 +9628,7 @@ function showSkillTooltip(event, skillName) {
   _positionTooltip(event);
 }
 
+
 function _positionTooltip(event) {
   const tooltip = document.getElementById('skillTooltip');
   if (!tooltip) return;
@@ -9327,9 +9641,92 @@ function _positionTooltip(event) {
   tooltip.style.top  = y + 'px';
 }
 
+
 function hideSkillTooltip() {
   const tooltip = document.getElementById('skillTooltip');
   if (tooltip) tooltip.classList.remove('visible');
+}
+
+function showSkillDetail(skillName) {
+  const preview = document.getElementById('rsPreview');
+  if (!preview) return;
+
+  // 括弧で親技能・専門分野を分解（全角・半角両対応）
+  const parenMatch = skillName.match(/^(.+?)[（(](.+)[）)]$/);
+  const parentName = parenMatch ? parenMatch[1] : null;
+  const childName  = parenMatch ? parenMatch[2] : null;
+
+  // skillDetails・カスタム技能を参照（完全一致 → 親技能の順）
+  const skillDetail  = (state.skillDetails||{})[skillName];
+  const customSk     = (state.customSkills||[]).find(cs => cs.name === skillName);
+  const activeSk     = skillDetail ? { ...skillDetail, name: skillName } : (customSk || null);
+
+  // 親技能の設定（専門分野の場合）
+  const parentSkillDetail = parentName ? (state.skillDetails||{})[parentName] : null;
+  const parentCustomSk    = parentName ? (state.customSkills||[]).find(cs => cs.name === parentName) : null;
+  const parentSk          = parentSkillDetail ? { ...parentSkillDetail, name: parentName } : (parentCustomSk || null);
+
+  // 専門分野の初期値を親のspecializationsから取得
+  let specBaseValue = null;
+  if (childName && parentSk) {
+    const spEntry = (parentSk.specializations||[]).find(sp => sp.name === childName);
+    if (spEntry) specBaseValue = spEntry.baseValue;
+  }
+  // COC7組み込みの初期値
+  const masterSkill = COC7_SKILLS.skills.find(sk => sk.name_ja === skillName);
+  const specEntry   = COC7_SKILLS.specializations.find(sp =>
+    sp.child_ja === skillName || (childName && sp.child_ja === childName)
+  );
+  const builtinBase = masterSkill
+    ? (masterSkill.base_value !== null ? masterSkill.base_value : masterSkill.base_formula)
+    : (specEntry ? specEntry.base_value : null);
+
+  const baseValue = activeSk?.baseValue ?? specBaseValue ?? builtinBase;
+  // 詳細：完全一致 → 親技能の詳細の順
+  const detail   = activeSk?.detail || parentSk?.detail || '';
+  const category = activeSk?.category || parentSk?.category || '';
+
+  // 探索者の技能値
+  const s = getCurrentScenario();
+  const invs = s?.investigators || [];
+  const invRows = invs.map(inv => {
+    const thumb = inv.image
+      ? `<img src="${inv.image}" style="width:20px;height:20px;border-radius:3px;object-fit:cover;flex-shrink:0;border:1px solid var(--border)">`
+      : `<span style="font-size:12px">🔍</span>`;
+    // 完全一致 → 子技能名単体 → 専門化マッチ
+    let sk = (inv.skills||[]).find(s => s.name === skillName);
+    if (!sk && childName) sk = (inv.skills||[]).find(s => s.name === childName);
+    if (!sk && parentName) {
+      const matches = (inv.skills||[]).filter(s =>
+        s.name === skillName ||
+        s.name.startsWith(parentName + '（') ||
+        (childName && s.name === childName)
+      );
+      if (matches.length > 0) {
+        return `<div style="display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid var(--border)">
+          ${thumb}<span style="flex:1;font-size:12px;color:var(--text2)">${esc(inv.name||'?')}</span>
+          <span style="font-size:10px;color:var(--accent2)">${matches.map(m=>`${esc(m.name)}:${m.val}%`).join(' / ')}</span>
+        </div>`;
+      }
+    }
+    const val = sk ? sk.val : null;
+    return `<div style="display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid var(--border)">
+      ${thumb}<span style="flex:1;font-size:12px;color:var(--text2)">${esc(inv.name||'?')}</span>
+      ${val !== null
+        ? `<span style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--accent3)">${val}%</span>`
+        : `<span style="font-size:10px;color:var(--text3)">${baseValue !== null && baseValue !== undefined ? '初期値 '+baseValue+'%' : '—'}</span>`}
+    </div>`;
+  }).join('');
+
+  preview.innerHTML = `
+    <div style="padding:14px 16px">
+      <div style="font-family:'Cinzel',serif;font-size:9px;color:var(--text3);letter-spacing:2px;margin-bottom:8px">◆ SKILL</div>
+      <div style="font-size:17px;font-weight:700;color:var(--accent3);margin-bottom:4px">〈${esc(skillName)}〉</div>
+      ${baseValue !== null && baseValue !== undefined
+        ? `<div style="font-size:11px;color:var(--text3);margin-bottom:6px">初期値: <span style="font-family:'Share Tech Mono',monospace;color:var(--accent2)">${baseValue}${typeof baseValue==='number'?'%':''}</span>${category?'　'+esc(category):''}</div>` : ''}
+      ${detail ? `<div style="font-size:13px;color:var(--text2);line-height:1.9;margin-bottom:12px;white-space:pre-wrap">${esc(detail)}</div>` : '<div style="font-size:12px;color:var(--text3);margin-bottom:12px;font-style:italic">詳細未設定</div>'}
+      ${invs.length > 0 ? `<div style="font-family:'Cinzel',serif;font-size:9px;color:var(--text3);letter-spacing:1px;margin-bottom:6px">INVESTIGATORS</div>${invRows}` : ''}
+    </div>`;
 }
 
 // ═══════════════════════════════════════════════
@@ -9661,10 +10058,12 @@ function exportAllData() {
     _type: 'coc_tool_backup',
     _version: 1,
     _date: new Date().toISOString(),
-    scenarios:   state.scenarios,
-    library:     state.library,
-    ruleLibrary: state.ruleLibrary,
-    folders:     state.folders,
+    scenarios:    state.scenarios,
+    library:      state.library,
+    ruleLibrary:  state.ruleLibrary,
+    folders:      state.folders,
+    customSkills: state.customSkills,
+    skillDetails: state.skillDetails,
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
@@ -9785,6 +10184,28 @@ function handleImportAll(event) {
             const dup = (state.library||[]).find(l => l.job === cr.job && JSON.stringify(l.stats) === JSON.stringify(cr.stats));
             if (!dup) { state.library.push({ ...cr, libId: uid() }); creatureCount++; }
           });
+        }
+      }
+
+      // 技能データ
+      if (data.customSkills) {
+        if (mode === 'overwrite') {
+          state.customSkills = data.customSkills;
+        } else {
+          const existing = state.customSkills || [];
+          (data.customSkills||[]).forEach(sk => {
+            const dup = existing.find(e => e.id === sk.id);
+            if (dup) Object.assign(dup, sk);
+            else existing.push(sk);
+          });
+          state.customSkills = existing;
+        }
+      }
+      if (data.skillDetails) {
+        if (mode === 'overwrite') {
+          state.skillDetails = data.skillDetails;
+        } else {
+          state.skillDetails = { ...(state.skillDetails||{}), ...data.skillDetails };
         }
       }
 
