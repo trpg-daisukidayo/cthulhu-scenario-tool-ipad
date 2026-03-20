@@ -9407,6 +9407,14 @@ function importInvJson() {
         if (statLabels.includes(p.label)) stats[p.label] = parseInt(p.value)||0;
       });
     }
+    // status から幸運を取得（いあきゃら形式）
+    if (Array.isArray(data.status)) {
+      data.status.forEach(st => {
+        if (st.label === '幸運' || st.label === 'LUK' || st.label === 'luck') {
+          if (!stats['幸運']) stats['幸運'] = parseInt(st.max || st.value) || 0;
+        }
+      });
+    }
 
     const skills = [];
     if (data.commands) {
@@ -9590,7 +9598,7 @@ function showSkillTooltip(event, skillName) {
 
   // 幸運・知識は stats から派生値として計算
   const DERIVED = {
-    '幸運': inv => inv.stats?.['幸運'] || (inv.stats?.POW || 0) * 5,
+    '幸運':    inv => inv.stats?.['幸運'] || null,
     '知識': inv => inv.stats?.['知識'] || (inv.stats?.EDU || 0) * 5,
     'アイデア': inv => inv.stats?.INT || 0,
   };
@@ -9685,7 +9693,7 @@ function showSkillTooltip(event, skillName) {
       }
     }
   } else if (isDerived) {
-    const formulaMap = { '幸運': 'POW×5', '知識': 'EDU×5', 'アイデア': 'INT' };
+    const formulaMap = { '幸運': '3D6×5（別途設定）', '知識': 'EDU×5', 'アイデア': 'INT' };
     const formula = formulaMap[skillName] || '';
     baseStr = `<span style="font-size:10px;color:var(--text3);margin-bottom:6px;display:block">初期値: ${formula}</span>`;
   }
