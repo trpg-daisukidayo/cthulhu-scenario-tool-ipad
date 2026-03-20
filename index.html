@@ -6566,8 +6566,7 @@ function rubyToHtml(str, scenario) {
     tagPlaceholders.push(match);
     return `\x00TAG${idx}\x00`;
   };
-  s = s.replace(/\[box\][\s\S]*?\[\/box\]/g, protectTag);
-  s = s.replace(/\[c:[a-z]+\][\s\S]*?\[\/c\]/g, protectTag);
+  // リンク記法のみ保護（入れ子にならないため）
   s = s.replace(/\[\[[a-z]+:[^\]]+\]\]/g, protectTag);
 
   // ｜base[よみ] パターン — 半角角括弧
@@ -6582,17 +6581,22 @@ function rubyToHtml(str, scenario) {
   s = s.replace(/\x00TAG(\d+)\x00/g,   (_, i) => tagPlaceholders[+i]);
   s = s.replace(/\x00SKILL(\d+)\x00/g, (_, i) => skillPlaceholders[+i]);
 
-  // インラインマークアップ
-  s = s.replace(/\[box\]([\s\S]*?)\[\/box\]/g,
-    (_, t) => `<div class="ch-box">${t}</div>`);
-  s = s.replace(/\*\*([\s\S]*?)\*\*/g,
-    (_, t) => `<span class="ch-bold">${t}</span>`);
-  s = s.replace(/__([\s\S]*?)__/g,
-    (_, t) => `<span class="ch-under">${t}</span>`);
-  s = s.replace(/\[s\]([\s\S]*?)\[\/s\]/g,
-    (_, t) => `<span class="ch-small">${t}</span>`);
-  s = s.replace(/\[c:(red|orange|green|blue|purple)\]([\s\S]*?)\[\/c\]/g,
-    (_, col, t) => `<span class="ch-col-${col}">${t}</span>`);
+  // インラインマークアップ（入れ子対応：内側から繰り返し展開）
+  const renderInline = (str) => {
+    let prev = null;
+    while (prev !== str) {
+      prev = str;
+      str = str
+        .replace(/\[box\]([\s\S]*?)\[\/box\]/g,  (_, t) => `<div class="ch-box">${t}</div>`)
+        .replace(/\[s\]([\s\S]*?)\[\/s\]/g,       (_, t) => `<span class="ch-small">${t}</span>`)
+        .replace(/\[c:(red|orange|green|blue|purple)\]([\s\S]*?)\[\/c\]/g,
+                                                   (_, col, t) => `<span class="ch-col-${col}">${t}</span>`);
+    }
+    return str;
+  };
+  s = renderInline(s);
+  s = s.replace(/\*\*([\s\S]*?)\*\*/g,  (_, t) => `<span class="ch-bold">${renderInline(t)}</span>`);
+  s = s.replace(/__([\s\S]*?)__/g,       (_, t) => `<span class="ch-under">${renderInline(t)}</span>`);
 
   // 「セリフ」→ 自動太字（括弧ごと）— 章・本文タブのみ
   if (scenario) {
