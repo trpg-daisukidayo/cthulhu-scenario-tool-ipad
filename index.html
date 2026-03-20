@@ -6556,7 +6556,7 @@ function rubyToHtml(str, scenario) {
   s = s.replace(/〈([^〉\n]+?)〉/g, (_, skill) => {
     const idx = skillPlaceholders.length;
         const skillEsc = skill.replace(/"/g,'&quot;').replace(/'/g,"\'");
-    skillPlaceholders.push(`<span class="ch-skill" data-skill="${skill.replace(/"/g,'&quot;')}" onmouseenter="showSkillTooltip(event,'${skillEsc}')" onmouseleave="hideSkillTooltip()" onclick="showSkillDetail('${skillEsc}')">〈${skill}〉</span>`);
+    skillPlaceholders.push(`<span class="ch-skill" data-skill="${skill.replace(/"/g,'&quot;')}" onmouseenter="showSkillTooltip(event,'${skillEsc}')" onmouseleave="hideSkillTooltip()" onclick="_skillTap(event,'${skillEsc}')">〈${skill}〉</span>`);
     return `\x00SKILL${idx}\x00`;
   });
   // [box]〜[/box] / **〜** / __〜__ / [c:col]〜[/c] / [[link]] を保護
@@ -9646,6 +9646,48 @@ function hideSkillTooltip() {
   const tooltip = document.getElementById('skillTooltip');
   if (tooltip) tooltip.classList.remove('visible');
 }
+
+// iPad用2段階タップ：1回目でツールチップ、2回目でプレビュー
+let _skillTapActive = null; // 現在ツールチップ表示中の技能名
+
+function _skillTap(event, skillName) {
+  const tooltip = document.getElementById('skillTooltip');
+  const isTouch = navigator.maxTouchPoints > 1;
+
+  if (!isTouch) {
+    // PCはクリックで直接プレビュー
+    showSkillDetail(skillName);
+    return;
+  }
+
+  if (_skillTapActive === skillName && tooltip?.classList.contains('visible')) {
+    // 2回目タップ → プレビューへ
+    hideSkillTooltip();
+    _skillTapActive = null;
+    showSkillDetail(skillName);
+  } else {
+    // 1回目タップ → ツールチップ表示
+    _skillTapActive = skillName;
+    showSkillTooltip(event, skillName);
+    // ツールチップに「タップで詳細」ヒントを追加
+    if (tooltip) {
+      const hint = document.createElement('div');
+      hint.style.cssText = 'font-size:10px;color:var(--accent2);margin-top:6px;text-align:right;opacity:0.8';
+      hint.textContent = 'タップで詳細 →';
+      tooltip.appendChild(hint);
+    }
+  }
+}
+
+// ツールチップ外タップで閉じる
+document.addEventListener('touchstart', e => {
+  const tooltip = document.getElementById('skillTooltip');
+  if (!tooltip?.classList.contains('visible')) return;
+  if (!tooltip.contains(e.target) && !e.target.classList.contains('ch-skill')) {
+    hideSkillTooltip();
+    _skillTapActive = null;
+  }
+}, { passive: true });
 
 function showSkillDetail(skillName) {
   const preview = document.getElementById('rsPreview');
