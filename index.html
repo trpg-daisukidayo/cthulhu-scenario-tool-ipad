@@ -1087,6 +1087,26 @@
     letter-spacing: 0.5px;
   }
 
+  /* ─── ジャンプボタン ─── */
+  .preview-jump {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 10px 0;
+    padding: 7px 16px;
+    background: var(--panel2);
+    border: 1px solid var(--border2);
+    border-radius: 4px;
+    color: var(--accent2);
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    font-family: 'Noto Serif JP', serif;
+  }
+  .preview-jump:hover { background: var(--bg3); border-color: var(--accent2); }
+  .preview-jump .jump-arrow { font-size: 11px; opacity: 0.7; }
+  .preview-jump .jump-chapter { font-size: 10px; color: var(--text3); }
+
   /* ─── 章ナビゲーション ─── */
   .ch-nav-bar {
     display: flex;
@@ -4314,6 +4334,7 @@
           <button class="tb-btn" onclick="insertBlock('text')" title="本文ブロック追加">＋ 本文</button>
           <div class="ch-toolbar-sep"></div>
           <button class="tb-btn" onclick="insertBlock('image')" title="画像ブロック追加" style="color:#70b880;border-color:#2a5a30;">🖼 画像</button>
+          <button class="tb-btn" onclick="insertJumpBlock()" title="別章の見出しへのジャンプボタンを追加" style="color:#60c8d0;border-color:#1a5a60;">🔗 章ジャンプ</button>
           <button class="tb-btn" onmousedown="event.preventDefault()" onclick="openRubyModal()" title="選択テキストにふりがなを付ける" style="color:#c0a0e0;border-color:#5a3a7a;">
             <span style="font-size:10px;line-height:1">振<br><span style="font-size:8px;opacity:0.7">ふり</span></span>　ふりがな
           </button>
@@ -6367,8 +6388,8 @@ function renderEditPane(ch, s) {
 }
 
 function renderBlockEditor(bl, bi, chId, total) {
-  const typeLabel = {text:'本文',heading:'大見出し',subheading:'小見出し',choice:'選択肢',bold:'濃い文字',info:'情報カード',explore:'探索カード',scene:'演出カード',image:'画像'}[bl.type]||bl.type;
-  const lblClass = {text:'lbl-text',heading:'lbl-heading',subheading:'lbl-heading',choice:'lbl-heading',bold:'lbl-bold',info:'lbl-info',explore:'lbl-explore',scene:'lbl-scene',image:'lbl-image'}[bl.type]||'lbl-text';
+  const typeLabel = {text:'本文',heading:'大見出し',subheading:'小見出し',choice:'選択肢',bold:'濃い文字',info:'情報カード',explore:'探索カード',scene:'演出カード',image:'画像',jump:'章ジャンプ'}[bl.type]||bl.type;
+  const lblClass = {text:'lbl-text',heading:'lbl-heading',subheading:'lbl-heading',choice:'lbl-heading',bold:'lbl-bold',info:'lbl-info',explore:'lbl-explore',scene:'lbl-scene',image:'lbl-image',jump:'lbl-text'}[bl.type]||'lbl-text';
 
   let bodyHtml = '';
   if (bl.type === 'text') {
@@ -6449,6 +6470,43 @@ function renderBlockEditor(bl, bi, chId, total) {
           onchange="handleBlockImageFile(event,'${chId}','${bl.id}')">
       </div>`;
     bodyHtml = imgEditHtml;
+  } else if (bl.type === 'jump') {
+    const s = getCurrentScenario();
+    const otherChapters = (s.chapters||[]).filter(c => c.id !== chId);
+    const targetCh = otherChapters.find(c => c.id === bl.targetChapterId);
+    const targetBlocks = targetCh
+      ? (targetCh.blocks||[]).filter(b => b.type==='heading'||b.type==='subheading')
+      : [];
+    bodyHtml = `
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div class="jump-chapter-row" style="display:flex;align-items:center;gap:8px">
+          <div style="font-size:11px;color:var(--text3);flex-shrink:0">ジャンプ先の章：</div>
+          <select onchange="updateJumpTarget('${chId}','${bl.id}','chapter',this.value)"
+            style="flex:1;font-size:12px;padding:3px 6px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:3px">
+            <option value="">── 章を選択 ──</option>
+            ${otherChapters.map(c => `<option value="${c.id}" ${bl.targetChapterId===c.id?'selected':''}>${esc(c.title||'（タイトル未設定）')}</option>`).join('')}
+          </select>
+        </div>
+        ${targetCh ? `
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="font-size:11px;color:var(--text3);flex-shrink:0">見出し（任意）：</div>
+          <select class="jump-block-select" onchange="updateJumpTarget('${chId}','${bl.id}','block',this.value)"
+            style="flex:1;font-size:12px;padding:3px 6px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:3px">
+            <option value="">── 章の先頭 ──</option>
+            ${targetBlocks.map(b => `<option value="${b.id}" ${bl.targetBlockId===b.id?'selected':''}>${b.type==='heading'?'▶':'　▷'} ${esc(b.body||'（テキストなし）')}</option>`).join('')}
+          </select>
+        </div>` : ''}
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="font-size:11px;color:var(--text3);flex-shrink:0">ボタンのラベル：</div>
+          <input type="text" value="${esc(bl.label||'')}" placeholder="例: 第3章へ進む"
+            oninput="updateBlock('${chId}','${bl.id}','label',this.value)"
+            style="flex:1;font-size:12px;padding:3px 6px">
+        </div>
+        ${bl.targetChapterId ? `
+        <div class="jump-preview-row" style="font-size:11px;color:var(--accent2);padding:4px 8px;background:var(--bg3);border-radius:3px">
+          🔗 → ${esc(targetCh?.title||'章不明')}${bl.targetBlockId&&targetBlocks.find(b=>b.id===bl.targetBlockId) ? ' ／ '+esc(targetBlocks.find(b=>b.id===bl.targetBlockId)?.body||'') : '（先頭）'}
+        </div>` : ''}
+      </div>`;
   }
 
   return `
@@ -6518,6 +6576,20 @@ function renderViewPane(ch, s) {
         return `<div class="preview-image-block ${posClass}" id="vbl-${bl.id}">${imgTag}</div>`;
       }
       return `<div class="preview-image-block ${posClass}" id="vbl-${bl.id}">${imgTag}</div>`;
+    } else if (bl.type === 'jump') {
+      if (!bl.targetChapterId) return `<div id="vbl-${bl.id}" style="font-size:11px;color:var(--text3);padding:4px 8px;border:1px dashed var(--border);border-radius:3px;display:inline-block">🔗 章ジャンプ（未設定）</div>`;
+      const targetCh = (s.chapters||[]).find(c => c.id === bl.targetChapterId);
+      const targetBl = bl.targetBlockId ? (targetCh?.blocks||[]).find(b => b.id === bl.targetBlockId) : null;
+      const chLabel  = esc(targetCh?.title || '（章名未設定）');
+      const blLabel  = targetBl ? esc(targetBl.body||'') : '';
+      const btnLabel = bl.label || (blLabel ? blLabel : chLabel);
+      return `<div id="vbl-${bl.id}">
+        <button class="preview-jump" onclick="jumpToBlock('${bl.targetChapterId}','${bl.targetBlockId||''}')">
+          <span class="jump-arrow">🔗</span>
+          <span>${esc(btnLabel)}</span>
+          <span class="jump-chapter">→ ${chLabel}${blLabel&&blLabel!==btnLabel?' ／ '+blLabel:''}</span>
+        </button>
+      </div>`;
     }
     return '';
   }).join('');
@@ -7157,6 +7229,95 @@ function applyRuby() {
 }
 
 // ─── ブロック操作 ───
+function insertJumpBlock() {
+  const s = getCurrentScenario();
+  const ch = s.chapters.find(c => c.id === state.currentChapter);
+  if (!ch) return;
+  if (!ch.blocks) ch.blocks = [];
+  ch.blocks.push({ id: uid(), type: 'jump', label: '', targetChapterId: '', targetBlockId: '' });
+  save();
+  renderChContent(s);
+  setTimeout(() => {
+    const pane = document.getElementById('chEditPane');
+    if (pane) pane.scrollTop = pane.scrollHeight;
+  }, 60);
+}
+
+function updateJumpTarget(chId, blId, field, val) {
+  const s = getCurrentScenario();
+  const ch = s.chapters.find(c => c.id === chId);
+  if (!ch) return;
+  const bl = ch.blocks.find(b => b.id === blId);
+  if (!bl) return;
+  if (field === 'chapter') {
+    bl.targetChapterId = val;
+    bl.targetBlockId   = '';
+  } else {
+    bl.targetBlockId = val;
+  }
+  save();
+  // スクロール位置を保持したまま部分更新
+  const blockEl = document.getElementById(`block-${blId}`);
+  if (!blockEl) return;
+  const targetCh     = (s.chapters||[]).find(c => c.id === bl.targetChapterId);
+  const targetBlocks = targetCh
+    ? (targetCh.blocks||[]).filter(b => b.type==='heading'||b.type==='subheading')
+    : [];
+  const targetBlk = bl.targetBlockId ? targetBlocks.find(b => b.id === bl.targetBlockId) : null;
+  if (field === 'chapter') {
+    const existingSel = blockEl.querySelector('.jump-block-select');
+    if (existingSel) existingSel.parentElement.remove();
+    if (targetCh) {
+      const chRow = blockEl.querySelector('.jump-chapter-row');
+      const newRow = document.createElement('div');
+      newRow.style.cssText = 'display:flex;align-items:center;gap:8px';
+      newRow.innerHTML = `<div style="font-size:11px;color:var(--text3);flex-shrink:0">見出し（任意）：</div>
+        <select class="jump-block-select" onchange="updateJumpTarget('${chId}','${blId}','block',this.value)"
+          style="flex:1;font-size:12px;padding:3px 6px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);border-radius:3px">
+          <option value="">── 章の先頭 ──</option>
+          ${targetBlocks.map(b => `<option value="${b.id}">${b.type==='heading'?'▶':'　▷'} ${esc(b.body||'（テキストなし）')}</option>`).join('')}
+        </select>`;
+      if (chRow) chRow.after(newRow);
+    }
+  }
+  let previewRow = blockEl.querySelector('.jump-preview-row');
+  if (bl.targetChapterId) {
+    const chLabel = esc(targetCh?.title || '（章名未設定）');
+    const blLabel = targetBlk ? esc(targetBlk.body||'') : '';
+    const txt = `🔗 → ${chLabel}${bl.targetBlockId && blLabel ? ' ／ '+blLabel : '（先頭）'}`;
+    if (previewRow) { previewRow.textContent = txt; }
+    else {
+      previewRow = document.createElement('div');
+      previewRow.className = 'jump-preview-row';
+      previewRow.style.cssText = 'font-size:11px;color:var(--accent2);padding:4px 8px;background:var(--bg3);border-radius:3px';
+      previewRow.textContent = txt;
+      blockEl.querySelector('.block-body')?.appendChild(previewRow);
+    }
+  } else { previewRow?.remove(); }
+}
+
+function jumpToBlock(chapterId, blockId) {
+  if (!chapterId) return;
+  const s = getCurrentScenario();
+  const ch = (s.chapters||[]).find(c => c.id === chapterId);
+  if (!ch) return;
+  state.currentChapter = chapterId;
+  chapterMode = 'view';
+  renderChContent(s);
+  renderChTabBar(s);
+  if (blockId) {
+    setTimeout(() => {
+      const el = document.getElementById(`vbl-${blockId}`);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 120);
+  } else {
+    setTimeout(() => {
+      const pane = document.getElementById('chContent');
+      if (pane) pane.scrollTop = 0;
+    }, 120);
+  }
+}
+
 function insertBlock(type) {
   const s = getCurrentScenario();
   const ch = s.chapters.find(c => c.id === state.currentChapter);
