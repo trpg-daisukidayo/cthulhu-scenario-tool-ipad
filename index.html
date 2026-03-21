@@ -4957,6 +4957,7 @@ let state = {
 };
 
 let rsOpenSections = { investigators: true, events: true, npc: true, creature: true, refs: true };
+let currentRsTab = 'list'; // 右サイドバーのアクティブタブ
 let rsActiveItem = null;
 let rsEventExpanded = new Set(); // 右サイドバーで展開中のイベントID
 let infoMode = 'view';
@@ -5388,6 +5389,9 @@ function renderRightSidebar() {
   const s = getCurrentScenario();
   if (!s) return;
   renderRsList(s);
+  // フロータブが表示中なら再描画
+  const flowPane = document.getElementById('rsPane-flow');
+  if (flowPane && flowPane.style.display !== 'none') renderFlowchart(false);
 }
 
 function renderRsList(s) {
@@ -7017,6 +7021,7 @@ function rubyToHtml(str, scenario) {
   const skillPlaceholders = [];
   s = s.replace(/〈([^〉\n]+?)〉/g, (_, skill) => {
     const idx = skillPlaceholders.length;
+    const skillEsc = skill.replace(/"/g,'&quot;').replace(/'/g,"\\'");
     skillPlaceholders.push(`<span class="ch-skill" data-skill="${skill.replace(/"/g,'&quot;')}" onmouseenter="showSkillTooltip(event,'${skillEsc}')" onmouseleave="hideSkillTooltip()" onclick="_skillTap(event,'${skillEsc}')">〈${skill}〉</span>`);
     return `\x00SKILL${idx}\x00`;
   });
