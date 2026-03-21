@@ -2418,7 +2418,285 @@
     .right-sidebar { display: none; }
   }
 
-  /* ═══ LIBRARY ═══ */
+  /* ═══ RIGHT SIDEBAR TABS ═══ */
+  .rs-tab-header {
+    display: flex;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--panel2);
+  }
+  .rs-tab-btn {
+    flex: 1;
+    padding: 7px 4px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--text3);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+    user-select: none;
+    letter-spacing: 0.5px;
+  }
+  .rs-tab-btn:hover { color: var(--text2); background: var(--bg3); }
+  .rs-tab-btn.active { color: var(--accent3); border-bottom-color: var(--accent2); }
+  .rs-pane { display: flex; flex-direction: column; flex: 1 1 0; min-height: 0; overflow: hidden; }
+
+  /* ═══ FLOWCHART ═══ */
+  .fc-toolbar {
+    display: flex;
+    gap: 3px;
+    padding: 5px 6px;
+    background: var(--panel2);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    flex-wrap: wrap;
+  }
+  .fc-tool-btn {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    color: var(--text2);
+    font-size: 10px;
+    padding: 3px 7px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.1s, color 0.1s;
+    white-space: nowrap;
+  }
+  .fc-tool-btn:hover { background: var(--panel); color: var(--accent3); border-color: var(--accent); }
+  .fc-tool-btn.active { background: var(--accent); color: #fff; border-color: var(--accent2); }
+  .fc-toolbar-sep { width: 1px; background: var(--border2); margin: 2px 2px; flex-shrink: 0; }
+  /* 編集モードトグルボタン */
+  .fc-mode-btn { font-weight: 600; letter-spacing: 0.3px; }
+  .fc-mode-btn.edit-mode { background: #1a2a1a; color: #70d080; border-color: #2a6a3a; }
+  .fc-mode-btn.edit-mode:hover { background: #243424; }
+  /* 範囲選択矩形 */
+  .fc-range-rect { fill: rgba(80,120,200,0.08); stroke: #5080c8; stroke-width: 1; stroke-dasharray: 4,2; pointer-events: none; }
+  /* 複数選択ハイライト */
+  .fc-node-multi-sel rect, .fc-node-multi-sel polygon { stroke: #60a0e8 !important; stroke-width: 2 !important; }
+  .fc-canvas-wrap {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow: hidden;
+    position: relative;
+    background: var(--bg);
+    background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+    background-size: 20px 20px;
+    cursor: grab;
+  }
+  .fc-canvas-wrap.fc-edit-cursor { cursor: default; }
+  .fc-canvas-wrap.fc-panning { cursor: grabbing; }
+  .fc-svg {
+    display: block;
+    cursor: default;
+    user-select: none;
+  }
+  .fc-empty {
+    display: none;
+    padding: 20px;
+    text-align: center;
+    font-size: 11px;
+    color: var(--text3);
+    font-style: italic;
+  }
+  /* ノードスタイル */
+  .fc-node { cursor: pointer; }
+  .fc-node:hover .fc-node-body { filter: brightness(1.3); }
+  .fc-node-label {
+    font-size: 11px;
+    fill: var(--text, #d4c9b0);
+    pointer-events: none;
+    dominant-baseline: middle;
+    text-anchor: middle;
+  }
+  .fc-node-label-sub {
+    font-size: 9px;
+    fill: #8b6914;
+    pointer-events: none;
+    dominant-baseline: middle;
+    text-anchor: middle;
+  }
+  .fc-edge-label {
+    font-size: 9px;
+    fill: #a09880;
+    dominant-baseline: middle;
+    text-anchor: middle;
+    pointer-events: none;
+  }
+  /* エッジ編集用ドットハンドル */
+  .fc-edge-hit {
+    stroke: transparent;
+    stroke-width: 10;
+    fill: none;
+    cursor: pointer;
+  }
+  .fc-edge-hit:hover + .fc-edge-line { stroke: var(--accent3); }
+  /* ドラッグ中 */
+  .fc-dragging { cursor: grabbing !important; }
+
+  /* ═══ FLOWCHART MODAL ═══ */
+  .fc-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .fc-modal {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    width: 860px;
+    max-width: 96vw;
+    height: 600px;
+    max-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.8);
+  }
+  .fc-modal-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--panel2);
+    border-radius: 6px 6px 0 0;
+    flex-shrink: 0;
+  }
+  .fc-modal-title {
+    flex: 1;
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--accent2);
+  }
+  .fc-modal-body {
+    flex: 1 1 0;
+    min-height: 0;
+    position: relative;
+    overflow: auto;
+    background: var(--bg);
+    background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+  .fc-modal-toolbar {
+    display: flex;
+    gap: 4px;
+    padding: 5px 10px;
+    background: var(--panel2);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  /* ノード・エッジ編集パネル（下部固定） */
+  .fc-info-bar {
+    flex-shrink: 0;
+    padding: 4px 8px;
+    font-size: 10px;
+    color: var(--text3);
+    background: var(--panel2);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .fc-info-hint { font-style: italic; flex: 1; text-align: center; }
+  .fc-info-bar.edge-mode { background: #0d1a20; border-top-color: #2a7a9a; }
+  .fc-info-bar.edge-mode .fc-info-hint { color: #60c0e0; }
+
+  .fc-bottom-panel {
+    flex-shrink: 0;
+    background: var(--panel);
+    border-top: 1px solid var(--border2);
+    padding: 8px 10px;
+    font-size: 11px;
+    color: var(--text2);
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  .fc-bp-title {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--accent2);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .fc-bp-close {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: var(--text3);
+    cursor: pointer;
+    font-size: 12px;
+    padding: 0 2px;
+    line-height: 1;
+  }
+  .fc-bp-close:hover { color: var(--text); }
+  .fc-bp-row { margin-bottom: 6px; }
+  .fc-bp-row label { display: block; font-size: 10px; color: var(--text3); margin-bottom: 2px; }
+  .fc-bp-row input, .fc-bp-row select {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    font-size: 11px;
+    padding: 3px 5px;
+    border-radius: 3px;
+  }
+  .fc-bp-btns { display: flex; gap: 4px; margin-top: 8px; }
+  .fc-bp-del { background: var(--red); border: none; color: #fff; font-size: 10px; padding: 4px 8px; border-radius: 3px; cursor: pointer; flex-shrink: 0; }
+  .fc-bp-del:hover { background: var(--red2); }
+
+  /* 旧absoluteパネル（モーダル用に残す） */
+  .fc-edit-panel {
+    position: absolute;
+    top: 8px; right: 8px;
+    background: var(--panel);
+    border: 1px solid var(--border2);
+    border-radius: 5px;
+    padding: 10px;
+    width: 200px;
+    z-index: 10;
+    font-size: 11px;
+    color: var(--text2);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  }
+  .fc-edit-panel-title {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--accent2);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .fc-edit-row { margin-bottom: 6px; }
+  .fc-edit-row label { display: block; font-size: 10px; color: var(--text3); margin-bottom: 2px; }
+  .fc-edit-row input, .fc-edit-row select {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    font-size: 11px;
+    padding: 3px 5px;
+    border-radius: 3px;
+  }
+  .fc-edit-row-btns { display: flex; gap: 4px; margin-top: 6px; }
+  .fc-edit-ok { flex: 1; background: var(--accent); border: none; color: #fff; font-size: 10px; padding: 4px; border-radius: 3px; cursor: pointer; }
+  .fc-edit-ok:hover { background: var(--accent2); }
+  .fc-edit-del { background: var(--red); border: none; color: #fff; font-size: 10px; padding: 4px 7px; border-radius: 3px; cursor: pointer; }
+  .fc-edit-del:hover { background: var(--red2); }
+
+
+    /* ═══ LIBRARY ═══ */
   .lib-section {
     border-top: 1px solid var(--border);
     flex-shrink: 0;
@@ -4406,15 +4684,78 @@
 
   <!-- RIGHT SIDEBAR -->
   <div class="right-sidebar" id="rightSidebar">
-    <!-- プレビューパネル -->
-    <div class="rs-preview" id="rsPreview"></div>
-    <!-- リスト -->
-    <div class="rs-list-area" id="rsListArea">
-      <div class="rs-empty" style="padding:16px;text-align:center;font-size:11px">
-        シナリオを選択すると<br>NPC・生物・資料が表示されます
+    <!-- サイドバータブヘッダー -->
+    <div class="rs-tab-header">
+      <div class="rs-tab-btn active" id="rsTab-list" onclick="switchRsTab('list')">📋 一覧</div>
+      <div class="rs-tab-btn" id="rsTab-flow" onclick="switchRsTab('flow')">🗺 フロー</div>
+    </div>
+    <!-- プレビューパネル（一覧タブ内） -->
+    <div id="rsPane-list" class="rs-pane" style="display:flex;flex-direction:column;flex:1 1 0;min-height:0;overflow:hidden;">
+      <div class="rs-preview" id="rsPreview"></div>
+      <!-- リスト -->
+      <div class="rs-list-area" id="rsListArea">
+        <div class="rs-empty" style="padding:16px;text-align:center;font-size:11px">
+          シナリオを選択すると<br>NPC・生物・資料が表示されます
+        </div>
       </div>
     </div>
-  </div>
+    <!-- フローチャートパネル -->
+    <div id="rsPane-flow" class="rs-pane" style="display:none;flex-direction:column;flex:1 1 0;min-height:0;overflow:hidden;">
+      <div class="fc-toolbar">
+        <button class="fc-tool-btn fc-mode-btn" id="fcEditModeBtn" onclick="fcToggleEditMode()" title="編集モード切替">👁 閲覧</button>
+        <div class="fc-toolbar-sep"></div>
+        <div id="fcEditTools" style="display:none;contents">
+          <button class="fc-tool-btn" id="fcUndoBtn" onclick="fcUndo()" title="元に戻す (Ctrl+Z)" style="opacity:0.4" disabled>↩</button>
+          <button class="fc-tool-btn" id="fcRedoBtn" onclick="fcRedo()" title="やり直す (Ctrl+Y)" style="opacity:0.4" disabled>↪</button>
+          <div class="fc-toolbar-sep"></div>
+          <button class="fc-tool-btn" id="fcCopyBtn" onclick="fcCopy()" title="コピー (Ctrl+C)">⎘</button>
+          <button class="fc-tool-btn" id="fcPasteBtn" onclick="fcPaste()" title="貼り付け (Ctrl+V)">⎙</button>
+          <div class="fc-toolbar-sep"></div>
+          <button class="fc-tool-btn" onclick="fcAutoLayout()" title="自動整列">⚡ 整列</button>
+          <button class="fc-tool-btn" onclick="fcAddNode()" title="ノード追加">＋ ノード</button>
+          <button class="fc-tool-btn" onclick="fcAddGroup()" title="グループ枠追加">⬜ グループ</button>
+          <button class="fc-tool-btn" id="fcEdgeBtn" onclick="fcAddEdge()" title="接続追加">↗ 接続</button>
+          <div class="fc-toolbar-sep"></div>
+          <button class="fc-tool-btn" id="fcSnapBtn" onclick="fcToggleSnap()" title="グリッドスナップ ON/OFF">⊞ snap</button>
+          <div class="fc-toolbar-sep"></div>
+          <button class="fc-tool-btn" onclick="fcAlign('left',false)"   title="左揃え">⬛←</button>
+          <button class="fc-tool-btn" onclick="fcAlign('right',false)"  title="右揃え">→⬛</button>
+          <button class="fc-tool-btn" onclick="fcAlign('top',false)"    title="上揃え">⬛↑</button>
+          <button class="fc-tool-btn" onclick="fcAlign('bottom',false)" title="下揃え">↓⬛</button>
+          <button class="fc-tool-btn" onclick="fcAlign('distH',false)"  title="水平均等">⇿</button>
+          <button class="fc-tool-btn" onclick="fcAlign('distV',false)"  title="垂直均等">⇳</button>
+        </div>
+        <button class="fc-tool-btn" onclick="openFcModal()" title="拡大表示">⛶</button>
+      </div>
+      <div class="fc-canvas-wrap" id="fcCanvasWrap" onclick="fcBgClick(event,false)" onmousedown="fcCanvasMousedown(event,false)" onwheel="fcOnWheel(event,false)">
+        <svg id="fcSvg" class="fc-svg" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+          <defs>
+            <marker id="fc-arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#8b6914"/>
+            </marker>
+            <marker id="fc-arrow-dash" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#6b5040"/>
+            </marker>
+            <marker id="fc-arrow-modal" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#8b6914"/>
+            </marker>
+            <marker id="fc-arrow-dash-modal" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#6b5040"/>
+            </marker>
+          </defs>
+          <g id="fcViewport">
+            <g id="fcGroupLayer"></g>
+            <g id="fcEdgeLayer"></g>
+            <g id="fcNodeLayer"></g>
+            <g id="fcSelectLayer"></g>
+          </g>
+        </svg>
+      </div>
+      <div class="fc-empty" id="fcEmpty">章を追加するとフローが表示されます</div>
+      <!-- 固定編集パネル（下部） -->
+      <div class="fc-info-bar" id="fcInfoBar">
+        <span class="fc-info-hint">クリック: ジャンプ　右クリック: 編集</span>
+        <span class="fc-zoom-label" id="fcZoomLabel" style="margin-left:auto;color:var(--text3);font-size:9px;cursor:pointer" onclick="fcResetView(false)" title="ダブルクリックでリセット">100%</span>
 
   </div>
 </div>
@@ -5310,8 +5651,8 @@ function rsSelectItem(type, id) {
   rsActiveItem = { type, id };
   renderRsList(getCurrentScenario());
   renderRsPreview(type, id);
-  // 右サイドバーが閉じていれば開く
   openRightSidebar();
+  switchRsTab('list');
 }
 
 function renderRsPreview(type, id) {
@@ -7068,10 +7409,11 @@ function insertLink(type, id) {
 function chLinkClick(type, id) {
   if (type === 'rule') {
     renderRsRulePreview(id);
-    openRightSidebar();
   } else {
     rsSelectItem(type, id);
   }
+  openRightSidebar();
+  switchRsTab('list');
 }
 
 function setChapterMode(mode) {
@@ -10365,6 +10707,9 @@ function showSkillDetail(skillName) {
   const preview = document.getElementById('rsPreview');
   if (!preview) return;
 
+  openRightSidebar();
+  switchRsTab('list');
+
   // 技能グループ判定
   const skillGroup = (state.skillGroups||[]).find(g => g.name === skillName);
   if (skillGroup) {
@@ -11156,6 +11501,1690 @@ function esc(str) {
   if (!str) return '';
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+
+// RIGHT SIDEBAR TABS
+// ═══════════════════════════════════════════════
+
+function switchRsTab(tab) {
+  currentRsTab = tab;
+  ['list','flow'].forEach(t => {
+    const btn = document.getElementById('rsTab-' + t);
+    const pane = document.getElementById('rsPane-' + t);
+    if (btn)  { btn.classList.toggle('active', t === tab); }
+    if (pane) { pane.style.display = t === tab ? 'flex' : 'none'; }
+  });
+  if (tab === 'flow') renderFlowchart();
+}
+
+// ═══════════════════════════════════════════════
+// FLOWCHART
+// ═══════════════════════════════════════════════
+
+// ─── ドラッグ状態 ───
+let fcDrag = null;
+let fcEdgeMode = false;
+let fcEdgeFrom = null;
+let fcModalOpen = false;
+let fcSelectedItem = null;
+let fcSelectedItems = new Set();
+let fcEditMode = false;
+let fcSnapGrid = true;
+const FC_GRID = 20;
+let fcRangeDrag = null;
+
+// ─── Undo/Redo ───
+const FC_HISTORY_MAX = 30;
+let fcUndoStack = []; // JSON文字列スタック
+let fcRedoStack = [];
+let fcClipboard = null; // コピーしたノード群 [{ ...nodeData }]
+
+// ─── ビュー（ズーム・パン） ───
+const FC_ZOOM_MIN = 0.2, FC_ZOOM_MAX = 4;
+let fcView = { zoom: 1, panX: 0, panY: 0 };
+let fcViewModal = { zoom: 1, panX: 0, panY: 0 };
+
+// ─── ノード種別定義 ───
+const FC_NODE_TYPES = {
+  rect:       { label:'章（通常）',    rx:4,  fill:'#1a1a28', stroke:'#4a4a70', w:104, h:36 },
+  rounded:    { label:'章（導入/結末）',rx:20, fill:'#101820', stroke:'#2a5a7a', w:104, h:36 },
+  diamond:    { label:'条件分岐',      rx:4,  fill:'#1a1008', stroke:'#7a5a10', w:90,  h:44 },
+  event:      { label:'イベント',      rx:4,  fill:'#1a1218', stroke:'#5a2a4a', w:104, h:36 },
+  heading:    { label:'大見出し',      rx:3,  fill:'#0e1a0e', stroke:'#2a6a3a', w:96,  h:28 },
+  subheading: { label:'小見出し',      rx:3,  fill:'#0e100e', stroke:'#1a4a28', w:84,  h:24 },
+  text:       { label:'メモ',          rx:0,  fill:'transparent', stroke:'transparent', w:96, h:30 },
+  group:      { label:'グループ枠',    rx:6,  fill:'transparent', stroke:'#5a5a30', w:200, h:140 },
+};
+const FC_NODE_W  = 104;
+const FC_NODE_H  = 36;
+const FC_DIAMOND_W = 90;
+const FC_DIAMOND_H = 44;
+
+// ─── フローデータ取得/初期化 ───
+function getFcData() {
+  const s = getCurrentScenario();
+  if (!s) return null;
+  if (!s.flowchart) {
+    s.flowchart = { nodes: [], edges: [] };
+  }
+  return s.flowchart;
+}
+
+// ─── Undo/Redo: 履歴を保存してからsave() ───
+function fcPushHistory() {
+  const fc = getFcData(); if (!fc) return;
+  const snap = JSON.stringify({ nodes: fc.nodes, edges: fc.edges });
+  // 直前と同じなら積まない
+  if (fcUndoStack.length > 0 && fcUndoStack[fcUndoStack.length - 1] === snap) return;
+  fcUndoStack.push(snap);
+  if (fcUndoStack.length > FC_HISTORY_MAX) fcUndoStack.shift();
+  fcRedoStack = []; // 新操作でRedoスタックをクリア
+  fcUpdateUndoUI();
+}
+
+function fcUndo() {
+  if (fcUndoStack.length === 0) return;
+  const fc = getFcData(); if (!fc) return;
+  // 現在状態をRedoスタックに積む
+  fcRedoStack.push(JSON.stringify({ nodes: fc.nodes, edges: fc.edges }));
+  const prev = fcUndoStack.pop();
+  const data = JSON.parse(prev);
+  fc.nodes = data.nodes;
+  fc.edges = data.edges;
+  save();
+  fcSelectedItem = null;
+  fcSelectedItems.clear();
+  fcUpdateUndoUI();
+  renderFlowchart(false);
+  if (fcModalOpen) renderFlowchart(true);
+}
+
+function fcRedo() {
+  if (fcRedoStack.length === 0) return;
+  const fc = getFcData(); if (!fc) return;
+  fcUndoStack.push(JSON.stringify({ nodes: fc.nodes, edges: fc.edges }));
+  const next = fcRedoStack.pop();
+  const data = JSON.parse(next);
+  fc.nodes = data.nodes;
+  fc.edges = data.edges;
+  save();
+  fcSelectedItem = null;
+  fcSelectedItems.clear();
+  fcUpdateUndoUI();
+  renderFlowchart(false);
+  if (fcModalOpen) renderFlowchart(true);
+}
+
+function fcUpdateUndoUI() {
+  const undoBtn = document.getElementById('fcUndoBtn');
+  const redoBtn = document.getElementById('fcRedoBtn');
+  if (undoBtn) undoBtn.disabled = fcUndoStack.length === 0;
+  if (redoBtn) redoBtn.disabled = fcRedoStack.length === 0;
+  if (undoBtn) undoBtn.style.opacity = fcUndoStack.length === 0 ? '0.4' : '1';
+  if (redoBtn) redoBtn.style.opacity = fcRedoStack.length === 0 ? '0.4' : '1';
+}
+
+// ─── コピー/ペースト ───
+function fcCopy() {
+  const fc = getFcData(); if (!fc) return;
+  // 複数選択 or 単体選択のノードをコピー
+  const ids = fcSelectedItems.size > 0
+    ? [...fcSelectedItems]
+    : fcSelectedItem?.type === 'node' ? [fcSelectedItem.id] : [];
+  if (ids.length === 0) return;
+  fcClipboard = ids
+    .map(id => fc.nodes.find(n => n.id === id))
+    .filter(Boolean)
+    .map(n => JSON.parse(JSON.stringify(n))); // ディープコピー
+  fcUpdateUndoUI();
+  // 視覚フィードバック
+  const ib = document.getElementById('fcInfoBar');
+  if (ib && ib.style.display !== 'none') {
+    const orig = ib.innerHTML;
+    ib.innerHTML = `<span class="fc-info-hint" style="color:#70d080">✓ ${fcClipboard.length}ノードをコピーしました</span>`;
+    setTimeout(() => { ib.innerHTML = orig; }, 1200);
+  }
+}
+
+function fcPaste() {
+  if (!fcClipboard || fcClipboard.length === 0) return;
+  const fc = getFcData(); if (!fc) return;
+  fcPushHistory();
+  const OFFSET = 24;
+  const newIds = [];
+  fcClipboard.forEach(orig => {
+    const newNode = JSON.parse(JSON.stringify(orig));
+    newNode.id = 'n_' + uid();
+    newNode.x = (orig.x || 100) + OFFSET;
+    newNode.y = (orig.y || 100) + OFFSET;
+    // jumpTarget・chapterId等は引き継がない（独立したノードとして追加）
+    delete newNode.chapterId;
+    delete newNode.headingId;
+    delete newNode.jumpTarget;
+    fc.nodes.push(newNode);
+    newIds.push(newNode.id);
+  });
+  // 貼り付けたノードを選択状態に
+  fcSelectedItems = new Set(newIds);
+  fcSelectedItem = null;
+  save();
+  renderFlowchart(false);
+  if (fcModalOpen) renderFlowchart(true);
+  fcShowAlignPanel(false);
+}
+
+// ─── 章からノードを自動同期 ───
+// ─── 旧データ移行（chapterId → jumpTarget） ───
+function fcMigrateData() {
+  const fc = getFcData(); if (!fc) return;
+  let changed = false;
+  fc.nodes.forEach(n => {
+    // 旧形式: chapterId/headingId → jumpTarget に移行
+    if ((n.chapterId || n.headingId) && !n.jumpTarget) {
+      n.jumpTarget = {
+        chapterId:  n.chapterId  || null,
+        headingId:  n.headingId  || null,
+      };
+      // 旧フィールドは残してもよいが種別は全てrectに統一（旧見出し型は保持）
+      changed = true;
+    }
+  });
+  if (changed) save();
+}
+
+// ─── ノードラベル ───
+function fcNodeLabel(node) {
+  // 明示ラベルが設定されていればそれを使う
+  if (node.label) return node.label;
+  // jumpTargetがあれば対象の章・見出しタイトルをデフォルト表示
+  const jt = node.jumpTarget;
+  if (jt?.chapterId) {
+    const s = getCurrentScenario();
+    const ch = (s?.chapters || []).find(c => c.id === jt.chapterId);
+    if (jt.headingId && ch) {
+      const bl = (ch.blocks || []).find(b => b.id === jt.headingId);
+      return bl?.title || bl?.body?.slice(0,16) || ch?.title || '（見出し）';
+    }
+    return ch?.title || '（無題）';
+  }
+  if (node.type === 'group') return 'グループ';
+  return '（ノード）';
+}
+
+// ─── テキスト改行 → tspan列生成 ───
+function fcTextLines(label, maxW, fontSize) {
+  // \n で分割、各行を maxW/fontSize 文字でさらに折り返し
+  const charsPerLine = Math.max(4, Math.floor(maxW / (fontSize * 0.62)));
+  const lines = [];
+  for (const raw of label.split('\n')) {
+    if (raw === '') { lines.push(''); continue; }
+    for (let i = 0; i < raw.length; i += charsPerLine) {
+      lines.push(raw.slice(i, i + charsPerLine));
+    }
+  }
+  return lines.length ? lines : [''];
+}
+
+function fcTspanHtml(lines, x, baseY, lineH, fill, fontSize, style='') {
+  return lines.map((l, i) =>
+    `<text x="${x}" y="${baseY + i * lineH}" style="font-size:${fontSize}px;fill:${fill};dominant-baseline:middle;text-anchor:middle;pointer-events:none;${style}">${esc(l)}</text>`
+  ).join('');
+}
+
+// ─── SVGノード描画ヘルパー ───
+function fcNodeSvg(node, isModal) {
+  const def = FC_NODE_TYPES[node.type] || FC_NODE_TYPES.rect;
+  const label = fcNodeLabel(node);
+  const x = node.x, y = node.y;
+  const scale = isModal ? 1 : 0.88;
+  const fontSize = isModal ? 11 : 10;
+  const lineH = fontSize + 3;
+
+  // サイズ: node.w/h を優先、なければ def.w/h
+  const baseW = node.w || def.w || FC_NODE_W;
+  const baseH = node.h || def.h || FC_NODE_H;
+  const nW = baseW * scale;
+  const nH = baseH * scale;
+  const rx  = def.rx * scale;
+
+  // ハイライト: 単一選択 or 複数選択
+  const isSelected  = fcSelectedItem?.id === node.id || fcSelectedItems.has(node.id);
+  const isEdgeFrom  = fcEdgeFrom === node.id;
+  const stroke  = isEdgeFrom ? '#60d0ff' : isSelected ? '#e8c56a' : (node.color || def.stroke);
+  const strokeW = (isEdgeFrom || isSelected) ? 2 : 1;
+
+  const hasJump = !!(node.jumpTarget?.chapterId);
+  const clickFn = `fcNodeClick(event,'${node.id}',${isModal})`;
+  const ctxFn   = `fcNodeRightClick(event,'${node.id}',${isModal})`;
+  const dragFn  = `fcNodeDragStart(event,'${node.id}',${isModal})`;
+
+  if (node.type === 'group') return ''; // groupLayerで描画
+
+  // ── ひし形
+  if (node.type === 'diamond') {
+    const dW = nW, dH = nH;
+    const pts = `${x},${y-dH/2} ${x+dW/2},${y} ${x},${y+dH/2} ${x-dW/2},${y}`;
+    const lines = fcTextLines(label, dW * 0.7, fontSize);
+    const totalH = lines.length * lineH;
+    const textY = y - totalH/2 + lineH/2;
+    return `<g class="fc-node" data-id="${node.id}" onclick="${clickFn}" oncontextmenu="${ctxFn}" onmousedown="${dragFn}">
+      <polygon points="${pts}" fill="${node.color||def.fill}" stroke="${stroke}" stroke-width="${strokeW}"/>
+      ${fcTspanHtml(lines, x, textY, lineH, '#d4c9b0', fontSize)}
+    </g>`;
+  }
+
+  // ── テキスト（メモ）
+  if (node.type === 'text') {
+    const lines = fcTextLines(label, nW * 0.95, fontSize - 1);
+    const totalH = lines.length * lineH;
+    const textY = y - totalH/2 + lineH/2;
+    return `<g class="fc-node" data-id="${node.id}" onclick="${clickFn}" oncontextmenu="${ctxFn}" onmousedown="${dragFn}">
+      <rect x="${x-nW/2}" y="${y-nH/2}" width="${nW}" height="${nH}" rx="${rx}" fill="transparent" stroke="transparent"/>
+      ${fcTspanHtml(lines, x, textY, lineH, '#a09880', fontSize - 1, 'font-style:italic')}
+    </g>`;
+  }
+
+  // ── 見出し系
+  if (node.type === 'heading' || node.type === 'subheading') {
+    const isH = node.type === 'heading';
+    const fs = isModal ? (isH ? 10 : 9) : (isH ? 9 : 8);
+    const lh = fs + 3;
+    const barW = 3 * scale;
+    const barFill = isH ? '#2a8a4a' : '#1a6a38';
+    const textFill = isH ? '#80c890' : '#60a878';
+    const lines = fcTextLines(label, (nW - barW) * 0.9, fs);
+    const totalH = lines.length * lh;
+    const textY = y - totalH/2 + lh/2;
+    return `<g class="fc-node" data-id="${node.id}" onclick="${clickFn}" oncontextmenu="${ctxFn}" onmousedown="${dragFn}">
+      <rect x="${x-nW/2}" y="${y-nH/2}" width="${nW}" height="${nH}" rx="${rx}" fill="${node.color||def.fill}" stroke="${stroke}" stroke-width="${strokeW}"/>
+      <rect x="${x-nW/2}" y="${y-nH/2}" width="${barW}" height="${nH}" rx="${rx}" fill="${barFill}"/>
+      ${fcTspanHtml(lines, x + barW/2, textY, lh, textFill, fs)}
+    </g>`;
+  }
+
+  // ── 通常ノード (rect / rounded / event)
+  const lines = fcTextLines(label, nW * 0.88, fontSize);
+  const totalH = lines.length * lineH;
+  const textY = y - totalH/2 + lineH/2;
+  return `<g class="fc-node" data-id="${node.id}" onclick="${clickFn}" oncontextmenu="${ctxFn}" onmousedown="${dragFn}">
+    <rect x="${x-nW/2}" y="${y-nH/2}" width="${nW}" height="${nH}" rx="${rx}" fill="${node.color||def.fill}" stroke="${stroke}" stroke-width="${strokeW}"/>
+    ${fcTspanHtml(lines, x, textY, lineH, '#d4c9b0', fontSize)}
+  </g>`;
+}
+
+// ─── ノード境界上の接続点を返す ───
+// ─── ノード境界上の接続点 ───
+function fcNodeEdgePoint(node, dx, dy, scale) {
+  const def = FC_NODE_TYPES[node.type] || FC_NODE_TYPES.rect;
+  const len = Math.sqrt(dx*dx + dy*dy) || 1;
+  const nx = dx/len, ny = dy/len;
+  if (node.type === 'group') {
+    const cx = node.x + (node.w||def.w)*scale/2;
+    const cy = node.y + (node.h||def.h)*scale/2;
+    const hw = (node.w||def.w)*scale/2, hh = (node.h||def.h)*scale/2;
+    const t = Math.min(Math.abs(hw/(nx||0.001)), Math.abs(hh/(ny||0.001)));
+    return { x: cx + nx*Math.min(t,hw), y: cy + ny*Math.min(t,hh) };
+  }
+  if (node.type === 'diamond') {
+    const hw = (node.w||def.w)*scale/2, hh = (node.h||def.h)*scale/2;
+    const r = 1 / Math.sqrt((nx*nx)/(hw*hw) + (ny*ny)/(hh*hh));
+    return { x: node.x + nx*r, y: node.y + ny*r };
+  }
+  const hw = (node.w||def.w)*scale/2 + 2;
+  const hh = (node.h||def.h)*scale/2 + 2;
+  const t = Math.min(Math.abs(hw/(nx||0.001)), Math.abs(hh/(ny||0.001)));
+  return { x: node.x + nx*Math.min(t,hw), y: node.y + ny*Math.min(t,hh) };
+}
+
+// グループノードの中心座標
+function fcNodeCenter(node) {
+  const def = FC_NODE_TYPES[node.type] || FC_NODE_TYPES.rect;
+  if (node.type === 'group') {
+    return { x: node.x + (node.w||def.w)/2, y: node.y + (node.h||def.h)/2 };
+  }
+  return { x: node.x, y: node.y };
+}
+
+// ─── 接続点：routing指定に対応 ───
+// ─── 辺の中心座標を返す ───
+// side: 'top'|'bottom'|'left'|'right'
+function fcSidePoint(node, side, scale) {
+  const def = FC_NODE_TYPES[node.type] || FC_NODE_TYPES.rect;
+  const fc = fcNodeCenter(node);
+  const hw = (node.w || def.w || FC_NODE_W) * scale / 2;
+  const hh = (node.h || def.h || FC_NODE_H) * scale / 2;
+  if (side === 'right')  return { x: fc.x + hw, y: fc.y };
+  if (side === 'left')   return { x: fc.x - hw, y: fc.y };
+  if (side === 'bottom') return { x: fc.x, y: fc.y + hh };
+  if (side === 'top')    return { x: fc.x, y: fc.y - hh };
+  return { x: fc.x, y: fc.y };
+}
+
+// ─── ベジェ制御点：辺から辺への自然な曲線 ───
+function fcSideCurve(sx, sy, fromSide, ex, ey, toSide, scale) {
+  const CURVE = Math.max(40, Math.min(120, Math.sqrt((ex-sx)**2+(ey-sy)**2) * 0.4)) * scale;
+  const dirFrom = { right:[1,0], left:[-1,0], bottom:[0,1], top:[0,-1] }[fromSide] || [0,0];
+  const dirTo   = { right:[1,0], left:[-1,0], bottom:[0,1], top:[0,-1] }[toSide]   || [0,0];
+  return {
+    c1x: sx + dirFrom[0] * CURVE,
+    c1y: sy + dirFrom[1] * CURVE,
+    c2x: ex + dirTo[0]   * CURVE,
+    c2y: ey + dirTo[1]   * CURVE,
+  };
+}
+
+// ─── autoのとき: そのノードに繋がるエッジが最少の辺を選択 ───
+function fcAutoSide(nodeId, allEdges, role) {
+  // role: 'from' or 'to'
+  const counts = { top: 0, bottom: 0, left: 0, right: 0 };
+  allEdges.forEach(e => {
+    if (role === 'from' && e.fromId === nodeId && e.fromSide && e.fromSide !== 'auto')
+      counts[e.fromSide] = (counts[e.fromSide] || 0) + 1;
+    if (role === 'to' && e.toId === nodeId && e.toSide && e.toSide !== 'auto')
+      counts[e.toSide] = (counts[e.toSide] || 0) + 1;
+  });
+  return Object.entries(counts).sort((a,b) => a[1]-b[1])[0][0];
+}
+
+// ─── SVGエッジ描画ヘルパー ───
+function fcEdgeSvg(edge, nodes, isModal, edgeIndex, totalBetweenPair, allEdges) {
+  const fromNode = nodes.find(n => n.id === edge.fromId);
+  const toNode   = nodes.find(n => n.id === edge.toId);
+  if (!fromNode || !toNode) return '';
+
+  const scale = isModal ? 1 : 0.88;
+  const edges = allEdges || [];
+
+  // 始点・終点の辺を決定
+  const fromSide = (!edge.fromSide || edge.fromSide === 'auto')
+    ? fcAutoSide(edge.fromId, edges, 'from')
+    : edge.fromSide;
+  const toSide = (!edge.toSide || edge.toSide === 'auto')
+    ? fcAutoSide(edge.toId, edges, 'to')
+    : edge.toSide;
+
+  const fc1 = fcNodeCenter(fromNode), fc2 = fcNodeCenter(toNode);
+  const dx = fc2.x - fc1.x, dy = fc2.y - fc1.y;
+  const len = Math.sqrt(dx*dx + dy*dy) || 1;
+
+  const isSelf = edge.fromId === edge.toId;
+  const idx = edgeIndex ?? 0;
+  const total = totalBetweenPair ?? 1;
+
+// ─── 折れ線（直角）パス生成 ───
+function fcOrthogonalPath(sx, sy, fromSide, ex, ey, toSide, scale) {
+  const MARGIN = 30 * scale; // ノード外側に最低限出る距離
+
+  // 各辺の「外向き方向」
+  const dir = { right:[1,0], left:[-1,0], bottom:[0,1], top:[0,-1] };
+  const [fdx, fdy] = dir[fromSide] || [1,0];
+  const [tdx, tdy] = dir[toSide]   || [-1,0];
+
+  // 始点・終点からMARGIN分だけ辺方向に伸ばした「アーム先端」
+  const ax = sx + fdx * MARGIN;
+  const ay = sy + fdy * MARGIN;
+  const bx = ex + tdx * MARGIN;
+  const by = ey + tdy * MARGIN;
+
+  const fromH = fromSide === 'left' || fromSide === 'right';
+  const toH   = toSide   === 'left' || toSide   === 'right';
+
+  let pts;
+
+  if (fromH && toH) {
+    // 両方横向き
+    if ((fromSide === 'right' && ex > ax) || (fromSide === 'left' && ex < ax)) {
+      // 始点の方向に終点がある → 中間Xで折れるZ字
+      const midX = (ax + bx) / 2;
+      pts = [[sx,sy],[ax,sy],[midX,sy],[midX,ey],[bx,ey],[ex,ey]];
+    } else {
+      // 同じ方向（left→left / right→right）またはUターン
+      // アーム先端で上下に折り、両ノードの外側を通る
+      const midY = (ay + by) / 2;
+      pts = [[sx,sy],[ax,ay],[ax,midY],[bx,midY],[bx,by],[ex,ey]];
+    }
+  } else if (!fromH && !toH) {
+    // 両方縦向き
+    if ((fromSide === 'bottom' && ey > ay) || (fromSide === 'top' && ey < ay)) {
+      // 始点の方向に終点がある → 中間Yで折れる
+      const midY = (ay + by) / 2;
+      pts = [[sx,sy],[sx,midY],[ex,midY],[ex,ey]];
+    } else {
+      // 同じ方向（top→top / bottom→bottom）またはUターン
+      const midX = (ax + bx) / 2;
+      pts = [[sx,sy],[ax,ay],[midX,ay],[midX,by],[bx,by],[ex,ey]];
+    }
+  } else if (fromH && !toH) {
+    // 横出し → 縦入り: L字（アーム考慮）
+    pts = [[sx,sy],[bx,sy],[bx,ey]];
+  } else {
+    // 縦出し → 横入り: L字（アーム考慮）
+    pts = [[sx,sy],[sx,by],[ex,by]];
+  }
+
+  // 重複点を除去してパス生成
+  const uniq = pts.filter((p,i) => i===0 || p[0]!==pts[i-1][0] || p[1]!==pts[i-1][1]);
+  return 'M' + uniq.map(p => `${Math.round(p[0])},${Math.round(p[1])}`).join(' L');
+}
+
+  const straight = edge.lineType === 'straight';
+  let sx, sy, ex, ey, pathD;
+
+  if (isSelf) {
+    const sp = fcSidePoint(fromNode, 'right', scale);
+    sx = sp.x; sy = sp.y; ex = sp.x; ey = sp.y;
+    const r = 40 * scale;
+    pathD = `M${sx},${sy} C${sx+r},${sy-r*2} ${ex+r*2},${ey+r} ${ex},${ey}`;
+  } else if (edge.fromSide || edge.toSide) {
+    // 辺指定あり
+    const sp = fcSidePoint(fromNode, fromSide, scale);
+    const ep = fcSidePoint(toNode,   toSide,   scale);
+    sx = sp.x; sy = sp.y; ex = ep.x; ey = ep.y;
+    if (straight) {
+      pathD = fcOrthogonalPath(sx, sy, fromSide, ex, ey, toSide, scale);
+    } else {
+      const { c1x, c1y, c2x, c2y } = fcSideCurve(sx, sy, fromSide, ex, ey, toSide, scale);
+      pathD = `M${sx},${sy} C${c1x},${c1y} ${c2x},${c2y} ${ex},${ey}`;
+    }
+  } else {
+    // autoかつ辺指定なし
+    const sp = fcNodeEdgePoint(fromNode,  dx,  dy, scale);
+    const ep = fcNodeEdgePoint(toNode,   -dx, -dy, scale);
+    sx = sp.x; sy = sp.y; ex = ep.x; ey = ep.y;
+    if (straight) {
+      // 辺指定なしの直線: 水平/垂直方向によってL字
+      const isMoreH = Math.abs(dx) >= Math.abs(dy);
+      if (isMoreH) {
+        pathD = `M${sx},${sy} L${ex},${sy} L${ex},${ey}`;
+      } else {
+        pathD = `M${sx},${sy} L${sx},${ey} L${ex},${ey}`;
+      }
+    } else if (total === 1) {
+      pathD = `M${sx},${sy} L${ex},${ey}`;
+    } else {
+      const offset = (idx - (total-1)/2) * 28 * scale;
+      const px = -(dy/len) * offset, py = (dx/len) * offset;
+      const mx = (sx+ex)/2 + px, my = (sy+ey)/2 + py;
+      pathD = `M${sx},${sy} Q${mx},${my} ${ex},${ey}`;
+    }
+  }
+
+  // ラベル位置
+  const labelOffX = edge.labelOffset?.x || 0;
+  const labelOffY = edge.labelOffset?.y || 0;
+  const lx = (sx+ex)/2 + labelOffX;
+  const ly = (sy+ey)/2 - 7 + labelOffY;
+
+  const isDash = edge.style === 'dashed';
+  const markerId = isModal
+    ? (isDash ? 'fc-arrow-dash-modal' : 'fc-arrow-modal')
+    : (isDash ? 'fc-arrow-dash' : 'fc-arrow');
+  const strokeColor = isDash ? '#6b5040' : '#8b6914';
+  const dashAttr = isDash ? 'stroke-dasharray="5,3"' : '';
+  const isSelected = fcSelectedItem?.type === 'edge' && fcSelectedItem?.id === edge.id;
+  const strokeW = isSelected ? 2.5 : 1.5;
+  const selColor = isSelected ? '#e8c56a' : strokeColor;
+  const clickFn = `fcSelectEdge('${edge.id}',${isModal})`;
+
+  const labelHtml = edge.label
+    ? `<text x="${lx}" y="${ly}" style="font-size:${isModal?10:9}px;fill:#a09880;dominant-baseline:middle;text-anchor:middle;pointer-events:none">${esc(edge.label)}</text>`
+    : '';
+
+  return `<g>
+    <path d="${pathD}" stroke="${selColor}" stroke-width="${strokeW}" fill="none" ${dashAttr} marker-end="url(#${markerId})" style="pointer-events:none"/>
+    <path d="${pathD}" stroke="transparent" stroke-width="12" fill="none" onclick="${clickFn}" style="cursor:pointer;pointer-events:all"/>
+    ${labelHtml}
+  </g>`;
+}
+
+// ─── メインレンダリング ───
+function renderFlowchart(isModal) {
+  const s = getCurrentScenario();
+  if (!s) return;
+  fcMigrateData();
+  const fc = getFcData();
+
+  const svgId        = isModal ? 'fcSvgModal'        : 'fcSvg';
+  const groupLayerId  = isModal ? 'fcGroupLayerModal'  : 'fcGroupLayer';
+  const edgeLayerId   = isModal ? 'fcEdgeLayerModal'   : 'fcEdgeLayer';
+  const nodeLayerId   = isModal ? 'fcNodeLayerModal'   : 'fcNodeLayer';
+  const selectLayerId = isModal ? 'fcSelectLayerModal' : 'fcSelectLayer';
+  const emptyId      = isModal ? 'fcEmptyModal'       : 'fcEmpty';
+  const wrapId       = isModal ? 'fcModalBody'  : 'fcCanvasWrap';
+
+  const svg        = document.getElementById(svgId);
+  const groupLayer  = document.getElementById(groupLayerId);
+  const edgeLayer   = document.getElementById(edgeLayerId);
+  const nodeLayer   = document.getElementById(nodeLayerId);
+  const selectLayer = document.getElementById(selectLayerId);
+  const empty      = document.getElementById(emptyId);
+  const wrap       = document.getElementById(wrapId);
+  if (!svg || !edgeLayer || !nodeLayer) return;
+
+  const nodes = fc.nodes.filter(n => !n.hidden);
+  const edges = fc.edges;
+  const nonGroupNodes = nodes.filter(n => n.type !== 'group');
+
+  if (nonGroupNodes.length === 0 && nodes.filter(n=>n.type==='group').length === 0) {
+    if (empty) empty.style.display = 'block';
+    svg.style.display = 'none';
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+  svg.style.display = 'block';
+
+  const scale = isModal ? 1 : 0.88;
+
+  // ビューポート transform を適用
+  const view = isModal ? fcViewModal : fcView;
+  const viewportId = isModal ? 'fcViewportModal' : 'fcViewport';
+  const viewport = document.getElementById(viewportId);
+  if (viewport) {
+    viewport.setAttribute('transform', `translate(${view.panX},${view.panY}) scale(${view.zoom})`);
+  }
+
+  // グループレイヤー描画
+  if (groupLayer) {
+    groupLayer.innerHTML = nodes
+      .filter(n => n.type === 'group')
+      .map(n => fcGroupSvg(n, isModal))
+      .join('');
+  }
+
+  // エッジ: ペアごとの本数を計算してオフセット制御
+  const pairCount = {};
+  const pairIndex = {};
+  edges.forEach(e => {
+    const key = [e.fromId, e.toId].sort().join('|');
+    pairCount[key] = (pairCount[key] || 0) + 1;
+  });
+  const pairCur = {};
+  edgeLayer.innerHTML = edges.map(e => {
+    const key = [e.fromId, e.toId].sort().join('|');
+    pairCur[key] = (pairCur[key] || 0);
+    const idx = pairCur[key]++;
+    return fcEdgeSvg(e, nodes, isModal, idx, pairCount[key], edges);
+  }).join('');
+  nodeLayer.innerHTML = nonGroupNodes.map(n => fcNodeSvg(n, isModal)).join('');
+  if (selectLayer) selectLayer.innerHTML = '';
+
+  // カーソル: 接続モード > 編集モード > 閲覧モード
+  const wrap2 = document.getElementById(wrapId);
+  if (wrap2) {
+    wrap2.classList.toggle('fc-edit-cursor', fcEditMode || fcEdgeMode);
+  }
+  svg.style.cursor = fcEdgeMode ? 'crosshair' : 'default';
+
+  // ズームラベル更新
+  fcUpdateZoomLabel(isModal);
+}
+
+// ═══ ビュー操作（ズーム・パン） ═══
+
+function fcGetView(isModal) { return isModal ? fcViewModal : fcView; }
+
+function fcUpdateZoomLabel(isModal) {
+  if (isModal) return; // モーダルはラベルなし
+  const label = document.getElementById('fcZoomLabel');
+  if (label) label.textContent = Math.round(fcView.zoom * 100) + '%';
+  // 背景グリッドをズームに追従
+  const wrap = document.getElementById('fcCanvasWrap');
+  if (wrap) {
+    const gs = 20 * fcView.zoom;
+    const ox = fcView.panX % gs, oy = fcView.panY % gs;
+    wrap.style.backgroundSize = `${gs}px ${gs}px`;
+    wrap.style.backgroundPosition = `${ox}px ${oy}px`;
+  }
+}
+
+function fcResetView(isModal) {
+  const v = fcGetView(isModal);
+  v.zoom = 1; v.panX = 0; v.panY = 0;
+  renderFlowchart(isModal);
+}
+
+function fcOnWheel(e, isModal) {
+  e.preventDefault();
+  const v = fcGetView(isModal);
+  const svgId = isModal ? 'fcSvgModal' : 'fcSvg';
+  const svg = document.getElementById(svgId);
+  if (!svg) return;
+  const rect = svg.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+
+  // ズーム量（trackpadのpinchはdeltaY小さい、wheelは大きい）
+  const delta = e.deltaMode === 1 ? e.deltaY * 30 : e.deltaY;
+  const factor = Math.pow(0.998, delta);
+  const newZoom = Math.max(FC_ZOOM_MIN, Math.min(FC_ZOOM_MAX, v.zoom * factor));
+  const scale = newZoom / v.zoom;
+
+  // カーソル位置を中心にズーム（panを補正）
+  v.panX = mx - scale * (mx - v.panX);
+  v.panY = my - scale * (my - v.panY);
+  v.zoom = newZoom;
+
+  // transformだけ更新（再描画なし）
+  const viewportId = isModal ? 'fcViewportModal' : 'fcViewport';
+  const viewport = document.getElementById(viewportId);
+  if (viewport) {
+    viewport.setAttribute('transform', `translate(${v.panX},${v.panY}) scale(${v.zoom})`);
+  }
+  fcUpdateZoomLabel(isModal);
+}
+
+// ─── パン（閲覧モード時の背景ドラッグ） ───
+function fcStartPan(e, isModal) {
+  if (fcEditMode) return; // 編集モードはパンしない
+  if (e.button !== 0) return;
+  const t = e.target;
+  // ノード上のドラッグは無視（閲覧モードではドラッグ無効なので来ないはず）
+  if (t.tagName === 'path' || t.tagName === 'polygon' || t.tagName === 'text') return;
+  if (t.tagName === 'g' && t.closest && t.closest('.fc-node')) return;
+
+  const v = fcGetView(isModal);
+  const startX = e.clientX - v.panX;
+  const startY = e.clientY - v.panY;
+  const wrap = document.getElementById(isModal ? 'fcModalBody' : 'fcCanvasWrap');
+  if (wrap) wrap.classList.add('fc-panning');
+
+  const viewportId = isModal ? 'fcViewportModal' : 'fcViewport';
+  const viewport = document.getElementById(viewportId);
+
+  const onMove = ev => {
+    v.panX = ev.clientX - startX;
+    v.panY = ev.clientY - startY;
+    if (viewport) viewport.setAttribute('transform', `translate(${v.panX},${v.panY}) scale(${v.zoom})`);
+    fcUpdateZoomLabel(isModal);
+  };
+  const onUp = () => {
+    if (wrap) wrap.classList.remove('fc-panning');
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseup', onUp);
+  };
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('mouseup', onUp);
+}
+
+// ─── SVGマウス座標をキャンバス座標に変換（zoom/pan考慮） ───
+function fcSvgToCanvas(e, isModal) {
+  const svgId = isModal ? 'fcSvgModal' : 'fcSvg';
+  const svg = document.getElementById(svgId);
+  if (!svg) return { x: e.clientX, y: e.clientY };
+  const rect = svg.getBoundingClientRect();
+  const v = fcGetView(isModal);
+  return {
+    x: (e.clientX - rect.left - v.panX) / v.zoom,
+    y: (e.clientY - rect.top  - v.panY) / v.zoom,
+  };
+}
+
+// ─── グループ枠描画 ───
+function fcGroupSvg(node, isModal) {
+  const def = FC_NODE_TYPES.group;
+  const scale = isModal ? 1 : 0.88;
+  const nW = (node.w || def.w) * scale;
+  const nH = (node.h || def.h) * scale;
+  const x = node.x, y = node.y; // x,yは左上頂点
+  const rx = def.rx * scale;
+  const isSelected = fcSelectedItem?.id === node.id || fcSelectedItems.has(node.id);
+  const isEdgeFrom = fcEdgeFrom === node.id;
+  const stroke = isEdgeFrom ? '#60d0ff' : isSelected ? '#e8c56a' : (node.color || def.stroke);
+  const strokeW = (isEdgeFrom || isSelected) ? 2 : 1;
+  const label = node.label || 'グループ';
+  const fontSize = isModal ? 10 : 9;
+  const clickFn = `fcNodeClick(event,'${node.id}',${isModal})`;
+  const ctxFn   = `fcNodeRightClick(event,'${node.id}',${isModal})`;
+  const dragFn  = `fcGroupDragStart(event,'${node.id}',${isModal})`;
+  return `<g class="fc-node" data-id="${node.id}" onclick="${clickFn}" oncontextmenu="${ctxFn}" onmousedown="${dragFn}" style="cursor:move">
+    <rect x="${x}" y="${y}" width="${nW}" height="${nH}" rx="${rx}"
+      fill="${node.color||'rgba(60,60,30,0.12)'}" stroke="${stroke}" stroke-width="${strokeW}" stroke-dasharray="6,3"/>
+    <text x="${x+8}" y="${y+fontSize+4}" style="font-size:${fontSize}px;fill:#8a8a50;pointer-events:none;font-family:'Cinzel',serif;letter-spacing:1px">${esc(label)}</text>
+  </g>`;
+}
+
+// ─── グループ追加 ───
+function fcAddGroup() {
+  const fc = getFcData(); if (!fc) return;
+  fcPushHistory();
+  const id = 'g_' + uid();
+  const cx = 60, cy = 60;
+  fc.nodes.push({ id, type: 'group', x: cx, y: cy, w: 200, h: 140, label: 'グループ', color: '' });
+  save();
+  if (fcModalOpen) renderFlowchart(true);
+  renderFlowchart(false);
+}
+
+// ─── 編集モード切替 ───
+function fcToggleEditMode() {
+  fcEditMode = !fcEditMode;
+  // 編集モードをオフにするときはエッジモードも解除
+  if (!fcEditMode) {
+    fcEdgeMode = false;
+    fcEdgeFrom = null;
+    fcSelectedItem = null;
+    const panel = document.getElementById('fcBottomPanel');
+    if (panel) panel.style.display = 'none';
+    const infoBar = document.getElementById('fcInfoBar');
+    if (infoBar) infoBar.style.display = '';
+  }
+  fcUpdateModeUI();
+  renderFlowchart(false);
+  if (fcModalOpen) renderFlowchart(true);
+}
+
+function fcUpdateModeUI() {
+  const btn = document.getElementById('fcEditModeBtn');
+  if (btn) {
+    btn.textContent = fcEditMode ? '✏ 編集中' : '👁 閲覧';
+    btn.classList.toggle('edit-mode', fcEditMode);
+  }
+  const tools = document.getElementById('fcEditTools');
+  if (tools) tools.style.display = fcEditMode ? 'contents' : 'none';
+  const infoBar = document.getElementById('fcInfoBar');
+  if (infoBar && infoBar.style.display !== 'none') {
+    infoBar.className = fcEditMode ? 'fc-info-bar edge-mode' : 'fc-info-bar';
+    infoBar.innerHTML = fcEditMode
+      ? '<span class="fc-info-hint">✏ 編集: クリック→編集 / Shift+クリック→複数選択 / 背景ドラッグ→範囲選択</span>'
+      : '<span class="fc-info-hint">クリック: ジャンプ　右クリック: 編集</span>';
+  }
+  const btnM = document.getElementById('fcEditModeBtnModal');
+  if (btnM) {
+    btnM.textContent = fcEditMode ? '✏ 編集中' : '👁 閲覧';
+    btnM.classList.toggle('edit-mode', fcEditMode);
+  }
+  // スナップボタンの状態
+  const snapBtn = document.getElementById('fcSnapBtn');
+  if (snapBtn) snapBtn.classList.toggle('active', fcSnapGrid);
+}
+
+function fcToggleSnap() {
+  fcSnapGrid = !fcSnapGrid;
+  const btn = document.getElementById('fcSnapBtn');
+  if (btn) btn.classList.toggle('active', fcSnapGrid);
+}
+
+// ─── グループ専用ドラッグ（x,yが左上頂点） ───
+function fcGroupDragStart(e, nodeId, isModal) {
+  e.stopPropagation();
+  if (!fcEditMode) return; // 閲覧モード中はドラッグしない
+  const fc = getFcData(); if (!fc) return;
+  const node = fc.nodes.find(n => n.id === nodeId);
+  if (!node) return;
+  const svgId = isModal ? 'fcSvgModal' : 'fcSvg';
+  const svg   = document.getElementById(svgId);
+  if (!svg) return;
+  const getPos = ev => fcSvgToCanvas(ev, isModal);
+  const startPos = getPos(e);
+  const origX = node.x, origY = node.y;
+  let dragging = false;
+  const onMove = ev => {
+    const dx = getPos(ev).x - startPos.x, dy = getPos(ev).y - startPos.y;
+    const _v = fcGetView(isModal); const _pd = dx*_v.zoom, _pd2 = dy*_v.zoom;
+    if (!dragging && Math.sqrt(_pd*_pd + _pd2*_pd2) < 5) return;
+    if (!dragging) fcPushHistory();
+    dragging = true;
+    document.body.classList.add('fc-dragging');
+    node.x = Math.max(0, origX + dx);
+    node.y = Math.max(0, origY + dy);
+    renderFlowchart(isModal);
+  };
+  const onUp = () => {
+    document.body.classList.remove('fc-dragging');
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseup', onUp);
+    if (dragging) {
+      if (fcSnapGrid) fcSnapNode(node);
+      save();
+    }
+  };
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('mouseup', onUp);
+}
+
+// ─── 章へジャンプ ───
+// ─── ジャンプ実行 ───
+function fcJumpToChapter(chapterId, headingId) {
+  if (!chapterId) return;
+  state.currentChapter = chapterId;
+  // サイドバーはフロータブのまま維持（切り替えない）
+  switchTab('chapters');
+  // 見出しブロックへのスクロール
+  if (headingId) {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        chJumpTo(headingId);
+      });
+    });
+  }
+}
+
+// ─── ノードクリック ───
+function fcNodeClick(e, nodeId, isModal) {
+  e.stopPropagation();
+  e.preventDefault();
+  if (fcEdgeMode) {
+    fcSelectNode(nodeId, isModal);
+    return;
+  }
+  const fc = getFcData(); if (!fc) return;
+  const node = fc.nodes.find(n => n.id === nodeId);
+  if (!node) return;
+
+  if (fcEditMode) {
+    if (e.shiftKey) {
+      // Shiftクリック: 複数選択トグル
+      if (fcSelectedItems.has(nodeId)) {
+        fcSelectedItems.delete(nodeId);
+      } else {
+        fcSelectedItems.add(nodeId);
+      }
+      fcSelectedItem = null;
+      renderFlowchart(isModal);
+      fcShowAlignPanel(isModal);
+    } else {
+      // 通常クリック: 単体選択 + 編集パネル
+      fcSelectedItems.clear();
+      fcNodeRightClick(e, nodeId, isModal);
+    }
+  } else {
+    // 閲覧モード: jumpTargetがあればジャンプ
+    const jt = node.jumpTarget;
+    if (jt && jt.chapterId) {
+      fcJumpToChapter(jt.chapterId, jt.headingId);
+    }
+  }
+}
+
+function fcSelectNode(nodeId, isModal) {
+  const fc = getFcData(); if (!fc) return;
+  if (fcEdgeMode) {
+    if (!fcEdgeFrom) {
+      fcEdgeFrom = nodeId;
+      // 始点の名前を取得してinfo-barに表示
+      const node = fc.nodes.find(n => n.id === nodeId);
+      const lbl = fcNodeLabel(node);
+      const infoBar = document.getElementById('fcInfoBar');
+      if (infoBar && !isModal) {
+        infoBar.className = 'fc-info-bar edge-mode';
+        infoBar.innerHTML = `<span class="fc-info-hint">「${lbl}」から → 終点をクリック</span>`;
+      }
+      renderFlowchart(isModal);
+    } else if (fcEdgeFrom !== nodeId) {
+      fcPushHistory();
+      const id = 'e_' + uid();
+      fc.edges.push({ id, fromId: fcEdgeFrom, toId: nodeId, style: 'solid', label: '' });
+      save();
+      fcEdgeFrom = null;
+      fcEdgeMode = false;
+      document.querySelectorAll('.fc-tool-btn').forEach(b => b.classList.remove('active'));
+      // info-barをリセット
+      const infoBar = document.getElementById('fcInfoBar');
+      if (infoBar) {
+        infoBar.className = 'fc-info-bar';
+        infoBar.innerHTML = '<span class="fc-info-hint">クリック: 章ジャンプ　右クリック: 編集</span>';
+      }
+      renderFlowchart(isModal);
+    }
+    return;
+  }
+  fcSelectedItem = { type: 'node', id: nodeId, isModal };
+  renderFlowchart(isModal);
+  showFcEditPanel(isModal);
+}
+
+// ─── 右クリックで編集パネル ───
+function fcNodeRightClick(e, nodeId, isModal) {
+  e.preventDefault();
+  e.stopPropagation();
+  fcSelectedItem = { type: 'node', id: nodeId, isModal };
+  renderFlowchart(isModal);
+  showFcEditPanel(isModal);
+}
+
+// ─── エッジ選択 ───
+function fcSelectEdge(edgeId, isModal) {
+  if (!fcEditMode) return; // 閲覧モードでは編集パネルを開かない
+  fcSelectedItem = { type: 'edge', id: edgeId, isModal };
+  renderFlowchart(isModal);
+  showFcEditPanel(isModal);
+}
+
+// ─── 編集パネル表示（サイドバー=下部固定、モーダル=absolute） ───
+function showFcEditPanel(isModal) {
+  const fc = getFcData(); if (!fc) return;
+
+  // ── パネルHTML生成ヘルパー ──
+  function nodeHtml(node, modal) {
+    const M = modal;
+    const isGroup = node.type === 'group';
+    const def = FC_NODE_TYPES[node.type] || FC_NODE_TYPES.rect;
+    const s = getCurrentScenario();
+
+    // ── 種別セレクト（グループ以外全て変更可）
+    let typeRow = '';
+    if (!isGroup) {
+      const allTypes = ['rect','rounded','diamond','event','heading','subheading','text'];
+      const typeOptions = allTypes.map(k =>
+        `<option value="${k}" ${node.type===k?'selected':''}>${FC_NODE_TYPES[k].label}</option>`
+      ).join('');
+      typeRow = `<div class="fc-bp-row"><label>種別</label>
+        <select onchange="fcUpdateNode('${node.id}','type',this.value,${M})">${typeOptions}</select></div>`;
+    }
+
+    // ── ラベル（textarea・改行対応）
+    const currentLabel = node.label || '';
+    const labelRow = `<div class="fc-bp-row">
+      <label>ラベル <span style="color:var(--text3);font-size:9px">空欄=ジャンプ先タイトル　\\nで改行</span></label>
+      <textarea rows="2"
+        oninput="fcUpdateNode('${node.id}','label',this.value,${M})"
+        placeholder="${esc(fcNodeLabel(node))}"
+        style="width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-size:11px;padding:3px 5px;border-radius:3px;resize:vertical;font-family:inherit"
+      >${esc(currentLabel)}</textarea></div>`;
+
+    // ── ジャンプ先セレクト
+    const chapters = s?.chapters || [];
+    const jt = node.jumpTarget || {};
+    // 現在の選択値を "chId" or "chId::blId" 形式で管理
+    const currentJump = jt.headingId
+      ? `${jt.chapterId}::${jt.headingId}`
+      : (jt.chapterId || '');
+    let jumpOptions = `<option value="">（ジャンプなし）</option>`;
+    chapters.forEach(ch => {
+      const sel = currentJump === ch.id ? 'selected' : '';
+      jumpOptions += `<option value="${ch.id}" ${sel}>📖 ${esc(ch.title||'（無題）')}</option>`;
+      // 見出しブロック
+      (ch.blocks||[]).filter(b=>b.type==='heading'||b.type==='subheading').forEach(bl => {
+        const val = `${ch.id}::${bl.id}`;
+        const s2 = currentJump === val ? 'selected' : '';
+        const icon = bl.type === 'heading' ? '├' : '└';
+        const blLabel = bl.title || bl.body?.slice(0,20) || '（見出し）';
+        jumpOptions += `<option value="${val}" ${s2}>${icon} ${esc(blLabel)}</option>`;
+      });
+    });
+    const jumpRow = !isGroup ? `<div class="fc-bp-row">
+      <label>ジャンプ先 <span style="color:var(--text3);font-size:9px">クリック時に移動</span></label>
+      <select onchange="fcSetJumpTarget('${node.id}',this.value,${M})">${jumpOptions}</select></div>` : '';
+
+    // ── サイズ
+    const defW = def.w || FC_NODE_W, defH = def.h || FC_NODE_H;
+    const sizeRow = `<div class="fc-bp-row" style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+      <div><label>幅</label>
+        <input type="number" value="${node.w||defW}" min="40" max="800" step="8"
+          oninput="fcUpdateNode('${node.id}','w',+this.value,${M})"></div>
+      <div><label>高さ</label>
+        <input type="number" value="${node.h||defH}" min="20" max="600" step="8"
+          oninput="fcUpdateNode('${node.id}','h',+this.value,${M})"></div>
+    </div>`;
+
+    // ── 背景色
+    const colorOptions = [
+      ['','デフォルト'],['#1a2a1a','緑系'],['#1a1a2a','青系'],
+      ['#2a1a1a','赤系'],['#2a2a10','黄系'],['#1a1020','紫系']
+    ].map(([v,l]) => `<option value="${v}" ${(node.color||'')==v?'selected':''}>${l}</option>`).join('');
+    const colorRow = `<div class="fc-bp-row"><label>背景色</label>
+      <select onchange="fcUpdateNode('${node.id}','color',this.value,${M})">${colorOptions}</select></div>`;
+
+    // ── 削除（全ノード削除可能）
+    const delRow = `<button class="fc-bp-del" onclick="fcDeleteNode('${node.id}',${M})">🗑 削除</button>`;
+
+    const title = isGroup ? '⬜ グループ編集' : '✏ ノード編集';
+    const closeCall = M ? `fcCloseEditPanel(true)` : `fcCloseBp()`;
+
+    return `<div class="fc-bp-title">${title}
+        <button class="fc-bp-close" onclick="${closeCall}">✕</button></div>
+      ${typeRow}${labelRow}${jumpRow}${sizeRow}${colorRow}
+      <div class="fc-bp-btns">${delRow}</div>`;
+  }
+
+  function edgeHtml(edge, modal) {
+    const M = modal;
+    const closeCall = M ? `fcCloseEditPanel(true)` : `fcCloseBp()`;
+    const fromSide = edge.fromSide || 'auto';
+    const toSide   = edge.toSide   || 'auto';
+    const lox = edge.labelOffset?.x || 0;
+    const loy = edge.labelOffset?.y || 0;
+
+    const sideOptions = (val) => [
+      ['auto',   '⭕ 自動（空き辺）'],
+      ['right',  '→ 右辺'],
+      ['left',   '← 左辺'],
+      ['bottom', '↓ 下辺'],
+      ['top',    '↑ 上辺'],
+    ].map(([v,l]) => `<option value="${v}" ${val===v?'selected':''}>${l}</option>`).join('');
+
+    return `<div class="fc-bp-title">✏ 矢印編集
+        <button class="fc-bp-close" onclick="${closeCall}">✕</button></div>
+      <div class="fc-bp-row" style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        <div><label>線種</label>
+          <select onchange="fcUpdateEdge('${edge.id}','style',this.value,${M})">
+            <option value="solid"  ${edge.style==='solid' ?'selected':''}>─── 実線</option>
+            <option value="dashed" ${edge.style==='dashed'?'selected':''}>- - - 点線</option>
+          </select></div>
+        <div><label>形状</label>
+          <select onchange="fcUpdateEdge('${edge.id}','lineType',this.value,${M})">
+            <option value="curve"    ${(edge.lineType||'curve')==='curve'   ?'selected':''}>〜 曲線</option>
+            <option value="straight" ${edge.lineType==='straight'           ?'selected':''}>┐ 折れ線（直角）</option>
+          </select></div>
+      </div>
+      <div class="fc-bp-row" style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+        <div><label>始点の辺</label>
+          <select onchange="fcUpdateEdge('${edge.id}','fromSide',this.value,${M})">${sideOptions(fromSide)}</select></div>
+        <div><label>終点の辺</label>
+          <select onchange="fcUpdateEdge('${edge.id}','toSide',this.value,${M})">${sideOptions(toSide)}</select></div>
+      </div>
+      <div class="fc-bp-row"><label>ラベル <span style="color:var(--text3);font-size:9px">YES/NO, 昼/夜 など</span></label>
+        <input type="text" value="${esc(edge.label||'')}"
+          oninput="fcUpdateEdge('${edge.id}','label',this.value,${M})"
+          placeholder="ラベルなし"></div>
+      <div class="fc-bp-row"><label>ラベル位置オフセット <span style="color:var(--text3);font-size:9px">X / Y (px)</span></label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+          <input type="number" value="${lox}" step="4"
+            oninput="fcUpdateEdgeLabelOffset('${edge.id}','x',+this.value,${M})" placeholder="X">
+          <input type="number" value="${loy}" step="4"
+            oninput="fcUpdateEdgeLabelOffset('${edge.id}','y',+this.value,${M})" placeholder="Y">
+        </div></div>
+      <div class="fc-bp-row"><label>長さ統一 <span style="color:var(--text3);font-size:9px">終点ノードを移動</span></label>
+        <div style="display:flex;gap:4px;align-items:center">
+          <input type="number" id="fcEdgeLenInput_${edge.id}" value="120" min="40" max="600" step="10" style="flex:1">
+          <button class="fc-tool-btn" onclick="fcSetEdgeLength('${edge.id}',+document.getElementById('fcEdgeLenInput_${edge.id}').value,${M})" style="white-space:nowrap">適用</button>
+        </div></div>
+      <div class="fc-bp-btns">
+        <button class="fc-bp-del" onclick="fcDeleteEdge('${edge.id}',${M})">🗑 削除</button></div>`;
+  }
+
+  // ── サイドバー（下部固定） ──
+  if (!isModal) {
+    const panel   = document.getElementById('fcBottomPanel');
+    const infoBar = document.getElementById('fcInfoBar');
+    if (!panel) return;
+    panel.style.display = 'block';
+    if (infoBar) infoBar.style.display = 'none';
+
+    if (fcSelectedItem?.type === 'node') {
+      const node = fc.nodes.find(n => n.id === fcSelectedItem.id);
+      if (!node) return;
+      panel.innerHTML = nodeHtml(node, false);
+    } else if (fcSelectedItem?.type === 'edge') {
+      const edge = fc.edges.find(e => e.id === fcSelectedItem.id);
+      if (!edge) return;
+      panel.innerHTML = edgeHtml(edge, false);
+    }
+    return;
+  }
+
+  // ── モーダル（右上 absolute） ──
+  let panel = document.getElementById('fcEditPanelModal');
+  if (!panel) {
+    panel = document.createElement('div');
+    panel.id = 'fcEditPanelModal';
+    panel.className = 'fc-edit-panel';
+    const container = document.getElementById('fcModalBody');
+    if (container) container.appendChild(panel);
+  }
+  if (fcSelectedItem?.type === 'node') {
+    const node = fc.nodes.find(n => n.id === fcSelectedItem.id);
+    if (!node) return;
+    panel.innerHTML = nodeHtml(node, true);
+  } else if (fcSelectedItem?.type === 'edge') {
+    const edge = fc.edges.find(e => e.id === fcSelectedItem.id);
+    if (!edge) return;
+    panel.innerHTML = edgeHtml(edge, true);
+  }
+}
+
+function fcCloseBp() {
+  fcSelectedItem = null;
+  const panel = document.getElementById('fcBottomPanel');
+  if (panel) panel.style.display = 'none';
+  const infoBar = document.getElementById('fcInfoBar');
+  if (infoBar) infoBar.style.display = '';
+  renderFlowchart(false);
+}
+
+function fcCloseEditPanel(isModal) {
+  fcSelectedItem = null;
+  if (!isModal) { fcCloseBp(); return; }
+  const panel = document.getElementById('fcEditPanelModal');
+  if (panel) panel.remove();
+  renderFlowchart(true);
+}
+
+function fcSetJumpTarget(nodeId, val, isModal) {
+  const fc = getFcData(); if (!fc) return;
+  const node = fc.nodes.find(n => n.id === nodeId);
+  if (!node) return;
+  fcPushHistory();
+  if (!val) {
+    node.jumpTarget = null;
+  } else if (val.includes('::')) {
+    const [chapterId, headingId] = val.split('::');
+    node.jumpTarget = { chapterId, headingId };
+  } else {
+    node.jumpTarget = { chapterId: val, headingId: null };
+  }
+  save();
+  renderFlowchart(isModal);
+  if (isModal) renderFlowchart(false);
+  showFcEditPanel(isModal);
+}
+
+function fcUpdateNode(nodeId, key, val, isModal) {
+  const fc = getFcData(); if (!fc) return;
+  const node = fc.nodes.find(n => n.id === nodeId);
+  if (!node) return;
+  fcPushHistory();
+  node[key] = val;
+  save();
+  renderFlowchart(isModal);
+  if (isModal) renderFlowchart(false);
+}
+
+function fcUpdateEdge(edgeId, key, val, isModal) {
+  const fc = getFcData(); if (!fc) return;
+  const edge = fc.edges.find(e => e.id === edgeId);
+  if (!edge) return;
+  fcPushHistory();
+  edge[key] = val;
+  save();
+  renderFlowchart(isModal);
+  if (isModal) renderFlowchart(false);
+}
+
+// ─── ラベルオフセット更新 ───
+function fcUpdateEdgeLabelOffset(edgeId, axis, val, isModal) {
+  const fc = getFcData(); if (!fc) return;
+  const edge = fc.edges.find(e => e.id === edgeId);
+  if (!edge) return;
+  if (!edge.labelOffset) edge.labelOffset = { x: 0, y: 0 };
+  edge.labelOffset[axis] = val;
+  save();
+  renderFlowchart(isModal);
+  if (isModal) renderFlowchart(false);
+}
+
+// ─── 接続線の長さを統一（終点ノードを移動） ───
+function fcSetEdgeLength(edgeId, targetLen, isModal) {
+  const fc = getFcData(); if (!fc) return;
+  const edge = fc.edges.find(e => e.id === edgeId);
+  if (!edge) return;
+  const fromNode = fc.nodes.find(n => n.id === edge.fromId);
+  const toNode   = fc.nodes.find(n => n.id === edge.toId);
+  if (!fromNode || !toNode || fromNode === toNode) return;
+  fcPushHistory();
+
+  const fc1 = fcNodeCenter(fromNode), fc2 = fcNodeCenter(toNode);
+  const dx = fc2.x - fc1.x, dy = fc2.y - fc1.y;
+  const len = Math.sqrt(dx*dx + dy*dy) || 1;
+  // 同じ方向でtargetLenの距離に終点を移動
+  toNode.x = fc1.x + (dx/len) * targetLen;
+  toNode.y = fc1.y + (dy/len) * targetLen;
+  if (fcSnapGrid) fcSnapNode(toNode);
+  save();
+  renderFlowchart(isModal);
+  if (isModal) renderFlowchart(false);
+  showFcEditPanel(isModal);
+}
+
+function fcDeleteNode(nodeId, isModal) {
+  const fc = getFcData(); if (!fc) return;
+  fcPushHistory();
+  fc.nodes = fc.nodes.filter(n => n.id !== nodeId);
+  fc.edges = fc.edges.filter(e => e.fromId !== nodeId && e.toId !== nodeId);
+  save();
+  fcSelectedItem = null;
+  if (!isModal) { fcCloseBp(); } else { const p = document.getElementById('fcEditPanelModal'); if (p) p.remove(); }
+  renderFlowchart(isModal);
+  if (isModal) renderFlowchart(false);
+}
+
+function fcDeleteEdge(edgeId, isModal) {
+  const fc = getFcData(); if (!fc) return;
+  fcPushHistory();
+  fc.edges = fc.edges.filter(e => e.id !== edgeId);
+  save();
+  fcSelectedItem = null;
+  if (!isModal) { fcCloseBp(); } else { const p = document.getElementById('fcEditPanelModal'); if (p) p.remove(); }
+  renderFlowchart(isModal);
+  if (isModal) renderFlowchart(false);
+}
+
+// ─── ノード追加（手動） ───
+function fcAddNode() {
+  const fc = getFcData(); if (!fc) return;
+  fcPushHistory();
+  const id = 'n_' + uid();
+  const maxY = fc.nodes.length > 0 ? Math.max(...fc.nodes.map(n=>n.y)) : 40;
+  fc.nodes.push({ id, type: 'rect', x: 120, y: maxY + 80, label: '新規ノード', color: '' });
+  save();
+  if (fcModalOpen) renderFlowchart(true);
+  renderFlowchart(false);
+}
+
+// ─── エッジ追加モード切替 ───
+function fcAddEdge() {
+  fcEdgeMode = !fcEdgeMode;
+  fcEdgeFrom = null;
+  document.querySelectorAll('.fc-tool-btn').forEach(b => {
+    if (b.textContent.includes('接続')) b.classList.toggle('active', fcEdgeMode);
+  });
+  const infoBar = document.getElementById('fcInfoBar');
+  if (infoBar) {
+    if (fcEdgeMode) {
+      infoBar.className = 'fc-info-bar edge-mode';
+      infoBar.innerHTML = '<span class="fc-info-hint">▶ 接続モード: 始点→終点の順にクリック</span>';
+    } else {
+      infoBar.className = 'fc-info-bar';
+      infoBar.innerHTML = '<span class="fc-info-hint">クリック: 章ジャンプ　右クリック: 編集</span>';
+    }
+  }
+  renderFlowchart(false);
+  if (fcModalOpen) renderFlowchart(true);
+}
+
+// ─── 自動整列 ───
+function fcAutoLayout() {
+  const s = getCurrentScenario(); if (!s) return;
+  const fc = getFcData(); if (!fc) return;
+  fcPushHistory();
+  const chapters = s?.chapters || [];
+  const isModal = fcModalOpen;
+
+  const gapY = 90, startX = 110, startY = 60;
+  let chIdx = 0;
+  chapters.forEach(ch => {
+    const chNodes = fc.nodes.filter(n => n.jumpTarget?.chapterId === ch.id && !n.jumpTarget?.headingId);
+    chNodes.forEach(n => {
+      n.x = startX;
+      n.y = startY + chIdx * gapY;
+      chIdx++;
+    });
+  });
+
+  const others = fc.nodes.filter(n => !n.jumpTarget?.chapterId && n.type !== 'group');
+  others.forEach((n, i) => {
+    n.x = startX + 160;
+    n.y = startY + i * gapY;
+  });
+
+  save();
+  renderFlowchart(isModal);
+  if (isModal) renderFlowchart(false);
+}
+
+// ─── ドラッグ ───
+function fcNodeDragStart(e, nodeId, isModal) {
+  e.stopPropagation();
+  if (!fcEditMode) return;
+  if (fcEdgeMode) return;
+
+  // 複数選択中かつ対象が選択ノードならまとめて移動
+  if (fcSelectedItems.size > 0 && fcSelectedItems.has(nodeId)) {
+    fcMultiDragStart(e, nodeId, isModal);
+    return;
+  }
+
+  const fc = getFcData(); if (!fc) return;
+  const node = fc.nodes.find(n => n.id === nodeId);
+  if (!node) return;
+
+  const svgId = isModal ? 'fcSvgModal' : 'fcSvg';
+  const svg = document.getElementById(svgId);
+  if (!svg) return;
+
+  const getPos = ev => fcSvgToCanvas(ev, isModal);
+
+  const startPos = getPos(e);
+  const origX = node.x, origY = node.y;
+  let dragging = false;
+
+  const onMove = ev => {
+    const dx = getPos(ev).x - startPos.x, dy = getPos(ev).y - startPos.y;
+    // ズーム補正なしのpixel距離で閾値判定
+    const v = fcGetView(isModal);
+    const pdx = dx * v.zoom, pdy = dy * v.zoom;
+    if (!dragging && Math.sqrt(pdx*pdx + pdy*pdy) < 5) return;
+    if (!dragging) fcPushHistory();
+    dragging = true;
+    document.body.classList.add('fc-dragging');
+    const def = FC_NODE_TYPES[node.type] || FC_NODE_TYPES.rect;
+    const nW = (node.w || def.w || FC_NODE_W) / 2 + 4;
+    const nH = (node.h || def.h || FC_NODE_H) / 2 + 4;
+    node.x = Math.max(nW, origX + dx);
+    node.y = Math.max(nH, origY + dy);
+    renderFlowchart(isModal);
+  };
+  const onUp = () => {
+    document.body.classList.remove('fc-dragging');
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseup', onUp);
+    if (dragging) {
+      if (fcSnapGrid) fcSnapNode(node);
+      save();
+      renderFlowchart(isModal);
+    }
+  };
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('mouseup', onUp);
+}
+
+// ─── 拡大モーダル ───
+function openFcModal() {
+  fcModalOpen = true;
+  const s = getCurrentScenario();
+  const title = s?.name || 'シナリオ';
+
+  const overlay = document.createElement('div');
+  overlay.className = 'fc-modal-overlay';
+  overlay.id = 'fcModalOverlay';
+  overlay.innerHTML = `
+    <div class="fc-modal">
+      <div class="fc-modal-header">
+        <span class="fc-modal-title">🗺 FLOWCHART — ${esc(title)}</span>
+        <div class="fc-modal-toolbar">
+          <button class="fc-tool-btn fc-mode-btn" id="fcEditModeBtnModal" onclick="fcToggleEditMode()" title="編集モード切替">${fcEditMode ? '✏ 編集中' : '👁 閲覧'}</button>
+          <div class="fc-toolbar-sep"></div>
+          ${fcEditMode ? `
+          <button class="fc-tool-btn" onclick="fcAutoLayout()" title="自動整列">⚡ 整列</button>
+          <button class="fc-tool-btn" onclick="fcAddNodeModal()" title="ノード追加">＋ ノード</button>
+          <button class="fc-tool-btn" onclick="fcAddGroup()" title="グループ枠追加">⬜ グループ</button>
+          <button class="fc-tool-btn" onclick="fcAddEdge()" title="接続追加">↗ 接続</button>
+          ` : ''}
+        </div>
+        <button class="btn-sm" onclick="closeFcModal()" style="margin-left:8px">✕</button>
+      </div>
+      <div class="fc-modal-body" id="fcModalBody" onclick="fcBgClick(event,true)" onmousedown="fcCanvasMousedown(event,true)" onwheel="fcOnWheel(event,true)" style="overflow:hidden">
+        <svg id="fcSvgModal" class="fc-svg" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+          <defs>
+            <marker id="fc-arrow-modal" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#8b6914"/>
+            </marker>
+            <marker id="fc-arrow-dash-modal" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L8,3 z" fill="#6b5040"/>
+            </marker>
+          </defs>
+          <g id="fcViewportModal">
+            <g id="fcGroupLayerModal"></g>
+            <g id="fcEdgeLayerModal"></g>
+            <g id="fcNodeLayerModal"></g>
+            <g id="fcSelectLayerModal"></g>
+          </g>
+        </svg>
+        <div class="fc-empty" id="fcEmptyModal" style="display:none">章がありません</div>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeFcModal(); });
+
+  renderFlowchart(true);
+}
+
+function fcAddNodeModal() {
+  const fc = getFcData(); if (!fc) return;
+  const id = 'n_' + uid();
+  const maxY = fc.nodes.length > 0 ? Math.max(...fc.nodes.map(n=>n.y)) : 40;
+  fc.nodes.push({ id, chapterId: '', type: 'rect', x: 140, y: maxY + 80, label: '新規ノード', color: '' });
+  save();
+  renderFlowchart(true);
+  renderFlowchart(false);
+}
+
+function closeFcModal() {
+  fcModalOpen = false;
+  fcEdgeMode = false;
+  fcEdgeFrom = null;
+  fcSelectedItem = null;
+  const overlay = document.getElementById('fcModalOverlay');
+  if (overlay) overlay.remove();
+  renderFlowchart(false);
+}
+
+// ─── キャンバス背景クリックで選択解除 ───
+function fcBgClick(e, isModal) {
+  const t = e.target;
+  if (t.closest && t.closest('.fc-edit-panel, .fc-bottom-panel')) return;
+  if (t.tagName === 'path' || t.tagName === 'polygon' || t.tagName === 'text' || t.tagName === 'g') return;
+  // 複数選択解除
+  if (fcSelectedItems.size > 0) {
+    fcSelectedItems.clear();
+    const bp = document.getElementById('fcBottomPanel');
+    if (bp) bp.style.display = 'none';
+    const ib = document.getElementById('fcInfoBar');
+    if (ib) ib.style.display = '';
+    renderFlowchart(isModal);
+    return;
+  }
+  if (fcSelectedItem) {
+    if (!isModal) fcCloseBp();
+    else fcCloseEditPanel(true);
+  }
+  if (fcEdgeMode) {
+    fcEdgeMode = false;
+    fcEdgeFrom = null;
+    document.querySelectorAll('.fc-tool-btn').forEach(b => {
+      if (b.textContent.includes('接続')) b.classList.remove('active');
+    });
+    renderFlowchart(isModal);
+  }
+}
+
+// ─── キャンバスMousedownで範囲選択開始 ───
+function fcCanvasMousedown(e, isModal) {
+  // 閲覧モード: パン開始
+  if (!fcEditMode) {
+    fcStartPan(e, isModal);
+    return;
+  }
+  // 左ボタン以外は無視
+  if (e.button !== 0) return;
+  // Shiftキーは範囲選択ではなく個別選択なので無視
+  if (e.shiftKey) return;
+  const t = e.target;
+  // ノード・エッジ・パネル上は無視（ノードのg要素やpath、textも除外）
+  if (t.tagName === 'path' || t.tagName === 'polygon' || t.tagName === 'text') return;
+  if (t.tagName === 'g') return; // ノードのg要素
+  if (t.tagName === 'rect' && t.closest && t.closest('.fc-node')) return;
+  if (t.closest && t.closest('.fc-edit-panel, .fc-bottom-panel')) return;
+  // SVG要素以外（キャンバスdivそのもの）もスキップ
+  if (t.tagName !== 'svg' && t.tagName !== 'rect' && t.tagName !== 'circle' && t.id !== 'fcGroupLayer' && t.id !== 'fcEdgeLayer' && t.id !== 'fcNodeLayer') return;
+
+  const svgId = isModal ? 'fcSvgModal' : 'fcSvg';
+  const svg = document.getElementById(svgId);
+  if (!svg) return;
+  const getPos = ev => fcSvgToCanvas(ev, isModal);
+  const startPos = getPos(e);
+  let rangeRect = null;
+  let moved = false;
+
+  const onMove = ev => {
+    const pos = getPos(ev);
+    const w = Math.abs(pos.x - startPos.x), h = Math.abs(pos.y - startPos.y);
+    if (w < 6 && h < 6) return;
+    moved = true;
+    const x = Math.min(startPos.x, pos.x), y = Math.min(startPos.y, pos.y);
+    if (!rangeRect) {
+      rangeRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      rangeRect.setAttribute('class', 'fc-range-rect');
+      svg.appendChild(rangeRect);
+    }
+    rangeRect.setAttribute('x', x);
+    rangeRect.setAttribute('y', y);
+    rangeRect.setAttribute('width', w);
+    rangeRect.setAttribute('height', h);
+  };
+  const onUp = ev => {
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseup', onUp);
+    if (!moved || !rangeRect) {
+      if (rangeRect) rangeRect.remove();
+      return;
+    }
+    const rx = parseFloat(rangeRect.getAttribute('x'));
+    const ry = parseFloat(rangeRect.getAttribute('y'));
+    const rw = parseFloat(rangeRect.getAttribute('width'));
+    const rh = parseFloat(rangeRect.getAttribute('height'));
+    rangeRect.remove();
+    if (rw < 6 || rh < 6) return; // 小さすぎる選択は無視
+    const fc = getFcData(); if (!fc) return;
+    const scale = isModal ? 1 : 0.88;
+    const newSel = new Set();
+    fc.nodes.filter(n => !n.hidden).forEach(n => {
+      const def = FC_NODE_TYPES[n.type] || FC_NODE_TYPES.rect;
+      const cx = n.type === 'group' ? n.x + (n.w||def.w)*scale/2 : n.x;
+      const cy = n.type === 'group' ? n.y + (n.h||def.h)*scale/2 : n.y;
+      if (cx >= rx && cx <= rx+rw && cy >= ry && cy <= ry+rh) {
+        newSel.add(n.id);
+      }
+    });
+    if (newSel.size > 0) {
+      fcSelectedItems = newSel;
+      fcSelectedItem = null;
+      renderFlowchart(isModal);
+      fcShowAlignPanel(isModal);
+    }
+  };
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('mouseup', onUp);
+}
+
+// ─── 整列パネル表示 ───
+function fcShowAlignPanel(isModal) {
+  if (fcSelectedItems.size < 2) return;
+  const panel = document.getElementById('fcBottomPanel');
+  const infoBar = document.getElementById('fcInfoBar');
+  if (!panel) return;
+  panel.style.display = 'block';
+  if (infoBar) infoBar.style.display = 'none';
+  const M = isModal;
+  panel.innerHTML = `
+    <div class="fc-bp-title">⬛ ${fcSelectedItems.size}ノード選択中
+      <button class="fc-bp-close" onclick="fcClearSelection(${M})">✕</button></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:6px">
+      <button class="fc-tool-btn" onclick="fcAlign('left',${M})"   title="左端揃え">⬅ 左</button>
+      <button class="fc-tool-btn" onclick="fcAlign('center',${M})" title="水平中央揃え">⬌ 中</button>
+      <button class="fc-tool-btn" onclick="fcAlign('right',${M})"  title="右端揃え">➡ 右</button>
+      <button class="fc-tool-btn" onclick="fcAlign('top',${M})"    title="上端揃え">⬆ 上</button>
+      <button class="fc-tool-btn" onclick="fcAlign('middle',${M})" title="垂直中央揃え">⬍ 中</button>
+      <button class="fc-tool-btn" onclick="fcAlign('bottom',${M})" title="下端揃え">⬇ 下</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+      <button class="fc-tool-btn" onclick="fcAlign('distH',${M})" title="水平均等配置">↔ 水平均等</button>
+      <button class="fc-tool-btn" onclick="fcAlign('distV',${M})" title="垂直均等配置">↕ 垂直均等</button>
+    </div>`;
+}
+
+function fcClearSelection(isModal) {
+  fcSelectedItems.clear();
+  const panel = document.getElementById('fcBottomPanel');
+  if (panel) panel.style.display = 'none';
+  const ib = document.getElementById('fcInfoBar');
+  if (ib) ib.style.display = '';
+  renderFlowchart(isModal);
+}
+
+// ─── 整列実行 ───
+function fcAlign(type, isModal) {
+  const fc = getFcData(); if (!fc) return;
+  const nodes = fc.nodes.filter(n => fcSelectedItems.has(n.id));
+  if (nodes.length < 2) return;
+
+  const xs = nodes.map(n => n.x);
+  const ys = nodes.map(n => n.y);
+  const minX = Math.min(...xs), maxX = Math.max(...xs);
+  const minY = Math.min(...ys), maxY = Math.max(...ys);
+  const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2;
+
+  if (type === 'left')   nodes.forEach(n => { n.x = minX; });
+  if (type === 'right')  nodes.forEach(n => { n.x = maxX; });
+  if (type === 'center') nodes.forEach(n => { n.x = cx; });
+  if (type === 'top')    nodes.forEach(n => { n.y = minY; });
+  if (type === 'bottom') nodes.forEach(n => { n.y = maxY; });
+  if (type === 'middle') nodes.forEach(n => { n.y = cy; });
+  if (type === 'distH') {
+    const sorted = [...nodes].sort((a,b) => a.x - b.x);
+    const gap = (maxX - minX) / (sorted.length - 1);
+    sorted.forEach((n, i) => { n.x = minX + gap * i; });
+  }
+  if (type === 'distV') {
+    const sorted = [...nodes].sort((a,b) => a.y - b.y);
+    const gap = (maxY - minY) / (sorted.length - 1);
+    sorted.forEach((n, i) => { n.y = minY + gap * i; });
+  }
+
+  // グリッドスナップ適用
+  if (fcSnapGrid) nodes.forEach(n => fcSnapNode(n));
+
+  save();
+  renderFlowchart(isModal);
+  if (isModal) renderFlowchart(false);
+  fcShowAlignPanel(isModal);
+}
+
+// ─── グリッドスナップ ───
+function fcSnapNode(node) {
+  if (node.type === 'group') {
+    node.x = Math.round(node.x / FC_GRID) * FC_GRID;
+    node.y = Math.round(node.y / FC_GRID) * FC_GRID;
+  } else {
+    node.x = Math.round(node.x / FC_GRID) * FC_GRID;
+    node.y = Math.round(node.y / FC_GRID) * FC_GRID;
+  }
+}
+
+// ─── 複数ノード一括ドラッグ ───
+function fcMultiDragStart(e, nodeId, isModal) {
+  // 複数選択中ノードをまとめて動かす
+  const fc = getFcData(); if (!fc) return;
+  const svgId = isModal ? 'fcSvgModal' : 'fcSvg';
+  const svg = document.getElementById(svgId);
+  if (!svg) return;
+  const getPos = ev => fcSvgToCanvas(ev, isModal);
+  const startPos = getPos(e);
+  // 各ノードの初期位置を記録
+  const origPositions = {};
+  fcSelectedItems.forEach(id => {
+    const n = fc.nodes.find(n => n.id === id);
+    if (n) origPositions[id] = { x: n.x, y: n.y };
+  });
+  let dragging = false;
+  const onMove = ev => {
+    const dx = getPos(ev).x - startPos.x, dy = getPos(ev).y - startPos.y;
+    const _v2 = fcGetView(isModal); const _pd3 = dx*_v2.zoom, _pd4 = dy*_v2.zoom;
+    if (!dragging && Math.sqrt(_pd3*_pd3 + _pd4*_pd4) < 5) return;
+    if (!dragging) fcPushHistory();
+    dragging = true;
+    document.body.classList.add('fc-dragging');
+    fcSelectedItems.forEach(id => {
+      const n = fc.nodes.find(n => n.id === id);
+      const orig = origPositions[id];
+      if (!n || !orig) return;
+      n.x = orig.x + dx;
+      n.y = orig.y + dy;
+    });
+    renderFlowchart(isModal);
+  };
+  const onUp = () => {
+    document.body.classList.remove('fc-dragging');
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseup', onUp);
+    if (dragging) {
+      if (fcSnapGrid) {
+        fcSelectedItems.forEach(id => {
+          const n = fc.nodes.find(n => n.id === id);
+          if (n) fcSnapNode(n);
+        });
+      }
+      save();
+      renderFlowchart(isModal);
+    }
+  };
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('mouseup', onUp);
+}
+
+// ─── 章追加・削除時にフロー再描画 ───
+// 既存のrenderChapterTabにフック（章タブが更新されるたびにフローも同期）
+const _origRenderChapterTab = typeof renderChapterTab === 'function' ? renderChapterTab : null;
+// renderChapterTabはすでに定義済みなので、save()後に自動同期される。
 </script>
 </body>
 </html>
