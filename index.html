@@ -3965,21 +3965,27 @@ function rsSelectInvestigator(id) {
       ${statsHtml}
       <div style="font-size:10px;color:var(--text3);letter-spacing:1px;margin-bottom:5px">◆ 技能</div>
       <div style="margin-bottom:10px">${skillsHtml}</div>
-      ${(inv.appearance||inv.ideology||inv.significant||inv.places||inv.treasures||inv.traits) ? `
+      ${(inv.appearance||inv.ideology||inv.significant||inv.places||inv.treasures||inv.traits||inv.phobias||inv.keyConnection) ? `
         <div style="font-size:10px;color:var(--text3);letter-spacing:1px;margin-bottom:6px">◆ バックストーリー</div>
         <div style="background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:8px 10px;margin-bottom:8px">
           ${[
-            ['容姿の描写',        inv.appearance],
-            ['イデオロギー / 信念', inv.ideology],
-            ['重要な人々',         inv.significant],
-            ['意味のある場所',     inv.places],
-            ['秘蔵の品',           inv.treasures],
-            ['特徴',               inv.traits],
-          ].filter(([,v]) => v).map(([label, val]) => `
+            ['appearance',  '容姿の描写'],
+            ['ideology',    'イデオロギー / 信念'],
+            ['significant', '重要な人々'],
+            ['places',      '意味のある場所'],
+            ['treasures',   '秘蔵の品'],
+            ['traits',      '特徴'],
+            ['phobias',     '恐怖症、マニア'],
+          ].filter(([key]) => inv[key]).map(([key, label]) => {
+            const isKC = (inv.keyConnection||{})[key];
+            return `
             <div style="margin-bottom:7px">
-              <div style="font-size:9px;color:var(--text3);margin-bottom:2px">${label}</div>
-              <div style="font-size:12px;color:var(--text2);line-height:1.8;white-space:pre-wrap">${esc(val)}</div>
-            </div>`).join('')}
+              <div style="font-size:9px;color:var(--text3);margin-bottom:2px">
+                ${label}${isKC ? ' <span style="color:var(--accent2)">🔑</span>' : ''}
+              </div>
+              <div style="font-size:12px;color:var(--text2);line-height:1.8;white-space:pre-wrap">${esc(inv[key])}</div>
+            </div>`;
+          }).join('')}
         </div>` : ''}
       ${inv.backstory ? `<div style="font-size:10px;color:var(--text3);letter-spacing:1px;margin-bottom:4px">◆ バックストーリー</div>
         <div style="font-size:12px;color:var(--text2);line-height:1.8;white-space:pre-wrap">${esc(inv.backstory)}</div>` : ''}
@@ -7593,9 +7599,32 @@ function renderInvView(inv) {
               <div style="font-size:10px;color:var(--text3);margin-bottom:3px">${label}</div>
               <div style="font-size:13px;color:var(--text2);line-height:1.9;white-space:pre-wrap">${esc(val)}</div>
             </div>`).join('')}` : ''}
+        ${(inv.appearance||inv.ideology||inv.significant||inv.places||inv.treasures||inv.traits||inv.phobias||inv.keyConnection) ? `
+          <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--text3);margin-bottom:10px">◆ BACKSTORY</div>
+          ${[
+            ['appearance',  '容姿の描写'],
+            ['ideology',    'イデオロギー / 信念'],
+            ['significant', '重要な人々'],
+            ['places',      '意味のある場所'],
+            ['treasures',   '秘蔵の品'],
+            ['traits',      '特徴'],
+            ['phobias',     '恐怖症、マニア'],
+          ].filter(([key]) => inv[key]).map(([key, label]) => {
+            const isKC = (inv.keyConnection||{})[key];
+            return `
+            <div style="margin-bottom:10px">
+              <div style="font-size:10px;color:var(--text3);margin-bottom:3px;display:flex;align-items:center;gap:6px">
+                ${label}${isKC ? ' <span style="color:var(--accent2);font-size:9px">🔑 キー・コネクション</span>' : ''}
+              </div>
+              <div style="font-size:13px;color:var(--text2);line-height:1.9;white-space:pre-wrap">${esc(inv[key])}</div>
+            </div>`;
+          }).join('')}` : ''}
         ${inv.backstory ? `
           <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--text3);margin-bottom:6px">◆ BACKSTORY</div>
           <div style="font-size:15px;color:var(--text2);line-height:2.0;white-space:pre-wrap;margin-bottom:14px">${rubyToHtml(inv.backstory)}</div>` : ''}
+        ${inv.charaMemo ? `
+          <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--text3);margin-bottom:6px">◆ CHARACTER MEMO</div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.9;white-space:pre-wrap;background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:10px 12px;margin-bottom:10px">${esc(inv.charaMemo)}</div>` : ''}
         ${inv.memo ? `
           <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--text3);margin-bottom:6px">◆ MEMO</div>
           <div style="font-size:13px;color:var(--text2);line-height:1.9;white-space:pre-wrap;background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:10px 12px">${esc(inv.memo)}</div>` : ''}
@@ -7703,11 +7732,28 @@ function renderInvEdit(inv, idx) {
           ['places',      '意味のある場所',     '故郷・思い出の場所など'],
           ['treasures',   '秘蔵の品',           '大切にしているもの・形見など'],
           ['traits',      '特徴',               '口癖・癖・特徴的な行動など'],
-        ].map(([key, label, ph]) => `
+          ['phobias',     '恐怖症、マニア',     '恐怖症・マニアなど'],
+        ].map(([key, label, ph]) => {
+          const kc = (inv.keyConnection||{})[key] || false;
+          return `
         <div class="field-row"><div class="field-group">
-          <div class="field-label">${label}</div>
+          <div class="field-label" style="display:flex;align-items:center;justify-content:space-between">
+            <span>${label}</span>
+            <label style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text3);cursor:pointer;font-weight:normal">
+              <input type="checkbox" ${kc?'checked':''} onchange="updateInvKeyConnection('${inv.id}','${key}',this.checked)" style="cursor:pointer">
+              🔑 キー・コネクション
+            </label>
+          </div>
           <textarea rows="2" oninput="updateInvestigator('${inv.id}','${key}',this.value)" placeholder="${ph}">${esc(inv[key]||'')}</textarea>
-        </div></div>`).join('')}
+        </div></div>`;
+        }).join('')}
+        <div class="field-row" style="margin-top:8px">
+          <div class="field-group">
+            <div class="field-label">◇ キャラクターメモ（背景設定・自由記述など）</div>
+            <textarea rows="4" placeholder="背景設定・エピソード・自由メモ..."
+              oninput="updateInvestigator('${inv.id}','charaMemo',this.value)">${esc(inv.charaMemo||'')}</textarea>
+          </div>
+        </div>
         <div class="field-row" style="margin-top:8px">
           <div class="field-group">
             <div class="field-label">◇ セッションメモ（SAN喪失記録・状態など）</div>
@@ -7848,17 +7894,204 @@ function handleInvImageUpload(event, id) {
 }
 
 function openInvImportModal() {
-  showModal('📥 探索者JSONインポート（いあきゃら形式）', `
-    <div style="font-size:11px;color:var(--text3);margin-bottom:12px;line-height:1.9">
-      いあきゃらで出力した <code style="color:var(--accent2)">kind:"character"</code> 形式のJSONを貼り付けてください。<br>
-      配列で複数キャラクターを貼り付けることもできます。
+  showModal('📥 探索者インポート（いあきゃら形式）', `
+    <div style="display:flex;gap:0;margin-bottom:12px;border-bottom:1px solid var(--border)">
+      <button id="invImportTabJson" onclick="_invImportTab('json')"
+        style="padding:6px 16px;font-size:12px;background:var(--accent);color:var(--bg);border:none;border-radius:3px 3px 0 0;cursor:pointer;font-family:'Noto Serif JP',serif">JSON</button>
+      <button id="invImportTabText" onclick="_invImportTab('text')"
+        style="padding:6px 16px;font-size:12px;background:none;color:var(--text3);border:none;border-radius:3px 3px 0 0;cursor:pointer;font-family:'Noto Serif JP',serif">テキスト</button>
     </div>
-    <textarea id="invJsonInput" rows="12" placeholder='{"kind":"character","data":{...}}'
-      style="font-family:'Share Tech Mono',monospace;font-size:11px;line-height:1.6;resize:vertical;width:100%;"></textarea>
+    <div id="invImportPaneJson">
+      <div style="font-size:11px;color:var(--text3);margin-bottom:8px;line-height:1.9">
+        いあきゃらで出力した <code style="color:var(--accent2)">kind:"character"</code> 形式のJSONを貼り付けてください。
+      </div>
+      <textarea id="invJsonInput" rows="12" placeholder='{"kind":"character","data":{...}}'
+        style="font-family:'Share Tech Mono',monospace;font-size:11px;line-height:1.6;resize:vertical;width:100%;"></textarea>
+    </div>
+    <div id="invImportPaneText" style="display:none">
+      <div style="font-size:11px;color:var(--text3);margin-bottom:8px;line-height:1.9">
+        いあきゃらの「テキスト出力」（7版 v2.0.x）を貼り付けるか、ファイルを選択してください。
+      </div>
+      <div style="margin-bottom:8px">
+        <input type="file" id="invTextFile" accept=".txt" style="display:none" onchange="_loadInvTextFile(event)">
+        <button class="btn-sm" onclick="document.getElementById('invTextFile').click()" style="font-size:11px">📂 .txtファイルを選択</button>
+        <span id="invTextFileName" style="font-size:10px;color:var(--text3);margin-left:8px"></span>
+      </div>
+      <textarea id="invTextInput" rows="10" placeholder="いあきゃらテキスト 7版 v2.0.1&#10;【基本情報】&#10;名前: ..."
+        style="font-family:'Share Tech Mono',monospace;font-size:11px;line-height:1.6;resize:vertical;width:100%;"></textarea>
+    </div>
   `, [
     { label: 'キャンセル', cls: 'btn-sm', action: 'closeModal()' },
-    { label: 'インポート', cls: 'btn-primary', action: 'importInvJson()' },
+    { label: 'インポート', cls: 'btn-primary', action: 'importInvAuto()' },
   ]);
+}
+
+function _invTextFileLoad(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const nameEl = document.getElementById('invTextFileName');
+  if (nameEl) nameEl.textContent = file.name;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const ta = document.getElementById('invTextInput');
+    if (ta) ta.value = e.target.result;
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+function _invImportTab(tab) {
+  const isJson = tab === 'json';
+  document.getElementById('invImportPaneJson').style.display = isJson ? '' : 'none';
+  document.getElementById('invImportPaneText').style.display = isJson ? 'none' : '';
+  document.getElementById('invImportTabJson').style.background = isJson ? 'var(--accent)' : 'none';
+  document.getElementById('invImportTabJson').style.color = isJson ? 'var(--bg)' : 'var(--text3)';
+  document.getElementById('invImportTabText').style.background = isJson ? 'none' : 'var(--accent)';
+  document.getElementById('invImportTabText').style.color = isJson ? 'var(--text3)' : 'var(--bg)';
+}
+
+function _loadInvTextFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const textarea = document.getElementById('invTextInput');
+    if (textarea) textarea.value = e.target.result;
+    const label = document.getElementById('invTextFileName');
+    if (label) label.textContent = file.name;
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+function importInvAuto() {
+  const jsonPane = document.getElementById('invImportPaneJson');
+  if (jsonPane && jsonPane.style.display !== 'none') {
+    importInvJson();
+  } else {
+    importInvText();
+  }
+}
+
+function importInvText() {
+  const raw = document.getElementById('invTextInput')?.value.trim();
+  if (!raw) return alert('テキストを入力してください');
+
+  // セクションを分割するヘルパー
+  const getSection = (text, header) => {
+    const re = new RegExp(`【${header}】([\\s\\S]*?)(?=\\n【|$)`);
+    return (text.match(re)?.[1] || '').trim();
+  };
+  const getField = (text, label) => {
+    const re = new RegExp(`${label}[：:]+\\s*(.+)`);
+    return (text.match(re)?.[1] || '').trim();
+  };
+  const getBlock = (text, label) => {
+    // [ラベル] の次行から次の [ラベル] または空行2つ前まで
+    const re = new RegExp(`\\[★?${label}[\\]）)][^\\n]*\\n([\\s\\S]*?)(?=\\n\\[|$)`);
+    return (text.match(re)?.[1] || '').trim();
+  };
+
+  const s = getCurrentScenario();
+  if (!s.investigators) s.investigators = [];
+
+  // 基本情報
+  const basicSec = getSection(raw, '基本情報');
+  const rawName  = getField(basicSec, '名前');
+  const rubyMatch = rawName.match(/^(.+?)\s*[（(]([^）)]+)[）)]/);
+  const invName  = rubyMatch ? rubyMatch[1].trim() : rawName;
+  const invRuby  = rubyMatch ? rubyMatch[2].trim() : '';
+  const job      = getField(basicSec, '職業');
+  const age      = getField(basicSec, '年齢').replace(/\s*\/.*$/, '').trim(); // "28 / 性別: 男" → "28"
+
+  // 能力値
+  const statSec  = getSection(raw, '能力値');
+  const stats    = {};
+  const statKeys = ['STR','CON','POW','DEX','APP','SIZ','INT','EDU','幸運','知識'];
+  statKeys.forEach(key => {
+    const re = new RegExp(`^${key}\\s+(\\d+)`, 'm');
+    const m  = statSec.match(re);
+    if (m) stats[key] = parseInt(m[1]);
+  });
+  // HP/MP/SAN/MOV/DB/BLD を追加行から取得
+  const hpM  = statSec.match(/^HP\s+(\d+)/m);
+  const mpM  = statSec.match(/^MP\s+(\d+)/m);
+  const sanM = statSec.match(/^SAN\s+(\d+)/m);
+  if (hpM)  stats['HP']  = parseInt(hpM[1]);
+  if (mpM)  stats['MP']  = parseInt(mpM[1]);
+  if (sanM) stats['SAN'] = parseInt(sanM[1]);
+  // MOV/DB/BLD は独立行
+  const movM = raw.match(/^MOV\s+(\d+)/m);
+  const dbM  = raw.match(/^DB\s+([+\-]?\d+D?\d*)/m);
+  const bldM = raw.match(/^BLD\s+([+\-]?\d+)/m);
+  if (movM) stats['MOV']   = movM[1];
+  if (dbM)  stats['DB']    = dbM[1];
+  if (bldM) stats['build'] = bldM[1];
+
+  // 技能値（全技能セクションを結合して解析）
+  const skillSec = getSection(raw, '技能値');
+  const skills   = [];
+  const excludes = new Set(['STR','CON','SIZ','DEX','INT','APP','POW','EDU','幸運','知識','正気度ロール','回避','母国語']);
+  skillSec.split('\n').forEach(line => {
+    // "技能名(専門)   合計  初期値  ..." の形式
+    const m = line.match(/^(.+?)\s{2,}(\d+)\s+\d+\s+/);
+    if (!m) return;
+    const name = m[1].trim();
+    const val  = parseInt(m[2]);
+    if (excludes.has(name)) return;
+    if (name.startsWith('技能名') || name.startsWith('『') || name.startsWith('』')) return;
+    if (val === 0) return; // 初期値のみは除外
+    // 初期値と同じか確認（初期値列も読む）
+    const m2 = line.match(/^(.+?)\s{2,}(\d+)\s+(\d+)/);
+    if (m2 && parseInt(m2[2]) === parseInt(m2[3]) && parseInt(m2[2]) <= 25) return; // 初期値と同値かつ低い値は除外
+    skills.push({ id: uid(), name, val });
+  });
+
+  // バックストーリー
+  const bsSec      = getSection(raw, 'バックストーリー');
+  const appearance = getBlock(bsSec, '容姿の描写');
+  const ideology   = getBlock(bsSec, 'イデオロギー.{0,4}信念');
+  const significant= getBlock(bsSec, '重要な人々');
+  const places     = getBlock(bsSec, '意味のある場所');
+  const treasures  = getBlock(bsSec, '秘蔵の品');
+  const traits     = getBlock(bsSec, '特徴');
+  const phobias    = getBlock(bsSec, '恐怖症.{0,4}マニア');
+
+  // ★付き項目をキーコネクションとして収集（新構造: { ideology: true, ... }）
+  const keyConnection = {};
+  const kcMap = {
+    '容姿の描写': 'appearance', 'イデオロギー': 'ideology', '信念': 'ideology',
+    '重要な人々': 'significant', '意味のある場所': 'places',
+    '秘蔵の品': 'treasures', '特徴': 'traits', '恐怖症': 'phobias', 'マニア': 'phobias',
+  };
+  bsSec.split('\n').forEach(line => {
+    const m = line.match(/^\[★(.+?)\]/);
+    if (m) {
+      const label = m[1].trim();
+      Object.entries(kcMap).forEach(([kw, key]) => {
+        if (label.includes(kw)) keyConnection[key] = true;
+      });
+    }
+  });
+
+  // メモ → キャラクターメモ
+  const charaMemo = getSection(raw, 'メモ').trim();
+
+  if (!invName) return alert('名前を読み取れませんでした。テキスト形式を確認してください。');
+
+  s.investigators.push({
+    id: uid(),
+    name: invName, ruby: invRuby,
+    player: '', job, age,
+    stats, skills,
+    appearance, ideology, significant, places, treasures, traits, phobias, keyConnection,
+    backstory: '', charaMemo, memo: '', image: '',
+  });
+  state.currentInvestigator = s.investigators[s.investigators.length - 1].id;
+
+  save();
+  renderInvestigatorsTab();
+  renderRsList(s);
+  closeModal();
+  setTimeout(() => alert(`「${invName}」をインポートしました`), 100);
 }
 
 function importInvJson() {
@@ -7881,6 +8114,14 @@ function importInvJson() {
     if (Array.isArray(data.params)) {
       data.params.forEach(p => {
         if (statLabels.includes(p.label)) stats[p.label] = parseInt(p.value)||0;
+      });
+    }
+    // status から幸運・MPを取得（いあきゃら形式）
+    if (Array.isArray(data.status)) {
+      data.status.forEach(st => {
+        if (st.label === '幸運' || st.label === 'LUK' || st.label === 'luck') {
+          if (!stats['幸運']) stats['幸運'] = parseInt(st.max || st.value) || 0;
+        }
       });
     }
 
