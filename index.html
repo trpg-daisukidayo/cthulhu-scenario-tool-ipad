@@ -1737,10 +1737,9 @@
     /* メインコンテンツ：フル幅 */
     .main-content { width: 100%; }
 
-    /* タブバー：文字・タッチターゲット拡大 */
-    .tab-bar { padding: 0 6px; overflow-x: auto; scrollbar-width: none; }
-    .tab-bar::-webkit-scrollbar { display: none; }
-    .tab { padding: 12px 14px; font-size: 13px; }
+    /* タブバー：iPad ではプルダウンに切替 */
+    .tab-bar { display: none; }
+    .tab-pulldown { display: block; }
 
     /* フォーム */
     input[type="text"], input[type="number"], textarea, select {
@@ -3156,6 +3155,8 @@
         <span>💾 データ</span><span style="font-size:9px;opacity:0.7">▼</span>
       </button>
       <div class="hdr-dropdown-menu" id="hdrDropdownMenu">
+        <div class="hdr-dropdown-menu-item" id="ipadEditModeBtn" style="color:#70b880;font-weight:600" onclick="toggleIpadEditMode()">✏ 編集モードへ</div>
+        <div class="hdr-dropdown-menu-sep"></div>
         <div class="hdr-dropdown-menu-item" onclick="toggleDice();closeHdrDropdown()">🎲 ダイス</div>
         <div class="hdr-dropdown-menu-sep"></div>
         <div class="hdr-dropdown-menu-item" onclick="exportScenario();closeHdrDropdown()">📤 エクスポート</div>
@@ -3165,7 +3166,7 @@
         <div class="hdr-dropdown-menu-item" style="color:#c8a840" onclick="importAllData();closeHdrDropdown()">📂 全データ読込</div>
       </div>
     </div>
-    <button class="drawer-toggle" onclick="toggleRightSidebar()" title="クイック参照" style="margin-left:4px" id="drawerToggleBtn">⊞</button>
+    <button class="drawer-toggle" onclick="toggleRightSidebar()" title="クイック参照" style="margin-left:4px;display:none" id="drawerToggleBtn">⊞</button>
   </div>
 </header>
 
@@ -3237,6 +3238,23 @@
         <div class="tab" onclick="switchTab('investigators')" id="tab-investigators">🔍 探索者</div>
         <div class="tab" onclick="switchTab('events')" id="tab-events">⚡ イベント</div>
         <div class="tab" onclick="switchTab('memo')" id="tab-memo">📝 メモ</div>
+      </div>
+      <!-- iPad用プルダウンタブ -->
+      <div class="tab-pulldown" id="tabPulldown">
+        <button class="tab-pulldown-btn" onclick="toggleTabPulldown()">
+          <span id="tabPulldownLabel">📋 シナリオ情報</span>
+          <span class="tab-pulldown-btn-arrow" id="tabPulldownArrow">▼</span>
+        </button>
+        <div class="tab-pulldown-menu" id="tabPulldownMenu">
+          <div class="tab-pulldown-item active" data-tab="info"      onclick="switchTab('info');toggleTabPulldown()">📋 シナリオ情報</div>
+          <div class="tab-pulldown-item"        data-tab="chapters"  onclick="switchTab('chapters');toggleTabPulldown()">📖 章・本文</div>
+          <div class="tab-pulldown-item"        data-tab="npc"       onclick="switchTab('npc');toggleTabPulldown()">👤 NPC</div>
+          <div class="tab-pulldown-item"        data-tab="creature"  onclick="switchTab('creature');toggleTabPulldown()">👾 神話生物</div>
+          <div class="tab-pulldown-item"        data-tab="refs"      onclick="switchTab('refs');toggleTabPulldown()">🗂 情報・資料</div>
+          <div class="tab-pulldown-item"        data-tab="investigators" onclick="switchTab('investigators');toggleTabPulldown()">🔍 探索者</div>
+          <div class="tab-pulldown-item"        data-tab="events"    onclick="switchTab('events');toggleTabPulldown()">⚡ イベント</div>
+          <div class="tab-pulldown-item"        data-tab="memo"      onclick="switchTab('memo');toggleTabPulldown()">📝 メモ</div>
+        </div>
       </div>
 
       <!-- 通常タブ用コンテンツ（シナリオ情報・メモのみ） -->
@@ -3329,7 +3347,7 @@
   </div>
 
   <!-- RIGHT SIDEBAR -->
-  <div class="right-sidebar collapsed" id="rightSidebar">
+  <div class="right-sidebar" id="rightSidebar">
     <!-- サイドバータブヘッダー -->
     <div class="rs-tab-header">
       <div class="rs-tab-btn active" id="rsTab-list" onclick="switchRsTab('list')">📋 一覧</div>
@@ -4668,6 +4686,17 @@ function switchTab(tab) {
   state.activeTab = tab;
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('tab-' + tab)?.classList.add('active');
+  // プルダウンタブの表示を同期
+  const labels = {
+    info:'📋 シナリオ情報', chapters:'📖 章・本文', npc:'👤 NPC',
+    creature:'👾 神話生物', refs:'🗂 情報・資料', investigators:'🔍 探索者',
+    events:'⚡ イベント', memo:'📝 メモ'
+  };
+  const pdLabel = document.getElementById('tabPulldownLabel');
+  if (pdLabel && labels[tab]) pdLabel.textContent = labels[tab];
+  document.querySelectorAll('.tab-pulldown-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.tab === tab);
+  });
 
   const areas = ['contentArea','chapterArea','npcArea','creatureArea','refsArea','eventsArea','investigatorsArea'];
   areas.forEach(id => {
@@ -4986,8 +5015,8 @@ const chScrollPos = {};
 function renderChapterTab() {
   const s = getCurrentScenario();
   // タブバー描画前に選択章を確定させる
-  if (!state.currentChapter && s.chapters.length > 0) {
-    state.currentChapter = s.chapters[0].id;
+  if (!state.currentChapter && (s.chapters||[]).length > 0) {
+    state.currentChapter = (s.chapters||[])[0]?.id;
   }
   renderChTabBar(s);
   renderChContent(s);
@@ -5002,7 +5031,7 @@ function renderChTabBar(s) {
     `;
     return;
   }
-  bar.innerHTML = s.chapters.map((ch, i) => {
+  bar.innerHTML = (s.chapters||[]).map((ch, i) => {
     const active = ch.id === state.currentChapter ? 'active' : '';
     const label = ch.title || `第${i+1}章`;
     return `
@@ -5020,8 +5049,8 @@ function renderChContent(s) {
   const chContent  = document.getElementById('chContent');
 
   // アクティブ章がなければ先頭を選ぶ
-  if (!state.currentChapter && s.chapters.length > 0) {
-    state.currentChapter = s.chapters[0].id;
+  if (!state.currentChapter && (s.chapters||[]).length > 0) {
+    state.currentChapter = (s.chapters||[])[0]?.id;
   }
 
   if (s.chapters.length === 0) {
@@ -5036,7 +5065,7 @@ function renderChContent(s) {
     return;
   }
 
-  const ch = s.chapters.find(c => c.id === state.currentChapter);
+  const ch = (s.chapters||[]).find(c => c.id === state.currentChapter);
   if (!ch) return;
 
   if (chapterMode === 'edit') {
@@ -5056,7 +5085,7 @@ function renderChContent(s) {
 
 function renderEditPane(ch, s) {
   const chContent = document.getElementById('chContent');
-  const chIdx = s.chapters.findIndex(c => c.id === ch.id);
+  const chIdx = (s.chapters||[]).findIndex(c => c.id === ch.id);
   if (!ch.blocks) ch.blocks = [];
 
   chContent.innerHTML = `
@@ -5997,7 +6026,7 @@ function applyRuby() {
 // ─── ブロック操作 ───
 function insertJumpBlock() {
   const s = getCurrentScenario();
-  const ch = s.chapters.find(c => c.id === state.currentChapter);
+  const ch = (s.chapters||[]).find(c => c.id === state.currentChapter);
   if (!ch) return;
   if (!ch.blocks) ch.blocks = [];
   ch.blocks.push({ id: uid(), type: 'jump', label: '', targetChapterId: '', targetBlockId: '' });
@@ -6086,7 +6115,7 @@ function jumpToBlock(chapterId, blockId) {
 
 function insertBlock(type) {
   const s = getCurrentScenario();
-  const ch = s.chapters.find(c => c.id === state.currentChapter);
+  const ch = (s.chapters||[]).find(c => c.id === state.currentChapter);
   if (!ch) return;
   if (!ch.blocks) ch.blocks = [];
   ch.blocks.push({ id: uid(), type, title: '', body: '' });
@@ -9571,7 +9600,46 @@ function closeHdrDropdown() {
 document.addEventListener('click', e => {
   const dd = document.getElementById('hdrDropdown');
   if (dd && !dd.contains(e.target)) closeHdrDropdown();
+  const pd = document.getElementById('tabPulldown');
+  if (pd && !pd.contains(e.target)) closeTabPulldown();
 });
+
+// ─── タブプルダウン ───
+function toggleTabPulldown() {
+  const menu = document.getElementById('tabPulldownMenu');
+  const arrow = document.getElementById('tabPulldownArrow');
+  if (!menu) return;
+  const isOpen = menu.classList.toggle('open');
+  if (arrow) arrow.classList.toggle('open', isOpen);
+}
+function closeTabPulldown() {
+  const menu = document.getElementById('tabPulldownMenu');
+  const arrow = document.getElementById('tabPulldownArrow');
+  if (menu) menu.classList.remove('open');
+  if (arrow) arrow.classList.remove('open');
+}
+
+// ─── iPad 編集モード ───
+let ipadEditMode = false;
+function toggleIpadEditMode() {
+  ipadEditMode = !ipadEditMode;
+  const btn = document.getElementById('ipadEditModeBtn');
+  if (btn) {
+    btn.textContent = ipadEditMode ? '👁 閲覧モードへ' : '✏ 編集モードへ';
+    btn.style.color = ipadEditMode ? '#70d080' : '';
+    btn.style.borderColor = ipadEditMode ? '#2a6a3a' : '';
+  }
+  // 編集UIの表示切替
+  document.querySelectorAll('.ch-toolbar, .ch-tab-add, .tb-btn').forEach(el => {
+    el.style.display = ipadEditMode ? '' : 'none';
+  });
+  // シナリオが選択中のときのみ章モードを切替
+  const s = getCurrentScenario();
+  if (s && typeof setChapterMode === 'function') {
+    setChapterMode(ipadEditMode ? 'edit' : 'view');
+  }
+  closeHdrDropdown();
+}
 
 // ═══════════════════════════════════════════════
 // 全データ保存・読込
