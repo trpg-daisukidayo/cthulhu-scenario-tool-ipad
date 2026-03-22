@@ -2153,11 +2153,16 @@
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
-    transition: width 0.22s cubic-bezier(0.4,0,0.2,1),
-                opacity 0.18s ease;
     overflow: hidden;
   }
-  .right-sidebar.collapsed { width: 0; opacity: 0; border-left: none; }
+  /* デスクトップ: widthでアニメーション */
+  @media (min-width: 1025px) {
+    .right-sidebar {
+      transition: width 0.22s cubic-bezier(0.4,0,0.2,1),
+                  opacity 0.18s ease;
+    }
+    .right-sidebar.collapsed { width: 0; opacity: 0; border-left: none; }
+  }
 
   /* プレビューパネル */
   .rs-preview {
@@ -2468,8 +2473,8 @@
     }
     .right-sidebar.collapsed {
       transform: translateX(100%);
-      width: 300px !important;
-      opacity: 1 !important;
+      width: 300px;
+      opacity: 1;
       border-left: 1px solid var(--border);
     }
     .right-sidebar:not(.collapsed) {
