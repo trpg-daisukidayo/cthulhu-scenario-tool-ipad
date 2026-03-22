@@ -1740,6 +1740,8 @@
     /* タブバー：iPad ではプルダウンに切替 */
     .tab-bar { display: none; }
     .tab-pulldown { display: block; }
+    /* 閲覧モード時は編集専用UIを非表示 */
+    .ipad-edit-only { display: none; }
 
     /* フォーム */
     input[type="text"], input[type="number"], textarea, select {
@@ -2861,11 +2863,11 @@
     font-size: 12px;
     color: var(--text);
     box-shadow: 0 4px 16px rgba(0,0,0,0.6);
-    pointer-events: none;
     min-width: 160px;
     max-width: 260px;
     line-height: 1.7;
     display: none;
+    cursor: pointer;
   }
   .ch-skill-tooltip.visible { display: block; }
   .ch-skill-tooltip .tip-title {
@@ -3166,7 +3168,7 @@
         <div class="hdr-dropdown-menu-item" style="color:#c8a840" onclick="importAllData();closeHdrDropdown()">📂 全データ読込</div>
       </div>
     </div>
-    <button class="drawer-toggle" onclick="toggleRightSidebar()" title="クイック参照" style="margin-left:4px;display:none" id="drawerToggleBtn">⊞</button>
+    <button class="drawer-toggle" onclick="toggleRightSidebar()" title="クイック参照" style="margin-left:4px" id="drawerToggleBtn">⊞</button>
   </div>
 </header>
 
@@ -3306,8 +3308,7 @@
         <div id="chViewBar" style="display:none;background:var(--panel2);border-bottom:1px solid var(--border);align-items:center;padding:0 10px;gap:6px;min-height:34px;">
           <div class="ch-jump-bar" id="chJumpBar" style="flex:1;border:none;padding:0;background:none;min-height:unset;"></div>
           <div class="mode-toggle" style="flex-shrink:0">
-            <button class="mode-btn" id="modeEdit2" onclick="setChapterMode('edit')">✏ 編集</button>
-            <button class="mode-btn active" id="modeView2" onclick="setChapterMode('view')">👁 閲覧</button>
+            <button class="mode-btn ipad-edit-only" id="modeEdit2" onclick="setChapterMode('edit')">✏ 編集</button>
           </div>
         </div>
         <div id="chContent" style="flex:1 1 0;min-height:0;overflow:hidden;display:flex;flex-direction:column;"></div>
@@ -3352,6 +3353,7 @@
     <div class="rs-tab-header">
       <div class="rs-tab-btn active" id="rsTab-list" onclick="switchRsTab('list')">📋 一覧</div>
       <div class="rs-tab-btn" id="rsTab-flow" onclick="switchRsTab('flow')">🗺 フロー</div>
+      <button onclick="toggleRightSidebar()" style="margin-left:auto;padding:0 10px;background:none;border:none;color:var(--text3);font-size:16px;cursor:pointer;flex-shrink:0" title="閉じる">✕</button>
     </div>
     <!-- プレビューパネル（一覧タブ内） -->
     <div id="rsPane-list" class="rs-pane" style="display:flex;flex-direction:column;flex:1 1 0;min-height:0;overflow:hidden;">
@@ -3391,6 +3393,9 @@
           <button class="fc-tool-btn" onclick="fcAlign('distV',false)"  title="垂直均等">⇳</button>
         </div>
         <button class="fc-tool-btn" onclick="openFcModal()" title="拡大表示">⛶</button>
+        <button class="fc-tool-btn" onclick="fcZoomIn(false)"  title="拡大">＋</button>
+        <button class="fc-tool-btn" onclick="fcZoomOut(false)" title="縮小">－</button>
+        <button class="fc-tool-btn" onclick="fcResetView(false)" title="表示リセット" style="font-size:9px">⟳</button>
         <button class="fc-tool-btn" onclick="fcResetChecks()" title="チェックをリセット" style="color:#70b080">✓ reset</button>
       </div>
       <div class="fc-canvas-wrap" id="fcCanvasWrap" onclick="fcBgClick(event,false)" onmousedown="fcCanvasMousedown(event,false)" onwheel="fcOnWheel(event,false)">
@@ -3471,7 +3476,7 @@
   <button class="lightbox-close" onclick="closeLightbox()">✕</button>
   <img id="lightboxImg" src="" alt="" onclick="event.stopPropagation()">
 </div>
-<div class="ch-skill-tooltip" id="skillTooltip"></div>
+<div class="ch-skill-tooltip" id="skillTooltip" onclick="hideSkillTooltip()" title="タップで閉じる"></div>
 
 <!-- MODAL -->
 <div class="modal-overlay" id="modalOverlay" style="display:none" onclick="closeModal(event)">
@@ -5027,7 +5032,7 @@ function renderChTabBar(s) {
   if (s.chapters.length === 0) {
     bar.innerHTML = `
       <div style="padding:8px 12px;font-size:11px;color:var(--text3)">章がありません</div>
-      <div class="ch-tab-add" onclick="addChapter()" title="章を追加">＋</div>
+      <div class="ch-tab-add ipad-edit-only" onclick="addChapter()" title="章を追加">＋</div>
     `;
     return;
   }
@@ -5040,7 +5045,7 @@ function renderChTabBar(s) {
         <span>${esc(label)}</span>
       </div>
     `;
-  }).join('') + `<div class="ch-tab-add" onclick="addChapter()" title="章を追加">＋</div>`;
+  }).join('') + `<div class="ch-tab-add ipad-edit-only" onclick="addChapter()" title="章を追加">＋</div>`;
 }
 
 function renderChContent(s) {
@@ -5077,8 +5082,7 @@ function renderChContent(s) {
   } else {
     chToolbar.style.display = 'none';
     chViewBar.style.display = 'flex';
-    document.getElementById('modeEdit2').classList.remove('active');
-    document.getElementById('modeView2').classList.add('active');
+    document.getElementById('modeEdit2')?.classList.remove('active');
     renderViewPane(ch, s);
   }
 }
@@ -5486,7 +5490,7 @@ function rubyToHtml(str, scenario) {
   s = s.replace(/〈([^〉\n]+?)〉/g, (_, skill) => {
     const idx = skillPlaceholders.length;
     const skillEsc = skill.replace(/"/g,'&quot;').replace(/'/g,"\\'");
-    skillPlaceholders.push(`<span class="ch-skill" data-skill="${skill.replace(/"/g,'&quot;')}" onmouseenter="showSkillTooltip(event,'${skillEsc}')" onmouseleave="hideSkillTooltip()" onclick="showSkillDetail('${skillEsc}')">〈${skill}〉</span>`);
+    skillPlaceholders.push(`<span class="ch-skill" data-skill="${skill.replace(/"/g,'&quot;')}" onmouseenter="showSkillTooltip(event,'${skillEsc}')" onmouseleave="hideSkillTooltip()" onclick="_skillTap(event,'${skillEsc}')">〈${skill}〉</span>`);
     return `\x00SKILL${idx}\x00`;
   });
   // ─── ① タグ保護（ルビより先に保護して誤マッチを防ぐ） ───
@@ -9134,6 +9138,39 @@ function hideSkillTooltip() {
   if (tooltip) tooltip.classList.remove('visible');
 }
 
+// ─── 技能タップ：1タップでツールチップ、ダブルタップで詳細 ───
+let _skillLastTap = 0;
+let _skillLastName = '';
+let _skillTapTimer = null;
+function _skillTap(event, skillName) {
+  const now = Date.now();
+  const isTouch = event.pointerType === 'touch' || ('ontouchstart' in window);
+
+  if (!isTouch) {
+    // マウス操作はそのまま詳細表示
+    showSkillDetail(skillName);
+    return;
+  }
+
+  event.preventDefault();
+  const DOUBLE_MS = 350;
+  if (now - _skillLastTap < DOUBLE_MS && _skillLastName === skillName) {
+    // ダブルタップ → 詳細表示
+    clearTimeout(_skillTapTimer);
+    hideSkillTooltip();
+    showSkillDetail(skillName);
+    _skillLastTap = 0;
+  } else {
+    // シングルタップ → ツールチップ表示
+    _skillLastTap = now;
+    _skillLastName = skillName;
+    clearTimeout(_skillTapTimer);
+    showSkillTooltip(event, skillName);
+    // 外タップで閉じる
+    _skillTapTimer = setTimeout(() => { hideSkillTooltip(); }, 3000);
+  }
+}
+
 function showSkillDetail(skillName) {
   const preview = document.getElementById('rsPreview');
   if (!preview) return;
@@ -9629,8 +9666,8 @@ function toggleIpadEditMode() {
     btn.style.color = ipadEditMode ? '#70d080' : '';
     btn.style.borderColor = ipadEditMode ? '#2a6a3a' : '';
   }
-  // 編集UIの表示切替
-  document.querySelectorAll('.ch-toolbar, .ch-tab-add, .tb-btn').forEach(el => {
+  // ipad-edit-only クラスの要素を表示/非表示
+  document.querySelectorAll('.ipad-edit-only').forEach(el => {
     el.style.display = ipadEditMode ? '' : 'none';
   });
   // シナリオが選択中のときのみ章モードを切替
@@ -10046,7 +10083,92 @@ function switchRsTab(tab) {
     if (btn)  { btn.classList.toggle('active', t === tab); }
     if (pane) { pane.style.display = t === tab ? 'flex' : 'none'; }
   });
-  if (tab === 'flow') renderFlowchart();
+  if (tab === 'flow') {
+    renderFlowchart();
+    fcInitTouch(false);
+  }
+}
+
+// ─── タッチ操作（iPad：1本指パン・2本指ピンチズーム） ───
+function fcInitTouch(isModal) {
+  const wrapId = isModal ? 'fcModalBody' : 'fcCanvasWrap';
+  const wrap = document.getElementById(wrapId);
+  if (!wrap || wrap._fcTouchInited) return;
+  wrap._fcTouchInited = true;
+
+  const viewportId = isModal ? 'fcViewportModal' : 'fcViewport';
+  let lastTouches = null;
+  let lastDist = null;
+
+  const getDist = (t1, t2) => {
+    const dx = t1.clientX - t2.clientX, dy = t1.clientY - t2.clientY;
+    return Math.sqrt(dx*dx + dy*dy);
+  };
+  const getMid = (t1, t2) => {
+    const rect = wrap.getBoundingClientRect();
+    return { x: (t1.clientX + t2.clientX)/2 - rect.left, y: (t1.clientY + t2.clientY)/2 - rect.top };
+  };
+
+  wrap.addEventListener('touchstart', e => {
+    lastTouches = Array.from(e.touches).map(t => ({clientX:t.clientX, clientY:t.clientY}));
+    lastDist = e.touches.length === 2 ? getDist(e.touches[0], e.touches[1]) : null;
+  }, { passive: true });
+
+  wrap.addEventListener('touchmove', e => {
+    e.preventDefault();
+    const v = fcGetView(isModal);
+    const viewport = document.getElementById(viewportId);
+    if (e.touches.length === 2) {
+      const dist = getDist(e.touches[0], e.touches[1]);
+      const mid  = getMid(e.touches[0], e.touches[1]);
+      if (lastDist !== null) {
+        const scale = dist / lastDist;
+        const newZoom = Math.max(FC_ZOOM_MIN, Math.min(FC_ZOOM_MAX, v.zoom * scale));
+        const zs = newZoom / v.zoom;
+        v.panX = mid.x - zs * (mid.x - v.panX);
+        v.panY = mid.y - zs * (mid.y - v.panY);
+        v.zoom = newZoom;
+      }
+      lastDist = dist;
+      if (lastTouches && lastTouches.length === 2) {
+        const prevMid = getMid(lastTouches[0], lastTouches[1]);
+        v.panX += mid.x - prevMid.x;
+        v.panY += mid.y - prevMid.y;
+      }
+    } else if (e.touches.length === 1 && !fcEditMode) {
+      if (lastTouches && lastTouches.length === 1) {
+        v.panX += e.touches[0].clientX - lastTouches[0].clientX;
+        v.panY += e.touches[0].clientY - lastTouches[0].clientY;
+      }
+    }
+    lastTouches = Array.from(e.touches).map(t => ({clientX:t.clientX, clientY:t.clientY}));
+    if (viewport) viewport.setAttribute('transform', `translate(${v.panX},${v.panY}) scale(${v.zoom})`);
+    fcUpdateZoomLabel(isModal);
+  }, { passive: false });
+
+  wrap.addEventListener('touchend', e => {
+    lastTouches = Array.from(e.touches).map(t => ({clientX:t.clientX, clientY:t.clientY}));
+    lastDist = e.touches.length === 2 ? getDist(e.touches[0], e.touches[1]) : null;
+  }, { passive: true });
+}
+
+// ─── ズームボタン（iPad向け） ───
+function fcZoomIn(isModal)  { fcZoomStep(1.25, isModal); }
+function fcZoomOut(isModal) { fcZoomStep(0.8,  isModal); }
+function fcZoomStep(factor, isModal) {
+  const v = fcGetView(isModal);
+  const wrapId = isModal ? 'fcModalBody' : 'fcCanvasWrap';
+  const wrap = document.getElementById(wrapId);
+  const cx = (wrap?.clientWidth  || 280) / 2;
+  const cy = (wrap?.clientHeight || 300) / 2;
+  const newZoom = Math.max(FC_ZOOM_MIN, Math.min(FC_ZOOM_MAX, v.zoom * factor));
+  const s = newZoom / v.zoom;
+  v.panX = cx - s * (cx - v.panX);
+  v.panY = cy - s * (cy - v.panY);
+  v.zoom = newZoom;
+  const vp = document.getElementById(isModal ? 'fcViewportModal' : 'fcViewport');
+  if (vp) vp.setAttribute('transform', `translate(${v.panX},${v.panY}) scale(${v.zoom})`);
+  fcUpdateZoomLabel(isModal);
 }
 
 // ═══════════════════════════════════════════════
