@@ -3272,7 +3272,6 @@
           <button class="tb-btn" onclick="insertBlock('info')" title="情報カード">🔵 情報カード</button>
           <button class="tb-btn" onclick="insertBlock('scene')" title="演出カード" style="color:#a080c0;border-color:#4a2a60;">🎭 演出カード</button>
           <button class="tb-btn" onclick="insertBlock('event')" title="イベントカード" style="color:#e0a040;border-color:#6a4010;">⚡ イベント</button>
-          <button class="tb-btn" onclick="insertBlock('event')" title="イベントカード" style="color:#e0a040;border-color:#6a4010;">⚡ イベント</button>
           <button class="tb-btn" onclick="insertBlock('choice')" title="選択肢" style="color:#90c870;border-color:#3a6a20;">🔀 選択肢</button>
           <div class="ch-toolbar-sep"></div>
           <button class="tb-btn" onclick="insertBlock('text')" title="本文ブロック追加">＋ 本文</button>
@@ -9557,7 +9556,6 @@ function exportText() {
       if (bl.type === 'heading') txt += `【${bl.body||''}】\n\n`;
       if (bl.type === 'bold')    txt += `★${bl.body||''}★\n\n`;
       if (bl.type === 'info')    txt += `◆情報[${bl.title||''}]\n${bl.body||''}\n\n`;
-      if (bl.type === 'event')   txt += `⚡イベント[${bl.title||''}]\n${bl.body||''}\n\n`;
       if (bl.type === 'event')   txt += `⚡イベント[${bl.title||''}]\n${bl.body||''}\n\n`;
       if (bl.type === 'explore') txt += `◇探索[${bl.title||''}]\n${bl.body||''}\n\n`;
       if (bl.type === 'scene')   txt += `◆演出\n${bl.body||''}\n\n`;
