@@ -4726,6 +4726,7 @@
           <button class="fc-tool-btn" onclick="fcAlign('distV',false)"  title="垂直均等">⇳</button>
         </div>
         <button class="fc-tool-btn" onclick="openFcModal()" title="拡大表示">⛶</button>
+        <button class="fc-tool-btn" onclick="fcResetChecks()" title="チェックをリセット" style="color:#70b080">✓ reset</button>
         <div class="fc-toolbar-sep"></div>
         <button class="fc-tool-btn" onclick="fcZoomIn(false)"  title="拡大">＋</button>
         <button class="fc-tool-btn" onclick="fcZoomOut(false)" title="縮小">－</button>
@@ -11576,8 +11577,9 @@ function getFcData() {
   const s = getCurrentScenario();
   if (!s) return null;
   if (!s.flowchart) {
-    s.flowchart = { nodes: [], edges: [] };
+    s.flowchart = { nodes: [], edges: [], nodeChecks: {} };
   }
+  if (!s.flowchart.nodeChecks) s.flowchart.nodeChecks = {};
   return s.flowchart;
 }
 
@@ -11758,11 +11760,13 @@ function fcNodeSvg(node, isModal) {
   const nH = baseH * scale;
   const rx  = def.rx * scale;
 
-  // ハイライト: 単一選択 or 複数選択
+  // ハイライト: 単一選択 or 複数選択 or チェック済み
+  const fc = getFcData();
+  const isChecked   = !!(fc?.nodeChecks?.[node.id]);
   const isSelected  = fcSelectedItem?.id === node.id || fcSelectedItems.has(node.id);
   const isEdgeFrom  = fcEdgeFrom === node.id;
-  const stroke  = isEdgeFrom ? '#60d0ff' : isSelected ? '#e8c56a' : (node.color || def.stroke);
-  const strokeW = (isEdgeFrom || isSelected) ? 2 : 1;
+  const stroke  = isEdgeFrom ? '#60d0ff' : isSelected ? '#e8c56a' : isChecked ? '#40b060' : (node.color || def.stroke);
+  const strokeW = (isEdgeFrom || isSelected || isChecked) ? 2 : 1;
 
   const hasJump = !!(node.jumpTarget?.chapterId);
   const clickFn = `fcNodeClick(event,'${node.id}',${isModal})`;
@@ -11817,9 +11821,13 @@ function fcNodeSvg(node, isModal) {
   const lines = fcTextLines(label, nW * 0.88, fontSize);
   const totalH = lines.length * lineH;
   const textY = y - totalH/2 + lineH/2;
+  const checkOverlay = isChecked ? `
+    <rect x="${x-nW/2}" y="${y-nH/2}" width="${nW}" height="${nH}" rx="${rx}" fill="rgba(40,160,80,0.18)" style="pointer-events:none"/>
+    <text x="${x+nW/2-6}" y="${y-nH/2+8}" style="font-size:${fontSize+2}px;fill:#50d080;dominant-baseline:middle;text-anchor:middle;pointer-events:none;font-weight:bold">✓</text>` : '';
   return `<g class="fc-node" data-id="${node.id}" onclick="${clickFn}" oncontextmenu="${ctxFn}" onmousedown="${dragFn}">
     <rect x="${x-nW/2}" y="${y-nH/2}" width="${nW}" height="${nH}" rx="${rx}" fill="${node.color||def.fill}" stroke="${stroke}" stroke-width="${strokeW}"/>
-    ${fcTspanHtml(lines, x, textY, lineH, '#d4c9b0', fontSize)}
+    ${fcTspanHtml(lines, x, textY, lineH, isChecked ? '#a0e0b0' : '#d4c9b0', fontSize)}
+    ${checkOverlay}
   </g>`;
 }
 
@@ -12504,11 +12512,61 @@ function fcNodeClick(e, nodeId, isModal) {
       fcNodeRightClick(e, nodeId, isModal);
     }
   } else {
-    // 閲覧モード: jumpTargetがあればジャンプ
-    const jt = node.jumpTarget;
-    if (jt && jt.chapterId) {
-      fcJumpToChapter(jt.chapterId, jt.headingId);
-    }
+    // 閲覧モード: 小メニュー表示（チェック / ジャンプ）
+    fcShowNodeMenu(e, node, isModal);
+  }
+}
+
+
+// ─── 閲覧モード: ノードクリック小メニュー ───
+function fcShowNodeMenu(e, node, isModal) {
+  document.getElementById('fcNodeMenu')?.remove();
+  const fc = getFcData(); if (!fc) return;
+  const isChecked = !!(fc.nodeChecks?.[node.id]);
+  const hasJump   = !!(node.jumpTarget?.chapterId);
+  const menu = document.createElement('div');
+  menu.id = 'fcNodeMenu';
+  menu.style.cssText = `position:fixed;z-index:9000;background:var(--panel);border:1px solid var(--border2);border-radius:6px;box-shadow:0 4px 16px rgba(0,0,0,0.6);min-width:130px;overflow:hidden;font-size:12px;`;
+  const checkLabel = isChecked ? '✓ チェックを外す' : '✓ チェックする';
+  const items = [
+    { label: checkLabel, color: isChecked ? '#e07070' : '#50d080', action: () => fcToggleCheck(node.id, isModal) },
+    ...(hasJump ? [{ label: '→ 章にジャンプ', color: '#8b9fd0', action: () => fcJumpToChapter(node.jumpTarget.chapterId, node.jumpTarget.headingId) }] : []),
+    { label: '✕ 閉じる', color: 'var(--text3)', action: () => menu.remove() },
+  ];
+  menu.innerHTML = items.map((item, i) => `<div data-idx="${i}" style="padding:8px 14px;cursor:pointer;color:${item.color};border-bottom:${i < items.length-1 ? '1px solid var(--border)' : 'none'};transition:background 0.1s;" onmouseenter="this.style.background='var(--bg3)'" onmouseleave="this.style.background=''" onclick="document.getElementById('fcNodeMenu')?.remove();window._fcMenuActions[${i}]()">${item.label}</div>`).join('');
+  window._fcMenuActions = items.map(item => item.action);
+  document.body.appendChild(menu);
+  const mx = e.clientX || (e.touches?.[0]?.clientX) || 0;
+  const my = e.clientY || (e.touches?.[0]?.clientY) || 0;
+  const mw = menu.offsetWidth || 140, mh = menu.offsetHeight || 100;
+  menu.style.left = Math.min(mx, window.innerWidth  - mw - 8) + 'px';
+  menu.style.top  = Math.min(my, window.innerHeight - mh - 8) + 'px';
+  const closeMenu = (ev) => {
+    if (!menu.contains(ev.target)) { menu.remove(); document.removeEventListener('mousedown', closeMenu); document.removeEventListener('touchstart', closeMenu); }
+  };
+  setTimeout(() => { document.addEventListener('mousedown', closeMenu); document.addEventListener('touchstart', closeMenu); }, 0);
+}
+
+function fcToggleCheck(nodeId, isModal) {
+  const fc = getFcData(); if (!fc) return;
+  if (!fc.nodeChecks) fc.nodeChecks = {};
+  fc.nodeChecks[nodeId] = !fc.nodeChecks[nodeId];
+  save();
+  renderFlowchart(isModal);
+  if (isModal) renderFlowchart(false);
+}
+
+function fcResetChecks() {
+  const fc = getFcData(); if (!fc) return;
+  fc.nodeChecks = {};
+  save();
+  renderFlowchart(false);
+  if (fcModalOpen) renderFlowchart(true);
+  const ib = document.getElementById('fcInfoBar');
+  if (ib) {
+    const orig = ib.innerHTML;
+    ib.innerHTML = '<span class="fc-info-hint" style="color:#e8c56a">チェックをリセットしました</span>';
+    setTimeout(() => { ib.innerHTML = orig; }, 1500);
   }
 }
 
