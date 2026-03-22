@@ -1221,7 +1221,47 @@
     text-align: justify;
   }
 
-  .ch-empty-tab {
+  /* ─── イベントカード ─── */
+  .preview-event-card {
+    border: 1px solid var(--event-accent, #c08030);
+    border-left: 4px solid var(--event-accent, #c08030);
+    border-radius: 0 4px 4px 0;
+    background: var(--event-bg, #1a1208);
+    padding: 14px 18px;
+    margin: 14px 0;
+  }
+  .preview-event-card .event-label {
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--event-accent, #c08030);
+    margin-bottom: 7px;
+  }
+  .preview-event-card .event-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--event-accent, #e0a040);
+    margin-bottom: 8px;
+  }
+  .preview-event-card .event-body {
+    font-size: 15px;
+    color: #b0a080;
+    line-height: 2.0;
+    white-space: pre-wrap;
+  }
+  .preview-event-card .event-jump {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 4px 12px;
+    background: rgba(192,128,48,0.15);
+    border: 1px solid var(--event-accent, #c08030);
+    border-radius: 3px;
+    font-size: 11px;
+    color: var(--event-accent, #c08030);
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .preview-event-card .event-jump:hover { background: rgba(192,128,48,0.3); }
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -2695,1274 +2735,6 @@
   .fc-edit-del { background: var(--red); border: none; color: #fff; font-size: 10px; padding: 4px 7px; border-radius: 3px; cursor: pointer; }
   .fc-edit-del:hover { background: var(--red2); }
 
-
-    /* ═══ LIBRARY ═══ */
-  .lib-section {
-    border-top: 1px solid var(--border);
-    flex-shrink: 0;
-  }
-  .lib-header {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 10px;
-    cursor: pointer;
-    user-select: none;
-    transition: background 0.12s;
-  }
-  .lib-header:hover { background: var(--bg3); }
-  .lib-title {
-    font-family: 'Cinzel', serif;
-    font-size: 9px;
-    letter-spacing: 2px;
-    color: var(--accent2);
-    flex: 1;
-  }
-  .lib-chevron { font-size: 9px; color: var(--text3); transition: transform 0.18s; }
-  .lib-chevron.open { transform: rotate(90deg); }
-  .lib-body { overflow: hidden; max-height: 0; transition: max-height 0.22s ease; }
-  .lib-body.open { max-height: 600px; overflow-y: auto; }
-  .lib-body::-webkit-scrollbar { width: 4px; }
-  .lib-body::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 2px; }
-  .lib-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 10px 6px 12px;
-    font-size: 11px;
-    color: var(--text2);
-    cursor: default;
-    border-left: 2px solid transparent;
-    transition: background 0.1s;
-  }
-  .lib-item:hover { background: var(--bg3); }
-  .lib-item-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .lib-item-sub { font-size: 9px; color: var(--text3); }
-  .lib-item-actions { display: flex; gap: 3px; opacity: 0; transition: opacity 0.1s; }
-  .lib-item:hover .lib-item-actions { opacity: 1; }
-  .lib-item-btn {
-    background: none;
-    border: 1px solid var(--border2);
-    color: var(--text3);
-    cursor: pointer;
-    font-size: 10px;
-    padding: 1px 5px;
-    border-radius: 2px;
-    line-height: 1.4;
-    white-space: nowrap;
-  }
-  .lib-item-btn:hover { color: var(--accent3); border-color: var(--accent); }
-  .lib-empty { padding: 8px 12px; font-size: 10px; color: var(--text3); font-style: italic; }
-  /* ═══ CHAPTER LINK / SKILL / JUMPBAR ═══ */
-  .ch-link {
-    color: #6ab0f5;
-    text-decoration: underline;
-    text-decoration-color: rgba(106,176,245,0.5);
-    cursor: pointer;
-    transition: color 0.1s;
-  }
-  .ch-link:hover { color: #90c8ff; }
-  .ch-link-rule {
-    color: #c8a840;
-    text-decoration-color: rgba(200,168,64,0.5);
-  }
-  .ch-link-rule:hover { color: #e8c860; }
-
-  /* ルールライブラリ プレビュー */
-  .rs-rule-preview-name {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--accent2);
-    margin-bottom: 10px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid var(--accent);
-    font-family: 'Noto Serif JP', serif;
-  }
-  .rs-rule-preview-body {
-    font-size: 13px;
-    color: var(--text2);
-    line-height: 2.0;
-    white-space: pre-wrap;
-  }
-
-  .ch-skill {
-    color: #c8a840;
-    font-weight: 600;
-    position: relative;
-    cursor: help;
-  }
-  /* 技能ツールチップ */
-  .ch-skill-tooltip {
-    position: fixed;
-    z-index: 500;
-    background: var(--panel2);
-    border: 1px solid var(--border2);
-    border-radius: 5px;
-    padding: 8px 12px;
-    font-size: 12px;
-    color: var(--text);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.6);
-    pointer-events: none;
-    min-width: 160px;
-    max-width: 260px;
-    line-height: 1.7;
-    display: none;
-  }
-  .ch-skill-tooltip.visible { display: block; }
-  .ch-skill-tooltip .tip-title {
-    font-weight: 700;
-    color: #c8a840;
-    margin-bottom: 5px;
-    font-size: 13px;
-  }
-  .ch-skill-tooltip .tip-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 2px 0;
-  }
-  .ch-skill-tooltip .tip-row.has { color: var(--text2); }
-  .ch-skill-tooltip .tip-row.none { color: var(--text3); }
-  .ch-skill-tooltip .tip-val { font-family: 'Share Tech Mono', monospace; color: var(--accent3); margin-left: auto; }
-  .ch-skill-tooltip .tip-alias { font-size: 10px; color: var(--accent2); margin-top:4px; }
-  .ch-skill-tooltip .tip-empty { color: var(--text3); font-size: 11px; font-style: italic; }
-
-  /* 右サイドバー 探索者 */
-  .rs-inv-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 10px 6px 14px;
-    font-size: 12px;
-    color: var(--text2);
-    cursor: pointer;
-    transition: background 0.1s;
-    border-left: 2px solid transparent;
-  }
-  .rs-inv-item:hover { background: var(--bg3); }
-  .rs-inv-item.active { color: var(--accent3); border-left-color: var(--accent); background: var(--panel); }
-  .rs-inv-san {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 10px;
-    color: var(--text3);
-    flex-shrink: 0;
-  }
-
-  /* インラインマークアップ */
-  .ch-box {
-    display: block;
-    border: 1.5px solid var(--text2);
-    border-radius: 3px;
-    padding: 8px 12px;
-    margin: 4px 0;
-    color: var(--text);
-  }
-  .ch-bold  { font-weight: 900; color: var(--text); }
-  .ch-under { text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 4px; }
-  .ch-small { font-size: 0.8em; }
-  .ch-col-red    { color: #e07070; }
-  .ch-col-orange { color: #e09050; }
-  .ch-col-green  { color: #70c070; }
-  .ch-col-blue   { color: #70a8e0; }
-  .ch-col-purple { color: #c080e0; }
-
-  /* 見出し一覧ジャンプバー */
-  .ch-jump-bar {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 4px 10px;
-    background: var(--panel2);
-    border-bottom: 1px solid var(--border);
-    overflow-x: auto;
-    flex-shrink: 0;
-    min-height: 32px;
-  }
-  .ch-jump-bar::-webkit-scrollbar { height: 3px; }
-  .ch-jump-bar::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 2px; }
-  .ch-jump-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 2px 8px;
-    border-radius: 3px;
-    font-size: 11px;
-    cursor: pointer;
-    white-space: nowrap;
-    border: 1px solid transparent;
-    transition: background 0.12s;
-    flex-shrink: 0;
-  }
-  .ch-jump-item:hover { background: var(--bg3); border-color: var(--border); }
-  .ch-jump-item.type-heading    { color: var(--accent3); }
-  .ch-jump-item.type-subheading { color: var(--text2); font-size: 10px; }
-  .ch-jump-item.type-choice     { color: #90c870; font-size: 10px; }
-  .ch-jump-item.type-info       { color: #7ab0d8; }
-  .ch-jump-item.type-explore    { color: #a080c0; }
-  .ch-jump-item.type-scene      { color: #a080c0; }
-  .ch-jump-sep { color: var(--text3); font-size: 10px; flex-shrink: 0; }
-
-  .link-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 7px 10px;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    margin-bottom: 5px;
-    cursor: pointer;
-    font-size: 13px;
-    color: var(--text2);
-    transition: background 0.12s;
-  }
-  .link-item:hover { background: var(--bg3); color: var(--text); }
-  /* ═══ FLOATING INLINE TOOLBAR ═══ */
-  .float-toolbar {
-    position: fixed;
-    z-index: 200;
-    display: none;
-    align-items: center;
-    gap: 2px;
-    padding: 4px 6px;
-    background: var(--panel2);
-    border: 1px solid var(--border2);
-    border-radius: 6px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.5);
-    pointer-events: auto;
-  }
-  .float-toolbar.visible { display: flex; }
-  .float-tb-btn {
-    background: none;
-    border: 1px solid transparent;
-    color: var(--text2);
-    cursor: pointer;
-    font-size: 11px;
-    padding: 2px 6px;
-    border-radius: 3px;
-    line-height: 1.4;
-    white-space: nowrap;
-    transition: background 0.1s, color 0.1s;
-  }
-  .float-tb-btn:hover { background: var(--bg3); border-color: var(--border); color: var(--text); }
-  .float-tb-sep { width: 1px; height: 14px; background: var(--border); margin: 0 2px; flex-shrink: 0; }
-
-  input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
-
-  .tag-select { display: flex; gap: 6px; flex-wrap: wrap; }
-  .tag-selectable {
-    padding: 3px 10px;
-    border-radius: 10px;
-    font-size: 11px;
-    cursor: pointer;
-    border: 1px solid var(--border2);
-    color: var(--text3);
-    background: var(--bg3);
-    transition: all 0.15s;
-  }
-  .tag-selectable.sel-easy { background: #0a2a1a; border-color: #1a6a3a; color: #60c090; }
-  .tag-selectable.sel-normal { background: #1a1a0a; border-color: #6a6a1a; color: #c0c060; }
-  .tag-selectable.sel-hard { background: #2a0a0a; border-color: #8a1a1a; color: #d06060; }
-  .tag-selectable.sel-horror { background: #1a0a1a; border-color: #6a1a6a; color: #c060c0; }
-  .tag-selectable.sel-mystery { background: #0a1a2a; border-color: #1a4a8a; color: #6090d0; }
-
-  .divider { height: 1px; background: var(--border); margin: 12px 0; }
-
-  .collapse-icon { font-size: 10px; color: var(--text3); transition: transform 0.2s; }
-  .collapsed .collapse-icon { transform: rotate(-90deg); }
-
-  .drag-handle { cursor: grab; color: var(--text3); font-size: 12px; opacity: 0.5; }
-  .drag-handle:hover { opacity: 1; }
-
-  /* ═══ SIDEBAR DRAWER TOGGLE ═══ */
-  .sidebar-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.6);
-    z-index: 150;
-    backdrop-filter: blur(1px);
-  }
-  .sidebar-overlay.open { display: block; }
-  .drawer-toggle {
-    background: transparent;
-    border: 1px solid var(--border2);
-    color: var(--text2);
-    padding: 6px 10px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 4px;
-    line-height: 1;
-    flex-shrink: 0;
-    min-width: 36px;
-    min-height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: color 0.15s, border-color 0.15s;
-  }
-  .drawer-toggle:hover { color: var(--accent3); border-color: var(--accent); }
-
-  /* ─── ヘッダー ドロップダウン ─── */
-  .hdr-dropdown { position: relative; display: none; }
-  .hdr-dropdown-btn {
-    display: flex; align-items: center; gap: 5px;
-    background: var(--panel2); border: 1px solid var(--border2);
-    color: var(--text2); padding: 6px 10px; font-size: 11px;
-    border-radius: 3px; cursor: pointer; white-space: nowrap;
-    min-height: 36px;
-  }
-  .hdr-dropdown-btn:hover { color: var(--text); border-color: var(--accent); }
-  .hdr-dropdown-menu {
-    position: absolute; top: calc(100% + 6px); right: 0;
-    background: var(--panel); border: 1px solid var(--border2);
-    border-radius: 4px; box-shadow: 0 6px 24px rgba(0,0,0,0.5);
-    min-width: 180px; z-index: 300; overflow: hidden;
-    display: none;
-  }
-  .hdr-dropdown-menu.open { display: block; }
-  .hdr-dropdown-menu-item {
-    display: flex; align-items: center; gap: 8px;
-    padding: 13px 16px; font-size: 13px; color: var(--text2);
-    cursor: pointer; transition: background 0.1s; white-space: nowrap;
-  }
-  .hdr-dropdown-menu-item:hover { background: var(--bg3); color: var(--text); }
-  .hdr-dropdown-menu-sep {
-    height: 1px; background: var(--border); margin: 4px 0;
-  }
-  /* PC では通常ボタン表示、ドロップダウン非表示 */
-  .hdr-btn-group { display: flex; gap: 6px; align-items: center; }
-  @media (max-width: 1180px) {
-    .hdr-btn-group  { display: none; }
-    .hdr-dropdown   { display: block; }
-  }
-
-  /* ═══ IPAD / TABLET (max-width: 1180px) ═══ */
-  @media (max-width: 1180px) {
-
-    body { height: 100dvh; overflow: hidden; }
-
-    /* ヘッダー */
-    header { padding: 0 10px; height: 50px; }
-    .header-title { font-size: 12px; letter-spacing: 1px; }
-    .header-title span { display: none; }
-    .header-actions { gap: 4px; }
-    .header-actions .btn-sm { padding: 5px 8px; font-size: 11px; }
-
-    /* 右サイドバートグルボタン：iPad時は常時アクセスしやすいスタイルに */
-    #drawerToggleBtn {
-      background: var(--panel2);
-      border-color: var(--border2);
-      color: var(--accent2);
-      font-size: 14px;
-    }
-    #drawerToggleBtn.rs-open {
-      background: var(--accent);
-      border-color: var(--accent2);
-      color: #fff;
-    }
-
-    /* サイドバー：固定ドロワーに */
-    .sidebar {
-      position: fixed;
-      left: -240px;
-      top: env(safe-area-inset-top, 0px);
-      bottom: 0;
-      width: 240px;
-      z-index: 160;
-      transition: left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: none;
-    }
-    .sidebar.open {
-      left: 0;
-      box-shadow: 4px 0 24px rgba(0,0,0,0.7);
-    }
-
-    /* メインコンテンツ：フル幅 */
-    .main-content { width: 100%; }
-
-    /* タブバー：文字・タッチターゲット拡大 */
-    .tab-bar { padding: 0 6px; overflow-x: auto; scrollbar-width: none; }
-    .tab-bar::-webkit-scrollbar { display: none; }
-    .tab { padding: 12px 14px; font-size: 13px; }
-
-    /* フォーム */
-    input[type="text"], input[type="number"], textarea, select {
-      font-size: 16px; /* iOSズーム防止 */
-      padding: 10px 12px;
-    }
-    .field-label { font-size: 11px; }
-
-    /* 章タブバー */
-    .ch-tab { padding: 12px 14px; font-size: 13px; }
-    .ch-tab-add { padding: 10px 14px; font-size: 16px; }
-
-    /* ツールバーボタン */
-    .ch-toolbar { padding: 8px 10px; gap: 6px; overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; }
-    .ch-toolbar::-webkit-scrollbar { display: none; }
-    .tb-btn { padding: 8px 12px; font-size: 12px; flex-shrink: 0; }
-    .mode-toggle { flex-shrink: 0; }
-    .mode-btn { padding: 6px 12px; font-size: 16px; min-width: 40px; min-height: 36px; }
-
-    /* 章編集エリア */
-    .ch-edit-pane { padding: 14px 12px; }
-    .ch-title-field { font-size: 18px; }
-    .block-body textarea { font-size: 16px; min-height: 80px; }
-    .block-body input[type="text"] { font-size: 16px; }
-    .block-header { padding: 8px 12px; }
-
-    /* 閲覧モード：全体的に +1〜2px 拡大 */
-    .ch-preview { padding: 20px 18px; max-width: 100%; }
-    .preview-title    { font-size: 26px; }
-    .preview-heading  { font-size: 21px; }
-    .preview-subheading { font-size: 17px; }
-    .preview-choice   { font-size: 17px; }
-    .preview-bold     { font-size: 17px; }
-    .preview-text     { font-size: 17px; line-height: 2.3; }
-    .preview-info-card .card-title { font-size: 17px; }
-    .preview-info-card .card-body  { font-size: 16px; line-height: 2.1; }
-    .preview-scene-card .scene-body { font-size: 16px; line-height: 2.3; }
-
-    /* 編集エリアのテキストも +1px */
-    .block-body textarea { font-size: 16px; min-height: 80px; line-height: 2.0; }
-    .block-body input[type="text"] { font-size: 16px; }
-
-    /* モーダル */
-    .modal { width: calc(100vw - 24px); max-width: 100%; max-height: 85dvh; }
-
-    /* ダイスパネル */
-    .dice-panel { right: 10px; bottom: 10px; width: 185px; }
-
-    /* ボタン：タッチターゲット確保 */
-    .btn-sm, .btn-primary, .btn-danger, .btn-green {
-      padding: 8px 12px;
-      font-size: 12px;
-      min-height: 36px;
-    }
-    .cocofolia-btn { padding: 8px 12px; }
-
-    /* NPC stat grid */
-    .stat-grid { grid-template-columns: repeat(5, 1fr); gap: 5px; }
-    .stat-cell input[type="number"] { font-size: 16px; }
-
-    /* skill grid */
-    .skill-grid { grid-template-columns: repeat(2, 1fr); }
-    .skill-val { font-size: 14px; width: 45px; }
-
-    /* フィールド行：縦並びに */
-    .field-row { flex-wrap: wrap; }
-    .field-row .field-group { min-width: calc(50% - 5px); }
-
-    /* ヘッダーシナリオ名：iPad では幅を柔軟に */
-    #headerScenarioName {
-      max-width: 200px;
-      font-size: 12px;
-      padding: 4px 8px;
-    }
-
-    /* フロートツールバー：タップ領域拡大 */
-    .float-tb-btn {
-      padding: 6px 10px;
-      font-size: 13px;
-      min-height: 36px;
-    }
-    .float-toolbar {
-      padding: 6px 8px;
-      gap: 4px;
-    }
-  }
-
-  /* ═══ スマホ縦 (max-width: 600px) ═══ */
-  @media (max-width: 600px) {
-    .tab { padding: 11px 10px; font-size: 12px; }
-    .header-title { font-size: 11px; }
-    .stat-grid { grid-template-columns: repeat(3, 1fr); }
-    .field-row .field-group { min-width: 100%; }
-    .ch-preview { padding: 16px 14px; }
-    .preview-title { font-size: 20px; }
-    .preview-text { font-size: 16px; }
-    .right-sidebar { display: none !important; }
-    #drawerToggleBtn { display: none; }
-  }
-
-  /* ═══ REFERENCES TAB ═══ */
-  .ref-area {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px;
-  }
-  .ref-area::-webkit-scrollbar { width: 5px; }
-  .ref-area::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 3px; }
-
-  .ref-toolbar {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 7px 12px;
-    background: var(--panel2);
-    border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
-  }
-
-  /* カード */
-  .ref-card {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    margin-bottom: 16px;
-    overflow: hidden;
-    animation: fadeIn 0.2s ease;
-  }
-  .ref-card-header {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 7px 12px;
-    background: var(--panel2);
-    border-bottom: 1px solid var(--border);
-  }
-  .ref-card-label {
-    font-family: 'Cinzel', serif;
-    font-size: 9px;
-    letter-spacing: 2px;
-    color: var(--text3);
-    padding: 2px 8px;
-    background: var(--bg3);
-    border: 1px solid var(--border2);
-    border-radius: 8px;
-  }
-
-  /* カード編集ボディ */
-  .ref-card-body { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
-
-  .ref-heading-input {
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid var(--border2);
-    color: var(--accent2);
-    font-size: 17px;
-    font-weight: 700;
-    font-family: 'Noto Serif JP', serif;
-    width: 100%;
-    padding: 4px 2px 8px;
-    letter-spacing: 1px;
-  }
-  .ref-heading-input:focus { outline: none; border-bottom-color: var(--accent); }
-  .ref-heading-input::placeholder { color: var(--text3); font-weight: 300; font-size: 14px; }
-
-  .ref-text-input {
-    background: var(--bg3);
-    border: 1px solid var(--border2);
-    border-radius: 3px;
-    color: var(--text2);
-    font-size: 13px;
-    font-family: 'Noto Serif JP', serif;
-    line-height: 1.9;
-    resize: vertical;
-    width: 100%;
-    min-height: 80px;
-    padding: 8px 10px;
-  }
-  .ref-text-input:focus { outline: none; border-color: var(--accent); }
-
-  /* 画像エリア */
-  .ref-image-section { display: flex; flex-direction: column; gap: 8px; }
-  .ref-image-drop {
-    border: 2px dashed var(--border2);
-    border-radius: 4px;
-    padding: 22px;
-    text-align: center;
-    cursor: pointer;
-    color: var(--text3);
-    font-size: 12px;
-    transition: border-color 0.15s, background 0.15s;
-  }
-  .ref-image-drop:hover, .ref-image-drop.drag-over {
-    border-color: var(--accent);
-    background: #1a1a10;
-    color: var(--accent3);
-  }
-  .ref-image-drop .drop-icon { font-size: 26px; margin-bottom: 6px; opacity: 0.4; }
-
-  .ref-image-wrap img {
-    display: block;
-    border-radius: 3px;
-    max-width: 100%;
-    height: auto;
-    border: 1px solid var(--border);
-  }
-  .ref-image-controls {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-top: 6px;
-  }
-  .ref-image-controls label { font-size: 11px; color: var(--text3); white-space: nowrap; }
-  .ref-size-slider { flex: 1; min-width: 80px; accent-color: var(--accent2); cursor: pointer; }
-  .ref-size-val {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 12px;
-    color: var(--accent3);
-    min-width: 38px;
-    text-align: right;
-  }
-  .ref-img-caption {
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid var(--border);
-    color: var(--text3);
-    font-size: 11px;
-    font-family: 'Noto Serif JP', serif;
-    width: 100%;
-    padding: 4px 2px;
-  }
-  .ref-img-caption:focus { outline: none; border-bottom-color: var(--accent); }
-  .ref-img-caption::placeholder { opacity: 0.5; }
-
-  /* imgPos セレクタ */
-  .ref-pos-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 11px;
-    color: var(--text3);
-    flex-wrap: wrap;
-  }
-  .ref-pos-btn {
-    padding: 3px 10px;
-    font-size: 11px;
-    border: 1px solid var(--border2);
-    background: var(--bg3);
-    color: var(--text3);
-    border-radius: 3px;
-    cursor: pointer;
-    transition: all 0.12s;
-  }
-  .ref-pos-btn.active { border-color: var(--accent); color: var(--accent3); background: #1a1a08; }
-
-  /* プレビュー */
-  .ref-preview-divider {
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border2), transparent);
-    margin: 4px 0;
-  }
-  .ref-preview-label {
-    font-family: 'Cinzel', serif;
-    font-size: 9px;
-    letter-spacing: 2px;
-    color: var(--text3);
-    padding: 6px 14px 2px;
-  }
-  .ref-preview-body {
-    padding: 10px 14px 14px;
-  }
-  .ref-preview-title {
-    font-size: 17px;
-    font-weight: 700;
-    color: var(--accent2);
-    margin-bottom: 10px;
-    padding-left: 8px;
-    border-left: 3px solid var(--accent);
-    letter-spacing: 1px;
-  }
-  .ref-preview-text {
-    font-size: 14px;
-    color: var(--text2);
-    line-height: 2.0;
-    white-space: pre-wrap;
-    margin-bottom: 8px;
-  }
-  .ref-preview-img-wrap { margin-bottom: 8px; }
-  .ref-preview-img-wrap img {
-    border-radius: 4px;
-    border: 1px solid var(--border);
-    max-width: 100%;
-    height: auto;
-    display: block;
-  }
-  .ref-preview-img-wrap .img-caption {
-    font-size: 11px;
-    color: var(--text3);
-    text-align: center;
-    margin-top: 4px;
-  }
-  /* 画像位置別レイアウト */
-  .ref-preview-layout-right,
-  .ref-preview-layout-left {
-    display: flex;
-    gap: 16px;
-    align-items: flex-start;
-  }
-  .ref-preview-layout-right .ref-preview-img-wrap { order: 2; flex-shrink: 0; }
-  .ref-preview-layout-right .ref-preview-content  { order: 1; flex: 1; }
-  .ref-preview-layout-left  .ref-preview-img-wrap { order: 1; flex-shrink: 0; }
-  .ref-preview-layout-left  .ref-preview-content  { order: 2; flex: 1; }
-
-  @media (max-width: 1180px) {
-    .ref-heading-input { font-size: 16px; }
-    .ref-text-input { font-size: 16px; }
-    .ref-preview-layout-right,
-    .ref-preview-layout-left { flex-direction: column; }
-  }
-  .chapter-nav {
-    overflow: hidden;
-    max-height: 0;
-    transition: max-height 0.25s ease;
-  }
-  .chapter-nav.open {
-    max-height: 600px;
-  }
-  .chapter-nav-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 5px 10px 5px 22px;
-    font-size: 11px;
-    color: var(--text3);
-    cursor: pointer;
-    border-left: 2px solid transparent;
-    transition: all 0.12s;
-    line-height: 1.4;
-  }
-  .chapter-nav-item:hover {
-    color: var(--text2);
-    background: var(--bg3);
-  }
-  .chapter-nav-item.ch-active {
-    color: var(--accent3);
-    border-left-color: var(--accent);
-    background: var(--bg3);
-  }
-  .chapter-nav-num {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 9px;
-    color: var(--text3);
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    padding: 1px 4px;
-    border-radius: 2px;
-    flex-shrink: 0;
-  }
-  .chapter-nav-item.ch-active .chapter-nav-num {
-    border-color: var(--accent);
-    color: var(--accent2);
-  }
-  .chapter-nav-title {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .chapter-nav-empty {
-    padding: 5px 10px 5px 22px;
-    font-size: 10px;
-    color: var(--text3);
-    font-style: italic;
-    opacity: 0.6;
-  }
-  .scenario-chevron {
-    font-size: 9px;
-    color: var(--text3);
-    transition: transform 0.2s;
-    flex-shrink: 0;
-  }
-  .scenario-item.active .scenario-chevron {
-    transform: rotate(90deg);
-    color: var(--accent2);
-  }
-  /* ═══ ENTITY IMAGE ═══ */
-  .entity-avatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 4px;
-    border: 1px solid var(--border2);
-    object-fit: cover;
-    display: block;
-    flex-shrink: 0;
-    cursor: pointer;
-    transition: border-color 0.15s;
-  }
-  .entity-avatar:hover { border-color: var(--accent); }
-  .entity-avatar-placeholder {
-    width: 80px;
-    height: 80px;
-    border-radius: 4px;
-    border: 1px dashed var(--border2);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    cursor: pointer;
-    flex-shrink: 0;
-    color: var(--text3);
-    font-size: 10px;
-    transition: border-color 0.15s, background 0.15s;
-    background: var(--bg3);
-  }
-  .entity-avatar-placeholder:hover {
-    border-color: var(--accent);
-    background: #1a1a10;
-    color: var(--accent3);
-  }
-  .entity-avatar-placeholder .av-icon { font-size: 22px; opacity: 0.4; }
-  .rs-entity-avatar {
-    width: 60px;
-    height: 60px;
-    border-radius: 4px;
-    border: 1px solid var(--border2);
-    object-fit: cover;
-    flex-shrink: 0;
-  }
-
-  /* ═══ RIGHT SIDEBAR ═══ */
-  .right-sidebar {
-    width: 300px;
-    background: var(--bg2);
-    border-left: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
-    transition: width 0.22s cubic-bezier(0.4,0,0.2,1),
-                opacity 0.18s ease;
-    overflow: hidden;
-  }
-  .right-sidebar.collapsed { width: 0; opacity: 0; border-left: none; }
-
-  /* プレビューパネル */
-  .rs-preview {
-    flex-shrink: 0;
-    background: var(--bg3);
-    border-bottom: 1px solid var(--border);
-    max-height: 55%;
-    overflow-y: auto;
-    transition: max-height 0.2s ease;
-  }
-  .rs-preview:empty { display: none; }
-  .rs-preview::-webkit-scrollbar { width: 4px; }
-  .rs-preview::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 2px; }
-
-  .rs-preview-header {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 10px;
-    background: var(--panel2);
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 1;
-  }
-  .rs-preview-type {
-    font-family: 'Cinzel', serif;
-    font-size: 8px;
-    letter-spacing: 2px;
-    padding: 1px 6px;
-    border-radius: 8px;
-  }
-  .rs-preview-name {
-    flex: 1;
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--accent3);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .rs-preview-close {
-    background: none;
-    border: none;
-    color: var(--text3);
-    cursor: pointer;
-    font-size: 12px;
-    padding: 2px 4px;
-    line-height: 1;
-  }
-  .rs-preview-close:hover { color: var(--text); }
-
-  .rs-preview-body { padding: 10px; }
-
-  .rs-stat-row {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 3px;
-    margin-bottom: 8px;
-  }
-  .rs-stat-cell {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    padding: 3px 2px;
-    text-align: center;
-  }
-  .rs-stat-label { font-size: 9px; color: var(--text3); letter-spacing: 0.5px; }
-  .rs-stat-val {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 14px;
-    color: var(--accent3);
-    line-height: 1.2;
-  }
-
-  .rs-detail {
-    font-size: 13px;
-    color: var(--text2);
-    line-height: 1.8;
-    white-space: pre-wrap;
-    margin-bottom: 8px;
-  }
-  .rs-skill-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 3px;
-    margin-bottom: 6px;
-  }
-  .rs-skill-tag {
-    background: var(--bg2);
-    border: 1px solid var(--border2);
-    border-radius: 3px;
-    padding: 1px 6px;
-    font-size: 12px;
-    color: var(--text2);
-  }
-  .rs-skill-tag span { color: var(--accent3); font-family: 'Share Tech Mono', monospace; }
-
-  .rs-section-label {
-    font-size: 9px;
-    font-family: 'Cinzel', serif;
-    letter-spacing: 1px;
-    color: var(--text3);
-    margin-bottom: 4px;
-    padding-bottom: 2px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  /* リストエリア */
-  .rs-list-area {
-    flex: 1 1 0;
-    min-height: 0;
-    overflow-y: auto;
-  }
-  .rs-list-area::-webkit-scrollbar { width: 4px; }
-  .rs-list-area::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 2px; }
-
-  .rs-section {
-    border-bottom: 1px solid var(--border);
-  }
-  .rs-section-header {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 7px 10px;
-    cursor: pointer;
-    font-size: 11px;
-    color: var(--text2);
-    background: var(--panel2);
-    user-select: none;
-    transition: background 0.1s;
-  }
-  .rs-section-header:hover { background: var(--bg3); }
-  .rs-section-title { flex: 1; font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 2px; color: var(--accent2); }
-  .rs-section-chevron { font-size: 10px; color: var(--text3); transition: transform 0.18s; }
-  .rs-section-chevron.open { transform: rotate(90deg); }
-  .rs-section-body { overflow: hidden; max-height: 0; transition: max-height 0.2s ease; }
-  .rs-section-body.open { max-height: 2000px; }
-
-  .rs-item {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    padding: 7px 10px 7px 14px;
-    cursor: pointer;
-    font-size: 12px;
-    color: var(--text3);
-    transition: background 0.1s, color 0.1s;
-    border-left: 2px solid transparent;
-  }
-  .rs-item:hover { background: var(--bg3); color: var(--text2); }
-  .rs-item.active { color: var(--accent3); border-left-color: var(--accent); background: var(--panel); }
-  .rs-item-icon { font-size: 12px; flex-shrink: 0; }
-  .rs-item-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .rs-item-sub { font-size: 10px; color: var(--text3); flex-shrink: 0; }
-
-  .rs-empty {
-    padding: 8px 14px;
-    font-size: 11px;
-    color: var(--text3);
-    font-style: italic;
-  }
-
-  /* ─── イベントセクション（右サイドバー） ─── */
-  .rs-event-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    padding: 7px 10px 7px 14px;
-    font-size: 12px;
-    color: var(--text2);
-    border-bottom: 1px solid var(--border);
-    transition: background 0.1s;
-  }
-  .rs-event-item:last-child { border-bottom: none; }
-  .rs-event-item:hover { background: var(--bg3); }
-  .rs-event-item.done { opacity: 0.4; }
-  .rs-event-item.done .rs-event-title { text-decoration: line-through; color: var(--text3); }
-  .rs-event-check {
-    width: 14px;
-    height: 14px;
-    margin-top: 1px;
-    flex-shrink: 0;
-    accent-color: var(--accent2);
-    cursor: pointer;
-  }
-  .rs-event-title {
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    cursor: pointer;
-    line-height: 1.4;
-  }
-  .rs-event-title:hover { color: var(--accent3); }
-  .rs-event-chevron {
-    font-size: 9px;
-    color: var(--text3);
-    flex-shrink: 0;
-    transition: transform 0.15s;
-    cursor: pointer;
-  }
-  .rs-event-chevron.open { transform: rotate(90deg); }
-  .rs-event-detail {
-    padding: 8px 14px 10px 34px;
-    font-size: 13px;
-    color: var(--text2);
-    line-height: 1.8;
-    white-space: pre-wrap;
-    background: var(--bg3);
-    border-bottom: 1px solid var(--border);
-  }
-
-  /* ─── イベント拡大ボタン ─── */
-  .rs-event-expand {
-    background: none;
-    border: none;
-    color: var(--text3);
-    font-size: 11px;
-    cursor: pointer;
-    padding: 1px 3px;
-    flex-shrink: 0;
-    line-height: 1;
-    opacity: 0.6;
-    transition: opacity 0.12s, color 0.12s;
-    margin-top: 1px;
-  }
-  .rs-event-expand:hover { opacity: 1; color: var(--accent3); }
-  @media (max-width: 1180px) {
-    .rs-event-expand { font-size: 14px; padding: 2px 5px; min-width: 28px; min-height: 28px; opacity: 0.8; }
-  }
-
-  /* ─── イベント詳細モーダル ─── */
-  .event-detail-modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.82);
-    z-index: 400;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(3px);
-    animation: fadeIn 0.18s ease;
-    padding: 20px;
-  }
-  @media (max-width: 1180px) {
-    .event-detail-modal-overlay {
-      align-items: flex-end;
-      padding: 0;
-    }
-  }
-  .event-detail-modal {
-    background: var(--panel);
-    border: 1px solid var(--accent);
-    border-radius: 8px;
-    width: 560px;
-    max-width: 100%;
-    max-height: 80dvh;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 8px 48px rgba(0,0,0,0.7);
-    overflow: hidden;
-  }
-  @media (max-width: 1180px) {
-    .event-detail-modal {
-      width: 100%;
-      max-width: 100%;
-      border-radius: 14px 14px 0 0;
-      max-height: 88dvh;
-      border-left: none;
-      border-right: none;
-      border-bottom: none;
-    }
-  }
-  .event-detail-modal-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 14px 16px;
-    background: var(--panel2);
-    border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
-  }
-  .event-detail-modal-check {
-    width: 16px;
-    height: 16px;
-    flex-shrink: 0;
-    accent-color: var(--accent2);
-    cursor: pointer;
-  }
-  .event-detail-modal-title {
-    flex: 1;
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--accent3);
-    font-family: 'Noto Serif JP', serif;
-    line-height: 1.4;
-  }
-  .event-detail-modal-done .event-detail-modal-title {
-    text-decoration: line-through;
-    color: var(--text3);
-  }
-  .event-detail-modal-close {
-    background: none;
-    border: 1px solid var(--border2);
-    color: var(--text3);
-    cursor: pointer;
-    font-size: 14px;
-    width: 30px;
-    height: 30px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: color 0.12s, border-color 0.12s;
-  }
-  .event-detail-modal-close:hover { color: var(--text); border-color: var(--accent); }
-  @media (max-width: 1180px) {
-    .event-detail-modal-close { width: 38px; height: 38px; font-size: 16px; }
-  }
-  .event-detail-modal-body {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px 22px;
-    font-size: 15px;
-    color: var(--text2);
-    line-height: 2.0;
-    white-space: pre-wrap;
-  }
-  @media (max-width: 1180px) {
-    .event-detail-modal-body { font-size: 16px; padding: 20px 18px 32px; line-height: 2.1; }
-  }
-  .event-detail-modal-body::-webkit-scrollbar { width: 5px; }
-  .event-detail-modal-body::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 3px; }
-  .event-detail-modal-empty {
-    color: var(--text3);
-    font-style: italic;
-    font-size: 13px;
-  }
-
-  /* ─── イベントタブ メインエリア ─── */
-  .event-card {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    margin-bottom: 10px;
-    overflow: hidden;
-    transition: border-color 0.15s;
-  }
-  .event-card:hover { border-color: var(--border2); }
-  .event-card.done { opacity: 0.55; }
-  .event-card-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    background: var(--panel2);
-    border-bottom: 1px solid var(--border);
-  }
-  .event-card-check {
-    width: 15px;
-    height: 15px;
-    flex-shrink: 0;
-    accent-color: var(--accent2);
-    cursor: pointer;
-  }
-  .event-card-title {
-    flex: 1;
-    background: transparent;
-    border: none;
-    color: var(--text);
-    font-size: 13px;
-    font-weight: 700;
-    font-family: 'Noto Serif JP', serif;
-    padding: 0;
-  }
-  .event-card-title:focus { outline: none; }
-  .event-card-title::placeholder { color: var(--text3); font-weight: 300; }
-  .event-card-del {
-    margin-left: auto;
-    cursor: pointer;
-    color: var(--text3);
-    font-size: 11px;
-    opacity: 0.5;
-    flex-shrink: 0;
-  }
-  .event-card-del:hover { opacity: 1; color: var(--red2); }
-  .event-card-body { padding: 8px 12px; }
-  .event-card-body textarea {
-    background: transparent;
-    border: none;
-    color: var(--text2);
-    font-size: 13px;
-    font-family: 'Noto Serif JP', serif;
-    line-height: 1.9;
-    resize: vertical;
-    width: 100%;
-    min-height: 60px;
-  }
-  .event-card-body textarea:focus { outline: none; }
-
-  /* 資料カードプレビュー */
-  .rs-ref-preview-title {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--accent2);
-    margin-bottom: 6px;
-    border-left: 2px solid var(--accent);
-    padding-left: 6px;
-  }
-  .rs-ref-preview-text {
-    font-size: 13px;
-    color: var(--text2);
-    line-height: 1.9;
-    white-space: pre-wrap;
-  }
-  .rs-ref-preview-img img {
-    max-width: 100%;
-    border-radius: 3px;
-    border: 1px solid var(--border);
-    margin-top: 6px;
-  }
-
-  /* iPad では右サイドバーを折りたたみ状態で表示（JSで開閉） */
-  @media (max-width: 1180px) {
-    .right-sidebar {
-      width: 240px;
-    }
-    .right-sidebar.collapsed {
-      width: 0;
-      opacity: 0;
-      border-left: none;
-    }
-  }
-
   /* ═══ LIBRARY ═══ */
   .lib-section {
     border-top: 1px solid var(--border);
@@ -4167,6 +2939,7 @@
   .ch-jump-item.type-info       { color: #7ab0d8; }
   .ch-jump-item.type-explore    { color: #a080c0; }
   .ch-jump-item.type-scene      { color: #a080c0; }
+  .ch-jump-item.type-event      { color: #e0a040; }
   .ch-jump-sep { color: var(--text3); font-size: 10px; flex-shrink: 0; }
 
   .link-item {
@@ -4314,138 +3087,6 @@
   .lightbox-close:hover { background: rgba(255,255,255,0.25); }
   /* 拡大可能な画像はカーソルを虫眼鏡に */
   .zoomable { cursor: zoom-in !important; }
-
-  /* ═══ iPAD 追加スタイル ═══ */
-
-  /* 右サイドバー：iPad時の幅調整は media で制御済み
-     transition を少し長めに取ってスムーズに開閉 */
-  .right-sidebar {
-    transition: width 0.25s cubic-bezier(0.4,0,0.2,1),
-                opacity 0.2s ease;
-  }
-
-  /* 左ドロワー：スワイプ領域インジケーター
-     左端 8px にタッチ透明ゾーンを確保 */
-  .swipe-edge-hint {
-    position: fixed;
-    left: 0; top: 52px; bottom: 0;
-    width: 8px;
-    z-index: 155;
-    /* 視覚的には完全透明。JS でタッチイベントを拾う */
-  }
-
-  /* プルダウンメニュー：スライドインアニメーション */
-  @keyframes pulldownSlide {
-    from { opacity: 0; transform: translateY(-6px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .tab-pulldown-menu.open {
-    animation: pulldownSlide 0.15s ease;
-  }
-
-  /* プルダウンボタン：タップ領域を確保 */
-  .tab-pulldown-btn {
-    min-height: 50px;
-  }
-  .tab-pulldown-item {
-    min-height: 50px;
-  }
-
-  /* リストアイテム：iPad でタップ領域を確保 */
-  @media (max-width: 1180px) {
-    .scenario-item   { min-height: 44px; }
-    .folder-item     { min-height: 40px; }
-    .rs-item         { min-height: 40px; }
-    .rs-section-header { min-height: 40px; }
-    .sb-tab          { padding: 10px 4px; font-size: 11px; }
-    .sblib-header    { min-height: 44px; }
-    .sbrule-item-header { min-height: 40px; }
-
-    /* ダイスパネル：右サイドバーが開いているとき被らないよう
-       右サイドバーの幅(240px)+余白分だけ左に寄せる
-       （JSでも動的に調整するが CSS でベースを設定） */
-    .dice-panel {
-      right: 254px;
-      bottom: 16px;
-      transition: right 0.25s cubic-bezier(0.4,0,0.2,1);
-    }
-    /* 右サイドバーが collapsed のとき元の位置に戻す */
-    body.rs-collapsed .dice-panel {
-      right: 14px;
-    }
-
-    /* 章ツールバー：スクロール中に上に固定されるよう sticky */
-    .ch-toolbar {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      background: var(--panel2);
-    }
-
-    /* ref エリアも同様 */
-    .ref-toolbar {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    /* entity-header：編集ボタンのタップ領域 */
-    .entity-header button,
-    .entity-header .btn-sm {
-      min-height: 36px;
-      min-width: 36px;
-    }
-
-    /* block-drag-handle：iPadではドラッグより長押しが自然なので少し大きく */
-    .block-drag-handle {
-      padding: 4px 8px 4px 4px;
-      font-size: 16px;
-    }
-
-    /* モーダル：下から出てくるシート風にする */
-    .modal-overlay {
-      align-items: flex-end;
-    }
-    .modal {
-      width: 100%;
-      max-width: 100%;
-      border-radius: 12px 12px 0 0;
-      max-height: 88dvh;
-    }
-
-    /* ライトボックス：閉じるボタンを大きく */
-    .lightbox-close {
-      width: 48px;
-      height: 48px;
-      font-size: 22px;
-    }
-  }
-  /* iPad 編集モード切替ボタン（ヘッダー内） */
-  .edit-mode-fab {
-    display: none; /* JS で iPad 時のみ表示 */
-    background: var(--panel2);
-    border: 1px solid var(--border2);
-    color: var(--text3);
-    padding: 6px 10px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 4px;
-    line-height: 1;
-    min-width: 36px;
-    min-height: 36px;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: color 0.15s, border-color 0.15s, background 0.15s;
-  }
-  .edit-mode-fab:hover { color: var(--accent3); border-color: var(--accent); }
-  .edit-mode-fab.editing {
-    background: linear-gradient(135deg, #5c4010, #8b6914);
-    border-color: var(--accent2);
-    color: var(--accent3);
-  }
-  /* iPad 閲覧モード時：モードトグルを非表示 */
-  body.ipad-view-mode .mode-toggle { display: none !important; }
 </style>
 </head>
 <body>
@@ -4503,8 +3144,7 @@
         <div class="hdr-dropdown-menu-item" style="color:#c8a840" onclick="importAllData();closeHdrDropdown()">📂 全データ読込</div>
       </div>
     </div>
-    <button class="drawer-toggle" onclick="toggleRightSidebar()" title="クイック参照パネル" aria-label="クイック参照パネルを開閉" style="margin-left:4px" id="drawerToggleBtn">⊞</button>
-    <button class="edit-mode-fab" id="editModeFab" onclick="toggleIpadEditMode()" title="閲覧モード（タップで編集）">👁</button>
+    <button class="drawer-toggle" onclick="toggleRightSidebar()" title="クイック参照" style="margin-left:4px" id="drawerToggleBtn">⊞</button>
   </div>
 </header>
 
@@ -4542,11 +3182,11 @@
 
     <!-- ═══ ルールタブ ═══ -->
     <div class="sb-panel" id="sbPanel-rule">
-      <div class="sidebar-section" style="display:flex;align-items:center;padding:8px 10px;">
+      <div class="sidebar-section" style="display:flex;align-items:center;padding:8px 10px;flex-shrink:0">
         <span style="font-family:'Cinzel',serif;font-size:9px;color:var(--text3);letter-spacing:2px;flex:1">RULE LIBRARY</span>
         <button class="lib-item-btn" style="font-size:10px;padding:2px 6px;color:#70c090;border-color:#2a5a3a;margin-left:3px" onclick="openSkillLibraryModal()" title="技能リスト設定">⚙ 技能</button>
-        <button class="lib-item-btn" style="font-size:10px;padding:2px 6px;color:#a0b8d0;border-color:#2a4a6a" onclick="exportRuleLibrary()" title="ルールライブラリをエクスポート">📤</button>
-        <button class="lib-item-btn" style="font-size:10px;padding:2px 6px;color:#a0b8d0;border-color:#2a4a6a;margin-left:3px" onclick="importRuleLibrary()" title="ルールライブラリをインポート">📥</button>
+        <button class="lib-item-btn" style="font-size:10px;padding:2px 6px;color:#a0b8d0;border-color:#2a4a6a;margin-left:3px" onclick="exportRuleLibrary()" title="エクスポート">📤</button>
+        <button class="lib-item-btn" style="font-size:10px;padding:2px 6px;color:#a0b8d0;border-color:#2a4a6a;margin-left:3px" onclick="importRuleLibrary()" title="インポート">📥</button>
         <button class="lib-item-btn" style="font-size:10px;padding:2px 8px;color:#c8a840;border-color:#5a4010;margin-left:3px" onclick="openRuleEditor(null)">＋ 追加</button>
       </div>
       <div style="flex:1 1 0;min-height:0;overflow-y:auto;" id="sbRuleBody"></div>
@@ -4566,7 +3206,7 @@
       <div class="home-wrap" id="homeContent"></div>
     </div>
     <div id="scenarioEditor" style="display:none; flex:1 1 0; min-height:0; flex-direction:column; overflow:hidden;">
-      <div class="tab-bar" id="mainTabBar">
+      <div class="tab-bar">
         <div class="tab active" onclick="switchTab('info')" id="tab-info">📋 シナリオ情報</div>
         <div class="tab" onclick="switchTab('chapters')" id="tab-chapters">📖 章・本文</div>
         <div class="tab" onclick="switchTab('npc')" id="tab-npc">👤 NPC</div>
@@ -4575,24 +3215,6 @@
         <div class="tab" onclick="switchTab('investigators')" id="tab-investigators">🔍 探索者</div>
         <div class="tab" onclick="switchTab('events')" id="tab-events">⚡ イベント</div>
         <div class="tab" onclick="switchTab('memo')" id="tab-memo">📝 メモ</div>
-      </div>
-
-      <!-- iPad用プルダウンタブ -->
-      <div class="tab-pulldown" id="tabPulldown">
-        <button class="tab-pulldown-btn" onclick="toggleTabPulldown()">
-          <span id="tabPulldownLabel">📋 シナリオ情報</span>
-          <span class="tab-pulldown-btn-arrow" id="tabPulldownArrow">▼</span>
-        </button>
-        <div class="tab-pulldown-menu" id="tabPulldownMenu">
-          <div class="tab-pulldown-item active" onclick="switchTabPulldown('info')"   id="pd-info">📋 シナリオ情報</div>
-          <div class="tab-pulldown-item"        onclick="switchTabPulldown('chapters')" id="pd-chapters">📖 章・本文</div>
-          <div class="tab-pulldown-item"        onclick="switchTabPulldown('npc')"    id="pd-npc">👤 NPC</div>
-          <div class="tab-pulldown-item"        onclick="switchTabPulldown('creature')" id="pd-creature">👾 神話生物</div>
-          <div class="tab-pulldown-item"        onclick="switchTabPulldown('refs')"   id="pd-refs">🗂 情報・資料</div>
-          <div class="tab-pulldown-item"        onclick="switchTabPulldown('investigators')" id="pd-investigators">🔍 探索者</div>
-          <div class="tab-pulldown-item"        onclick="switchTabPulldown('events')" id="pd-events">⚡ イベント</div>
-          <div class="tab-pulldown-item"        onclick="switchTabPulldown('memo')"   id="pd-memo">📝 メモ</div>
-        </div>
       </div>
 
       <!-- 通常タブ用コンテンツ（シナリオ情報・メモのみ） -->
@@ -4607,6 +3229,8 @@
           <div class="ch-toolbar-sep"></div>
           <button class="tb-btn" onclick="insertBlock('info')" title="情報カード">🔵 情報カード</button>
           <button class="tb-btn" onclick="insertBlock('scene')" title="演出カード" style="color:#a080c0;border-color:#4a2a60;">🎭 演出カード</button>
+          <button class="tb-btn" onclick="insertBlock('event')" title="イベントカード" style="color:#e0a040;border-color:#6a4010;">⚡ イベント</button>
+          <button class="tb-btn" onclick="insertBlock('event')" title="イベントカード" style="color:#e0a040;border-color:#6a4010;">⚡ イベント</button>
           <button class="tb-btn" onclick="insertBlock('choice')" title="選択肢" style="color:#90c870;border-color:#3a6a20;">🔀 選択肢</button>
           <div class="ch-toolbar-sep"></div>
           <button class="tb-btn" onclick="insertBlock('text')" title="本文ブロック追加">＋ 本文</button>
@@ -4635,15 +3259,15 @@
             🔗 リンク
           </button>
           <div class="mode-toggle">
-            <button class="mode-btn active" id="modeEdit" onclick="setChapterMode('edit')">✏</button>
-            <button class="mode-btn" id="modeView" onclick="setChapterMode('view')">👁</button>
+            <button class="mode-btn active" id="modeEdit" onclick="setChapterMode('edit')">✏ 編集</button>
+            <button class="mode-btn" id="modeView" onclick="setChapterMode('view')">👁 閲覧</button>
           </div>
         </div>
         <div id="chViewBar" style="display:none;background:var(--panel2);border-bottom:1px solid var(--border);align-items:center;padding:0 10px;gap:6px;min-height:34px;">
           <div class="ch-jump-bar" id="chJumpBar" style="flex:1;border:none;padding:0;background:none;min-height:unset;"></div>
           <div class="mode-toggle" style="flex-shrink:0">
-            <button class="mode-btn" id="modeEdit2" onclick="setChapterMode('edit')">✏</button>
-            <button class="mode-btn active" id="modeView2" onclick="setChapterMode('view')">👁</button>
+            <button class="mode-btn" id="modeEdit2" onclick="setChapterMode('edit')">✏ 編集</button>
+            <button class="mode-btn active" id="modeView2" onclick="setChapterMode('view')">👁 閲覧</button>
           </div>
         </div>
         <div id="chContent" style="flex:1 1 0;min-height:0;overflow:hidden;display:flex;flex-direction:column;"></div>
@@ -4712,6 +3336,7 @@
           <button class="fc-tool-btn" id="fcPasteBtn" onclick="fcPaste()" title="貼り付け (Ctrl+V)">⎙</button>
           <div class="fc-toolbar-sep"></div>
           <button class="fc-tool-btn" onclick="fcAutoLayout()" title="自動整列">⚡ 整列</button>
+          <button class="fc-tool-btn" onclick="fcStraightenEdges(false)" title="接続線を整理（辺指定・線種をリセット）">↔ 線整理</button>
           <button class="fc-tool-btn" onclick="fcAddNode()" title="ノード追加">＋ ノード</button>
           <button class="fc-tool-btn" onclick="fcAddGroup()" title="グループ枠追加">⬜ グループ</button>
           <button class="fc-tool-btn" id="fcEdgeBtn" onclick="fcAddEdge()" title="接続追加">↗ 接続</button>
@@ -4727,10 +3352,6 @@
         </div>
         <button class="fc-tool-btn" onclick="openFcModal()" title="拡大表示">⛶</button>
         <button class="fc-tool-btn" onclick="fcResetChecks()" title="チェックをリセット" style="color:#70b080">✓ reset</button>
-        <div class="fc-toolbar-sep"></div>
-        <button class="fc-tool-btn" onclick="fcZoomIn(false)"  title="拡大">＋</button>
-        <button class="fc-tool-btn" onclick="fcZoomOut(false)" title="縮小">－</button>
-        <button class="fc-tool-btn" onclick="fcResetView(false)" title="表示リセット" style="font-size:9px">⟳</button>
       </div>
       <div class="fc-canvas-wrap" id="fcCanvasWrap" onclick="fcBgClick(event,false)" onmousedown="fcCanvasMousedown(event,false)" onwheel="fcOnWheel(event,false)">
         <svg id="fcSvg" class="fc-svg" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
@@ -4761,6 +3382,10 @@
       <div class="fc-info-bar" id="fcInfoBar">
         <span class="fc-info-hint">クリック: ジャンプ　右クリック: 編集</span>
         <span class="fc-zoom-label" id="fcZoomLabel" style="margin-left:auto;color:var(--text3);font-size:9px;cursor:pointer" onclick="fcResetView(false)" title="ダブルクリックでリセット">100%</span>
+      </div>
+      <div class="fc-bottom-panel" id="fcBottomPanel" style="display:none"></div>
+    </div>
+  </div>
 
   </div>
 </div>
@@ -4792,7 +3417,7 @@
   <button class="float-tb-btn" onmousedown="event.preventDefault()" onclick="floatWrap('box')"    title="枠で囲む">▢ 枠</button>
   <button class="float-tb-btn" onmousedown="event.preventDefault()" onclick="floatWrap('bold')"   title="太字" style="font-weight:700;">𝐁</button>
   <button class="float-tb-btn" onmousedown="event.preventDefault()" onclick="floatWrap('under')"  title="下線" style="text-decoration:underline;">U</button>
-  <button class="float-tb-btn" onmousedown="event.preventDefault()" onclick="floatWrap('small')"  title="小文字" style="font-size:10px;">Ａ</button>
+  <button class="float-tb-btn" onmousedown="event.preventDefault()" onclick="floatWrap('small')"  title="文字を小さく" style="font-size:10px;">Ａ</button>
   <div class="float-tb-sep"></div>
   <button class="float-tb-btn" onmousedown="event.preventDefault()" onclick="floatWrap('red')"    style="color:#e07070;">赤</button>
   <button class="float-tb-btn" onmousedown="event.preventDefault()" onclick="floatWrap('orange')" style="color:#e09050;">橙</button>
@@ -4950,7 +3575,7 @@ let state = {
   ruleLibrary: [],     // ルールライブラリ（全シナリオ共通）
   customSkills: [],    // カスタム技能リスト
   skillDetails: {},    // 組み込み技能の詳細
-  skillGroups: [],     // 技能グループ
+  skillGroups: [],     // 技能グループ（{ "図書館": { detail, baseValue } }）
   currentId: null,
   activeTab: 'info',
   currentChapter: null,
@@ -4962,19 +3587,19 @@ let state = {
 };
 
 let rsOpenSections = { investigators: true, events: true, npc: true, creature: true, refs: true };
-let currentRsTab = 'list'; // 右サイドバーのアクティブタブ
 let rsActiveItem = null;
 let rsEventExpanded = new Set(); // 右サイドバーで展開中のイベントID
+let currentRsTab = 'list'; // 右サイドバーのアクティブタブ
 let infoMode = 'view';
 let entityMode = 'view'; // NPC・神話生物共通モード
 let eventMode  = 'view'; // イベントタブモード
-let ipadEditMode = false; // iPad: false=閲覧専用, true=編集可能
 
 // ═══ SIDEBAR DRAWER ═══
 function toggleSidebar() {
   const sidebar = document.querySelector('.sidebar');
   const overlay = document.getElementById('sidebarOverlay');
-  if (_isIpadMode()) {
+  const isMobile = window.innerWidth <= 1024;
+  if (isMobile) {
     const isOpen = sidebar.classList.contains('open');
     sidebar.classList.toggle('open', !isOpen);
     overlay.classList.toggle('open', !isOpen);
@@ -4987,47 +3612,6 @@ function closeSidebar() {
   document.querySelector('.sidebar').classList.remove('open');
   document.getElementById('sidebarOverlay').classList.remove('open');
 }
-
-// ─── ダイスパネル位置を右サイドバーに合わせて調整 ───
-function _updateDicePosition() {
-  const dice = document.getElementById('dicePanel');
-  if (!dice || dice.style.display === 'none') return;
-  if (!_isIpadMode()) return;
-  const rs = document.getElementById('rightSidebar');
-  const rsCollapsed = rs && rs.classList.contains('collapsed');
-  dice.style.right = rsCollapsed ? '14px' : '254px';
-}
-
-// ─── 左ドロワー：端スワイプ対応 ───
-(function initSwipeDrawer() {
-  let touchStartX = 0;
-  let touchStartY = 0;
-  let drawerSwiping = false;
-
-  document.addEventListener('touchstart', e => {
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-    drawerSwiping = touchStartX < 28; // 左端28px以内からのスワイプで開く候補
-  }, { passive: true });
-
-  document.addEventListener('touchend', e => {
-    if (!drawerSwiping || !_isIpadMode()) return;
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    const dy = e.changedTouches[0].clientY - touchStartY;
-    // 横方向が支配的かつ60px以上右スワイプ
-    if (dx > 60 && Math.abs(dy) < Math.abs(dx) * 0.6) {
-      const sidebar = document.querySelector('.sidebar');
-      if (!sidebar.classList.contains('open')) {
-        sidebar.classList.add('open');
-        document.getElementById('sidebarOverlay').classList.add('open');
-      }
-    }
-    drawerSwiping = false;
-  }, { passive: true });
-
-  // 右サイドバーのトグル後にダイスパネル位置を更新
-  // ※ toggleRightSidebar 内で直接呼んでいるためここでは不要
-})();
 
 function updateHeaderScenarioName() {
   const nameEl = document.getElementById('headerScenarioName');
@@ -5174,7 +3758,9 @@ function save() {
 
 
 function injectImages(scenarios, images) {
+  if (!images) return;
   Object.values(scenarios).forEach(s => {
+    if (!s) return;
     (s.npcs||[]).forEach(e => {
       if (images[`npc_${e.id}`]) e.image = images[`npc_${e.id}`];
     });
@@ -5278,123 +3864,29 @@ function getStorageUsage() {
   renderScenarioList();
   renderSbCreature();
   renderSbRule();
+  renderSbSkill();
   renderHomepage();
   if (Object.keys(state.scenarios).length === 0) {
     document.getElementById('noScenario').style.display = 'flex';
     document.getElementById('scenarioEditor').style.display = 'none';
   }
   initFloatToolbar();
-  _applyIpadTabMode();
-  _updateDicePosition();
-  _showInstallGuideIfNeeded();
 })();
-
-// ─── ホーム画面追加ガイド（初回・Safari・非スタンドアローン時のみ） ───
-function _showInstallGuideIfNeeded() {
-  // すでにスタンドアローン（インストール済み）なら何もしない
-  if (window.navigator.standalone === true) return;
-  if (window.matchMedia('(display-mode: standalone)').matches) return;
-  // 一度表示したらスキップ
-  if (localStorage.getItem('_installGuideShown')) return;
-  // iOSのSafariかつタッチデバイスのみ案内
-  const isIosSafari = /iP(ad|hone|od)/.test(navigator.userAgent)
-    && /WebKit/.test(navigator.userAgent)
-    && !/CriOS|FxiOS|OPiOS|mercury/.test(navigator.userAgent);
-  if (!isIosSafari) return;
-
-  localStorage.setItem('_installGuideShown', '1');
-
-  // 少し遅らせてロード完了後に表示
-  setTimeout(() => {
-    const overlay = document.createElement('div');
-    overlay.id = 'installGuide';
-    overlay.style.cssText = `
-      position: fixed; inset: 0; z-index: 9999;
-      background: rgba(0,0,0,0.85); backdrop-filter: blur(4px);
-      display: flex; align-items: flex-end; justify-content: center;
-      padding: 0 16px 40px;
-      animation: fadeIn 0.3s ease;
-    `;
-    overlay.innerHTML = `
-      <div style="
-        background: #1e1e28; border: 1px solid #8b6914;
-        border-radius: 16px; padding: 24px 20px; max-width: 480px; width: 100%;
-        box-shadow: 0 -4px 40px rgba(0,0,0,0.6);
-      ">
-        <div style="font-family:'Cinzel',serif;font-size:13px;color:#c49a2e;
-                    letter-spacing:3px;margin-bottom:14px;text-align:center">
-          ☽ APP INSTALL GUIDE
-        </div>
-        <p style="font-size:14px;color:#d4c9b0;line-height:2;margin-bottom:16px;text-align:center">
-          このツールをホーム画面に追加すると<br>
-          フルスクリーンのアプリとして使えます
-        </p>
-        <div style="background:#141418;border:1px solid #2a2a38;border-radius:8px;
-                    padding:14px 16px;margin-bottom:20px;">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-            <span style="font-size:20px">①</span>
-            <span style="font-size:13px;color:#a09880">
-              画面下部の <strong style="color:#e8c56a">共有ボタン</strong>（□↑）をタップ
-            </span>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;">
-            <span style="font-size:20px">②</span>
-            <span style="font-size:13px;color:#a09880">
-              「<strong style="color:#e8c56a">ホーム画面に追加</strong>」を選択
-            </span>
-          </div>
-        </div>
-        <div style="display:flex;gap:10px;">
-          <button onclick="document.getElementById('installGuide').remove()"
-            style="flex:1;background:#1a1a22;border:1px solid #353548;color:#a09880;
-                   padding:12px;border-radius:8px;font-size:13px;cursor:pointer;
-                   font-family:'Noto Serif JP',serif;">
-            後で
-          </button>
-          <button onclick="document.getElementById('installGuide').remove()"
-            style="flex:2;background:linear-gradient(135deg,#5c4010,#8b6914);
-                   border:1px solid #c49a2e;color:#e8c56a;
-                   padding:12px;border-radius:8px;font-size:13px;cursor:pointer;
-                   font-family:'Noto Serif JP',serif;font-weight:700;">
-            わかった ✓
-          </button>
-        </div>
-      </div>
-    `;
-    overlay.addEventListener('click', e => {
-      if (e.target === overlay) overlay.remove();
-    });
-    document.body.appendChild(overlay);
-  }, 1800);
-}
 
 // ═══════════════════════════════════════════════
 // RIGHT SIDEBAR
 // ═══════════════════════════════════════════════
 
 function toggleRightSidebar() {
-  const rs  = document.getElementById('rightSidebar');
-  const btn = document.getElementById('drawerToggleBtn');
-  const collapsed = rs.classList.toggle('collapsed');
-  if (btn) btn.classList.toggle('rs-open', !collapsed);
-  // ダイスパネルの位置を右サイドバー状態に合わせて更新
-  setTimeout(_updateDicePosition, 260);
-}
-
-// 右サイドバーを確実に開く（ボタン状態も同期）
-function openRightSidebar() {
-  const rs  = document.getElementById('rightSidebar');
-  const btn = document.getElementById('drawerToggleBtn');
-  if (rs) { rs.classList.remove('collapsed'); }
-  if (btn) btn.classList.add('rs-open');
-  setTimeout(_updateDicePosition, 260);
+  const rs = document.getElementById('rightSidebar');
+  rs.classList.toggle('collapsed');
 }
 
 function renderRightSidebar() {
   const s = getCurrentScenario();
   if (!s) return;
   renderRsList(s);
-  // フロータブが表示中なら再描画
+  // フロータブが表示中の場合のみ再描画（switchTabの連鎖で余分に呼ばれないよう）
   const flowPane = document.getElementById('rsPane-flow');
   if (flowPane && flowPane.style.display !== 'none') renderFlowchart(false);
 }
@@ -5438,7 +3930,6 @@ function renderRsList(s) {
               onchange="toggleEventDone('${ev.id}',this.checked)">
             <span class="rs-event-title" onclick="rsToggleEventDetail('${ev.id}')"
               title="${esc(ev.title||'（未入力）')}">${esc(ev.title||'（未入力）')}</span>
-            <button class="rs-event-expand" onclick="openEventDetailModal('${ev.id}')" title="詳細を拡大表示">⤢</button>
             <span class="rs-event-chevron ${expanded ? 'open' : ''}"
               onclick="rsToggleEventDetail('${ev.id}')">▶</span>
           </div>
@@ -5541,9 +4032,20 @@ function rsSelectInvestigator(id) {
       ).join('')}</div>`
     : `<span style="font-size:11px;color:var(--text3)">技能なし</span>`;
   const statsHtml = statOrder.some(k => stats[k])
-    ? `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin-bottom:8px">${
+    ? `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin-bottom:4px">${
         statOrder.map(k => `<div style="background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:3px 2px;text-align:center"><div style="font-size:9px;color:var(--text3)">${k}</div><div style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--accent3)">${stats[k]||0}</div></div>`).join('')
-      }</div>` : '';
+      }</div>
+      ${(stats['幸運']||stats['知識']||stats['HP']||stats['MP']||stats['SAN']||stats['MOV']||stats['DB']||stats['build']) ? `
+      <div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:8px">
+        ${stats['幸運'] ? `<div style="background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:3px 5px;text-align:center;min-width:44px"><div style="font-size:8px;color:var(--text3)">幸運</div><div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--accent3)">${stats['幸運']}</div></div>` : ''}
+        ${stats['知識'] ? `<div style="background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:3px 5px;text-align:center;min-width:44px"><div style="font-size:8px;color:var(--text3)">知識</div><div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--accent3)">${stats['知識']}</div></div>` : ''}
+        ${stats['HP']  ? `<div style="background:var(--bg3);border:1px solid var(--border2);border-radius:3px;padding:3px 5px;text-align:center;min-width:44px"><div style="font-size:8px;color:var(--text3)">耐久力</div><div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--accent2)">${stats['HP']}</div></div>` : ''}
+        ${stats['MP']  ? `<div style="background:var(--bg3);border:1px solid var(--border2);border-radius:3px;padding:3px 5px;text-align:center;min-width:44px"><div style="font-size:8px;color:var(--text3)">MP</div><div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--accent2)">${stats['MP']}</div></div>` : ''}
+        ${stats['SAN'] ? `<div style="background:var(--bg3);border:1px solid var(--border2);border-radius:3px;padding:3px 5px;text-align:center;min-width:44px"><div style="font-size:8px;color:var(--text3)">正気度</div><div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--accent2)">${stats['SAN']}</div></div>` : ''}
+        ${stats['MOV'] ? `<div style="background:var(--bg3);border:1px solid var(--border2);border-radius:3px;padding:3px 5px;text-align:center;min-width:44px"><div style="font-size:8px;color:var(--text3)">MOV</div><div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--accent2)">${stats['MOV']}</div></div>` : ''}
+        ${stats['DB']    ? `<div style="background:var(--bg3);border:1px solid var(--border2);border-radius:3px;padding:3px 5px;text-align:center;min-width:44px"><div style="font-size:8px;color:var(--text3)">DB</div><div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--accent2)">${stats['DB']}</div></div>` : ''}
+        ${stats['build'] ? `<div style="background:var(--bg3);border:1px solid var(--border2);border-radius:3px;padding:3px 5px;text-align:center;min-width:44px"><div style="font-size:8px;color:var(--text3)">ビルド</div><div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--accent2)">${stats['build']}</div></div>` : ''}
+      </div>` : '<div style="margin-bottom:8px"></div>'}` : '';
   panel.innerHTML = `
     <div class="rs-preview-header">
       <span class="rs-preview-type" style="background:#0a1a10;border:1px solid #1a5a30;color:#60b080">探索者</span>
@@ -5586,8 +4088,10 @@ function rsSelectInvestigator(id) {
         </div>` : ''}
       ${inv.backstory ? `<div style="font-size:10px;color:var(--text3);letter-spacing:1px;margin-bottom:4px">◆ バックストーリー</div>
         <div style="font-size:12px;color:var(--text2);line-height:1.8;white-space:pre-wrap">${esc(inv.backstory)}</div>` : ''}
+      ${inv.charaMemo ? `<div style="font-size:10px;color:var(--text3);letter-spacing:1px;margin-bottom:4px;margin-top:8px">◆ キャラクターメモ</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.8;white-space:pre-wrap;background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:6px 8px">${esc(inv.charaMemo)}</div>` : ''}
     </div>`;
-  openRightSidebar();
+  document.getElementById('rightSidebar').classList.remove('collapsed');
 }
 
 function rsToggleEventDetail(id) {
@@ -5599,68 +4103,12 @@ function rsToggleEventDetail(id) {
   renderRsList(getCurrentScenario());
 }
 
-// ─── イベント詳細モーダル ───
-function openEventDetailModal(id) {
-  const s = getCurrentScenario();
-  if (!s) return;
-  const ev = (s.events || []).find(e => e.id === id);
-  if (!ev) return;
-
-  // 既存モーダルがあれば除去
-  document.getElementById('eventDetailModalOverlay')?.remove();
-
-  const overlay = document.createElement('div');
-  overlay.id = 'eventDetailModalOverlay';
-  overlay.className = 'event-detail-modal-overlay';
-  overlay.addEventListener('click', e => {
-    if (e.target === overlay) closeEventDetailModal();
-  });
-
-  const isDone = !!ev.done;
-  overlay.innerHTML = `
-    <div class="event-detail-modal ${isDone ? 'event-detail-modal-done' : ''}">
-      <div class="event-detail-modal-header">
-        <input type="checkbox" class="event-detail-modal-check" id="evModalCheck"
-          ${isDone ? 'checked' : ''}
-          onchange="toggleEventDoneFromModal('${id}', this.checked)">
-        <div class="event-detail-modal-title">${esc(ev.title || '（タイトル未入力）')}</div>
-        <button class="event-detail-modal-close" onclick="closeEventDetailModal()">✕</button>
-      </div>
-      <div class="event-detail-modal-body" id="evModalBody">
-        ${ev.detail
-          ? rubyToHtml(ev.detail)
-          : '<span class="event-detail-modal-empty">詳細テキストなし</span>'}
-      </div>
-    </div>
-  `;
-
-  document.body.appendChild(overlay);
-
-  // ESCキーで閉じる
-  overlay._keyHandler = e => { if (e.key === 'Escape') closeEventDetailModal(); };
-  document.addEventListener('keydown', overlay._keyHandler);
-}
-
-function closeEventDetailModal() {
-  const overlay = document.getElementById('eventDetailModalOverlay');
-  if (!overlay) return;
-  document.removeEventListener('keydown', overlay._keyHandler);
-  overlay.remove();
-}
-
-function toggleEventDoneFromModal(id, checked) {
-  // 本体側のチェック状態を更新
-  toggleEventDone(id, checked);
-  // モーダルのタイトルスタイルを同期
-  const modal = document.querySelector('.event-detail-modal');
-  if (modal) modal.classList.toggle('event-detail-modal-done', checked);
-}
-
 function rsSelectItem(type, id) {
   rsActiveItem = { type, id };
   renderRsList(getCurrentScenario());
   renderRsPreview(type, id);
-  openRightSidebar();
+  // 右サイドバーが閉じていれば開く・フロータブなら一覧タブに切替
+  document.getElementById('rightSidebar').classList.remove('collapsed');
   switchRsTab('list');
 }
 
@@ -5898,6 +4346,7 @@ function createScenario() {
 
 function selectScenario(id) {
   state.currentId = id;
+  // 最終使用時刻を記録（ホームページのRECENT用）
   if (state.scenarios[id]) state.scenarios[id].updatedAt = Date.now();
   state.activeTab = 'info';
   state.currentChapter = null;
@@ -5909,10 +4358,6 @@ function selectScenario(id) {
   infoMode = 'view';
   entityMode = 'view';
   eventMode  = 'view';
-  // iPad閲覧モード中は常にview固定
-  if (_isIpadMode() && !ipadEditMode) {
-    chapterMode = 'view';
-  }
   document.getElementById('noScenario').style.display = 'none';
   document.getElementById('scenarioEditor').style.display = 'flex';
   document.getElementById('rsPreview').innerHTML = '';
@@ -6197,9 +4642,6 @@ function switchTab(tab) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('tab-' + tab)?.classList.add('active');
 
-  // プルダウン側も同期
-  _syncPulldown(tab);
-
   const areas = ['contentArea','chapterArea','npcArea','creatureArea','refsArea','eventsArea','investigatorsArea'];
   areas.forEach(id => {
     const el = document.getElementById(id);
@@ -6232,125 +4674,6 @@ function switchTab(tab) {
   }
 }
 
-// ─── プルダウンタブ ───
-const _tabLabels = {
-  info: '📋 シナリオ情報', chapters: '📖 章・本文', npc: '👤 NPC',
-  creature: '👾 神話生物', refs: '🗂 情報・資料',
-  investigators: '🔍 探索者', events: '⚡ イベント', memo: '📝 メモ'
-};
-
-function _syncPulldown(tab) {
-  const label = document.getElementById('tabPulldownLabel');
-  if (label) label.textContent = _tabLabels[tab] || tab;
-  document.querySelectorAll('.tab-pulldown-item').forEach(el => el.classList.remove('active'));
-  document.getElementById('pd-' + tab)?.classList.add('active');
-}
-
-function toggleTabPulldown() {
-  const menu  = document.getElementById('tabPulldownMenu');
-  const arrow = document.getElementById('tabPulldownArrow');
-  const isOpen = menu.classList.contains('open');
-  menu.classList.toggle('open', !isOpen);
-  arrow.classList.toggle('open', !isOpen);
-}
-
-function switchTabPulldown(tab) {
-  document.getElementById('tabPulldownMenu').classList.remove('open');
-  document.getElementById('tabPulldownArrow').classList.remove('open');
-  switchTab(tab);
-}
-
-// メニュー外タップで閉じる
-document.addEventListener('click', e => {
-  const pd = document.getElementById('tabPulldown');
-  if (pd && !pd.contains(e.target)) {
-    document.getElementById('tabPulldownMenu')?.classList.remove('open');
-    document.getElementById('tabPulldownArrow')?.classList.remove('open');
-  }
-});
-
-function _isIpadMode() {
-  // タッチデバイス or 1180px以下をiPadモードとして扱う
-  return navigator.maxTouchPoints > 1 || window.innerWidth <= 1180;
-}
-
-function _applyIpadTabMode() {
-  const isIpad = _isIpadMode();
-  const tabBar   = document.getElementById('mainTabBar');
-  const pulldown = document.getElementById('tabPulldown');
-  const rsBar    = document.getElementById('rightSidebar');
-  const btn      = document.getElementById('drawerToggleBtn');
-  const fab      = document.getElementById('editModeFab');
-
-  // メインタブバー ↔ プルダウン切り替え
-  if (tabBar)   tabBar.style.display   = isIpad ? 'none' : '';
-  if (pulldown) pulldown.style.display = isIpad ? 'block' : 'none';
-
-  // FAB：iPadのみ表示
-  if (fab) fab.style.display = isIpad ? 'flex' : 'none';
-
-  // bodyクラス：iPadかつ閲覧モード時に付与
-  document.body.classList.toggle('ipad-view-mode', isIpad && !ipadEditMode);
-
-  // 右サイドバー：iPad時はデフォルト展開（collapsed外す）
-  if (rsBar) {
-    rsBar.style.display = '';
-    if (isIpad && !rsBar._ipadInitDone) {
-      rsBar.classList.remove('collapsed');
-      if (btn) btn.classList.add('rs-open');
-      rsBar._ipadInitDone = true;
-    } else if (!isIpad) {
-      rsBar.classList.remove('collapsed');
-      if (btn) btn.classList.remove('rs-open');
-      rsBar._ipadInitDone = false;
-    }
-    // ボタン状態を現在の collapsed 状態に同期
-    if (btn && rsBar._ipadInitDone) {
-      btn.classList.toggle('rs-open', !rsBar.classList.contains('collapsed'));
-    }
-  }
-}
-
-// ─── iPad 編集モード切替 ───
-function toggleIpadEditMode() {
-  ipadEditMode = !ipadEditMode;
-  const fab = document.getElementById('editModeFab');
-  if (fab) {
-    fab.classList.toggle('editing', ipadEditMode);
-    fab.textContent = ipadEditMode ? '✏' : '👁';
-    fab.title = ipadEditMode ? '閲覧モードに戻す' : '編集モードに切替';
-  }
-  // bodyクラスで一括制御
-  document.body.classList.toggle('ipad-view-mode', !ipadEditMode);
-  // 現在のタブを再レンダリング
-  _rerenderCurrentTab();
-}
-
-function _rerenderCurrentTab() {
-  const tab = state.activeTab;
-  if (!tab) return;
-  if (!getCurrentScenario()) return; // シナリオ未選択時は何もしない
-  if (tab === 'chapters') {
-    renderChapterTab();
-  } else if (tab === 'npc') {
-    renderNpcTab();
-  } else if (tab === 'creature') {
-    renderCreatureTab();
-  } else if (tab === 'refs') {
-    renderRefsTab();
-  } else if (tab === 'events') {
-    renderEventsTab();
-  } else if (tab === 'investigators') {
-    renderInvestigatorsTab();
-  } else if (tab === 'info') {
-    renderInfo(document.getElementById('contentArea'));
-  } else if (tab === 'memo') {
-    renderMemo(document.getElementById('contentArea'));
-  }
-}
-
-window.addEventListener('resize', _applyIpadTabMode);
-
 // ═══════════════════════════════════════════════
 // INFO TAB
 // ═══════════════════════════════════════════════
@@ -6361,7 +4684,6 @@ function renderInfo(area) {
 }
 
 function setInfoMode(mode) {
-  if (_isIpadMode() && !ipadEditMode) return;
   infoMode = mode;
   renderInfo(document.getElementById('contentArea'));
 }
@@ -6373,10 +4695,10 @@ function renderInfoEdit(area) {
     <div class="section-card fade-in">
       <div class="section-header">
         <div class="section-header-title">◆ SCENARIO INFO</div>
-        ${_isIpadMode() && !ipadEditMode ? '' : `<div class="mode-toggle" style="margin-left:auto">
-          <button class="mode-btn active" onclick="setInfoMode('edit')">✏</button>
-          <button class="mode-btn" onclick="setInfoMode('view')">👁</button>
-        </div>`}
+        <div class="mode-toggle" style="margin-left:auto">
+          <button class="mode-btn active" onclick="setInfoMode('edit')">✏ 編集</button>
+          <button class="mode-btn" onclick="setInfoMode('view')">👁 閲覧</button>
+        </div>
       </div>
       <div class="section-body">
         <div class="field-row">
@@ -6472,10 +4794,10 @@ function renderInfoView(area) {
           <button class="btn-green" id="infoCopyBtn" onclick="copyPlayerInfo()" style="font-size:11px;padding:5px 14px">
             📋 プレイヤー情報をコピー
           </button>
-          ${_isIpadMode() && !ipadEditMode ? '' : `<div class="mode-toggle">
-            <button class="mode-btn" onclick="setInfoMode('edit')">✏</button>
-            <button class="mode-btn active" onclick="setInfoMode('view')">👁</button>
-          </div>`}
+          <div class="mode-toggle">
+            <button class="mode-btn" onclick="setInfoMode('edit')">✏ 編集</button>
+            <button class="mode-btn active" onclick="setInfoMode('view')">👁 閲覧</button>
+          </div>
         </div>
       </div>
       <div class="section-body" id="infoViewBody">
@@ -6598,6 +4920,7 @@ function removeTitleImage() {
 function openScenarioGallery() {
   const scenarios = Object.values(state.scenarios);
   if (scenarios.length === 0) return;
+
   const items = scenarios.map(s => {
     const isActive = s.id === state.currentId;
     const imgHtml = s.info?.titleImage
@@ -6609,9 +4932,11 @@ function openScenarioGallery() {
         <div class="gallery-item-tooltip">${esc(s.name || '無題のシナリオ')}</div>
       </div>`;
   }).join('');
+
   showModal('📜 シナリオギャラリー', `
     <div class="gallery-grid">${items}</div>
   `, [{ label: '閉じる', cls: 'btn-sm', action: 'closeModal()' }]);
+  // ギャラリー用に幅を拡張
   const modal = document.querySelector('.modal');
   if (modal) modal.style.width = 'min(860px, 90vw)';
 }
@@ -6620,6 +4945,9 @@ function gallerySelect(id) {
   closeModal();
   selectScenario(id);
 }
+
+// ═══════════════════════════════════════════════
+// CHAPTERS TAB — 新実装
 // ═══════════════════════════════════════════════
 
 // blocks構造: { id, type:'text'|'heading'|'bold'|'info'|'explore', title:'', body:'' }
@@ -6630,7 +4958,6 @@ const chScrollPos = {};
 
 function renderChapterTab() {
   const s = getCurrentScenario();
-  if (!s) return;
   // タブバー描画前に選択章を確定させる
   if (!state.currentChapter && s.chapters.length > 0) {
     state.currentChapter = s.chapters[0].id;
@@ -6657,7 +4984,7 @@ function renderChTabBar(s) {
         <span>${esc(label)}</span>
       </div>
     `;
-  }).join('') + (_isIpadMode() && !ipadEditMode ? '' : `<div class="ch-tab-add" onclick="addChapter()" title="章を追加">＋</div>`);
+  }).join('') + `<div class="ch-tab-add" onclick="addChapter()" title="章を追加">＋</div>`;
 }
 
 function renderChContent(s) {
@@ -6685,10 +5012,7 @@ function renderChContent(s) {
   const ch = s.chapters.find(c => c.id === state.currentChapter);
   if (!ch) return;
 
-  // iPad 閲覧モード中は強制 view
-  const effectiveChMode = (_isIpadMode() && !ipadEditMode) ? 'view' : chapterMode;
-
-  if (effectiveChMode === 'edit') {
+  if (chapterMode === 'edit') {
     chToolbar.style.display = 'flex';
     chViewBar.style.display = 'none';
     document.getElementById('modeEdit').classList.add('active');
@@ -6738,7 +5062,7 @@ function renderEditPane(ch, s) {
 }
 
 function renderBlockEditor(bl, bi, chId, total) {
-  const typeLabel = {text:'本文',heading:'大見出し',subheading:'小見出し',choice:'選択肢',bold:'濃い文字',info:'情報カード',explore:'探索カード',scene:'演出カード',image:'画像',jump:'章ジャンプ'}[bl.type]||bl.type;
+  const typeLabel = {text:'本文',heading:'大見出し',subheading:'小見出し',choice:'選択肢',bold:'濃い文字',info:'情報カード',explore:'探索カード',scene:'演出カード',event:'イベントカード',image:'画像',jump:'章ジャンプ'}[bl.type]||bl.type;
   const lblClass = {text:'lbl-text',heading:'lbl-heading',subheading:'lbl-heading',choice:'lbl-heading',bold:'lbl-bold',info:'lbl-info',explore:'lbl-explore',scene:'lbl-scene',image:'lbl-image',jump:'lbl-text'}[bl.type]||'lbl-text';
 
   let bodyHtml = '';
@@ -6820,6 +5144,31 @@ function renderBlockEditor(bl, bi, chId, total) {
           onchange="handleBlockImageFile(event,'${chId}','${bl.id}')">
       </div>`;
     bodyHtml = imgEditHtml;
+  } else if (bl.type === 'event') {
+    const colorPresets = [
+      ['',        '琥珀（デフォルト）', '#c08030'],
+      ['#c03030', '赤（危険・緊張）',   '#c03030'],
+      ['#3070c0', '青（情報・謎）',     '#3070c0'],
+      ['#308050', '緑（発見・解決）',   '#308050'],
+      ['#8030a0', '紫（超常・恐怖）',   '#8030a0'],
+    ];
+    const curColor = bl.color || '';
+    bodyHtml = `
+      <input type="text" placeholder="イベントタイトル"
+        value="${esc(bl.title||'')}"
+        oninput="updateBlock('${chId}','${bl.id}','title',this.value)"
+        style="margin-bottom:6px;font-weight:700;">
+      <textarea rows="4" placeholder="イベント本文（マークアップ対応）"
+        oninput="updateBlock('${chId}','${bl.id}','body',this.value)">${esc(bl.body||'')}</textarea>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap">
+        <span style="font-size:11px;color:var(--text3)">カラー：</span>
+        ${colorPresets.map(([v,label,hex]) =>
+          `<button onclick="updateBlock('${chId}','${bl.id}','color','${v}');renderChContent(getCurrentScenario())"
+            title="${label}"
+            style="width:20px;height:20px;border-radius:50%;background:${hex||'#c08030'};border:2px solid ${v===curColor?'#fff':'transparent'};cursor:pointer;flex-shrink:0"></button>`
+        ).join('')}
+        <span style="font-size:10px;color:var(--text3)">${colorPresets.find(([v])=>v===curColor)?.[1]||'琥珀（デフォルト）'}</span>
+      </div>`;
   } else if (bl.type === 'jump') {
     const s = getCurrentScenario();
     const otherChapters = (s.chapters||[]).filter(c => c.id !== chId);
@@ -6913,6 +5262,60 @@ function renderViewPane(ch, s) {
           <div class="scene-label">◆ SCENE</div>
           <div class="scene-body">${rubyToHtml(bl.body||'', s)}</div>
         </div>`;
+    } else if (bl.type === 'event') {
+      const accent = bl.color || '#c08030';
+      const bg     = bl.color
+        ? bl.color.replace(/^#/, '')
+            .match(/../g)
+            .map(h => Math.max(0, parseInt(h,16) - 0xb0).toString(16).padStart(2,'0'))
+            .reduce((a,v,i) => a + (i===0?'#':'') + v, '') // 暗くする
+        : '#1a1208';
+      // 暗い背景色を計算（アクセント色を大幅に暗く）
+      const bgDark = (() => {
+        const hex = (bl.color||'#c08030').replace('#','');
+        const r = Math.round(parseInt(hex.slice(0,2),16)*0.12).toString(16).padStart(2,'0');
+        const g = Math.round(parseInt(hex.slice(2,4),16)*0.10).toString(16).padStart(2,'0');
+        const b = Math.round(parseInt(hex.slice(4,6),16)*0.10).toString(16).padStart(2,'0');
+        return `#${r}${g}${b}`;
+      })();
+      const jumpHtml = bl.targetChapterId ? (() => {
+        const tc = (s.chapters||[]).find(c=>c.id===bl.targetChapterId);
+        return tc ? `<a class="event-jump" onclick="jumpToBlock('${bl.targetChapterId}','${bl.targetBlockId||''}')">→ ${esc(tc.title||'章へ')}</a>` : '';
+      })() : '';
+      return `
+        <div class="preview-event-card" id="vbl-${bl.id}" style="--event-accent:${accent};--event-bg:${bgDark}">
+          <div class="event-label">⚡ EVENT</div>
+          ${bl.title ? `<div class="event-title">${rubyToHtml(bl.title)}</div>` : ''}
+          ${bl.body  ? `<div class="event-body">${rubyToHtml(bl.body, s)}</div>` : ''}
+          ${jumpHtml}
+        </div>`;
+    } else if (bl.type === 'event') {
+      const accent = bl.color || '#c08030';
+      const bg     = bl.color
+        ? bl.color.replace(/^#/, '')
+            .match(/../g)
+            .map(h => Math.max(0, parseInt(h,16) - 0xb0).toString(16).padStart(2,'0'))
+            .reduce((a,v,i) => a + (i===0?'#':'') + v, '') // 暗くする
+        : '#1a1208';
+      // 暗い背景色を計算（アクセント色を大幅に暗く）
+      const bgDark = (() => {
+        const hex = (bl.color||'#c08030').replace('#','');
+        const r = Math.round(parseInt(hex.slice(0,2),16)*0.12).toString(16).padStart(2,'0');
+        const g = Math.round(parseInt(hex.slice(2,4),16)*0.10).toString(16).padStart(2,'0');
+        const b = Math.round(parseInt(hex.slice(4,6),16)*0.10).toString(16).padStart(2,'0');
+        return `#${r}${g}${b}`;
+      })();
+      const jumpHtml = bl.targetChapterId ? (() => {
+        const tc = (s.chapters||[]).find(c=>c.id===bl.targetChapterId);
+        return tc ? `<a class="event-jump" onclick="jumpToBlock('${bl.targetChapterId}','${bl.targetBlockId||''}')">→ ${esc(tc.title||'章へ')}</a>` : '';
+      })() : '';
+      return `
+        <div class="preview-event-card" id="vbl-${bl.id}" style="--event-accent:${accent};--event-bg:${bgDark}">
+          <div class="event-label">⚡ EVENT</div>
+          ${bl.title ? `<div class="event-title">${rubyToHtml(bl.title)}</div>` : ''}
+          ${bl.body  ? `<div class="event-body">${rubyToHtml(bl.body, s)}</div>` : ''}
+          ${jumpHtml}
+        </div>`;
     } else if (bl.type === 'image') {
       if (!bl.src) return '';
       const width  = bl.imgWidth  || 60;
@@ -6987,13 +5390,13 @@ function _chNavHtml(s, chId) {
 function renderChJumpBar(ch) {
   const bar = document.getElementById('chJumpBar');
   if (!bar) return;
-  const targets = (ch.blocks||[]).filter(bl => bl.type==='heading' || bl.type==='info' || bl.type==='choice');
+  const targets = (ch.blocks||[]).filter(bl => bl.type==='heading' || bl.type==='info' || bl.type==='choice' || bl.type==='event');
   if (targets.length === 0) {
-    bar.innerHTML = `<span style="font-size:10px;color:var(--text3)">見出し・情報カード・選択肢なし</span>`;
+    bar.innerHTML = `<span style="font-size:10px;color:var(--text3)">見出し・情報カード・イベント・選択肢なし</span>`;
     return;
   }
   bar.innerHTML = targets.map((bl, i) => {
-    const icon  = {heading:'Ａ', subheading:'ａ', choice:'🔀', info:'🔵', scene:'🎭', explore:'🎭'}[bl.type] || '';
+    const icon  = {heading:'Ａ', subheading:'ａ', choice:'🔀', info:'🔵', scene:'🎭', explore:'🎭', event:'⚡'}[bl.type] || '';
     const label = (bl.type==='heading'||bl.type==='subheading'||bl.type==='choice' ? bl.body : (bl.type==='scene'||bl.type==='explore' ? (bl.body||'').slice(0,16) : bl.title)) || `(${i+1})`;
     const cls   = `type-${bl.type}`;
     return `<span class="ch-jump-item ${cls}" onclick="chJumpTo('${bl.id}')" title="${esc(label)}">${icon} ${esc(label.length>16?label.slice(0,16)+'…':label)}</span>`;
@@ -7027,7 +5430,7 @@ function rubyToHtml(str, scenario) {
   s = s.replace(/〈([^〉\n]+?)〉/g, (_, skill) => {
     const idx = skillPlaceholders.length;
     const skillEsc = skill.replace(/"/g,'&quot;').replace(/'/g,"\\'");
-    skillPlaceholders.push(`<span class="ch-skill" data-skill="${skill.replace(/"/g,'&quot;')}" onmouseenter="showSkillTooltip(event,'${skillEsc}')" onmouseleave="hideSkillTooltip()" onclick="_skillTap(event,'${skillEsc}')">〈${skill}〉</span>`);
+    skillPlaceholders.push(`<span class="ch-skill" data-skill="${skill.replace(/"/g,'&quot;')}" onmouseenter="showSkillTooltip(event,'${skillEsc}')" onmouseleave="hideSkillTooltip()" onclick="showSkillDetail('${skillEsc}')">〈${skill}〉</span>`);
     return `\x00SKILL${idx}\x00`;
   });
   // ─── ① タグ保護（ルビより先に保護して誤マッチを防ぐ） ───
@@ -7073,12 +5476,7 @@ function rubyToHtml(str, scenario) {
   };
   s = renderInline(s);
   s = s.replace(/\*\*([\s\S]*?)\*\*/g,  (_, t) => `<span class="ch-bold">${renderInline(t)}</span>`);
-  s = s.replace(/__([\s\S]*?)__/g,
-    (_, t) => `<span class="ch-under">${t}</span>`);
-  s = s.replace(/\[s\]([\s\S]*?)\[\/s\]/g,
-    (_, t) => `<span class="ch-small">${t}</span>`);
-  s = s.replace(/\[c:(red|orange|green|blue|purple)\]([\s\S]*?)\[\/c\]/g,
-    (_, col, t) => `<span class="ch-col-${col}">${t}</span>`);
+  s = s.replace(/__([\s\S]*?)__/g,       (_, t) => `<span class="ch-under">${renderInline(t)}</span>`);
 
   // 「セリフ」→ 自動太字（括弧ごと）— 章・本文タブのみ
   if (scenario) {
@@ -7126,12 +5524,19 @@ function rubyToHtml(str, scenario) {
 let _floatTarget = null; // 現在選択中のtextarea/input
 
 function initFloatToolbar() {
-  // マウス選択
   document.addEventListener('mouseup', e => {
+    // フローティングツールバー自身のクリックは無視
     if (e.target.closest('#floatToolbar')) return;
+
     const el = e.target.closest('textarea, input[type="text"]');
-    if (!el) { hideFloatToolbar(); return; }
+    if (!el) {
+      hideFloatToolbar();
+      return;
+    }
+
+    // 章タブの編集エリアは既存ツールバーがあるので除外
     if (el.closest('.ch-edit-pane')) return;
+
     setTimeout(() => {
       const start = el.selectionStart;
       const end   = el.selectionEnd;
@@ -7140,23 +5545,6 @@ function initFloatToolbar() {
       showFloatToolbar(e.clientX, e.clientY);
     }, 10);
   });
-
-  // タッチ選択（iPad向け）
-  document.addEventListener('touchend', e => {
-    if (e.target.closest('#floatToolbar')) return;
-    const el = e.target.closest('textarea, input[type="text"]');
-    if (!el) return;
-    if (el.closest('.ch-edit-pane')) return;
-    // タッチ終了後に選択範囲が確定するまで少し待つ
-    setTimeout(() => {
-      const start = el.selectionStart;
-      const end   = el.selectionEnd;
-      if (start === end) { hideFloatToolbar(); return; }
-      _floatTarget = el;
-      const t = e.changedTouches[0];
-      showFloatToolbar(t.clientX, t.clientY);
-    }, 80);
-  }, { passive: true });
 
   document.addEventListener('keyup', e => {
     const el = document.activeElement;
@@ -7419,15 +5807,14 @@ function insertLink(type, id) {
 function chLinkClick(type, id) {
   if (type === 'rule') {
     renderRsRulePreview(id);
+    document.getElementById('rightSidebar').classList.remove('collapsed');
   } else {
     rsSelectItem(type, id);
   }
-  openRightSidebar();
   switchRsTab('list');
 }
 
 function setChapterMode(mode) {
-  if (_isIpadMode() && !ipadEditMode) return;
   chapterMode = mode;
   renderChContent(getCurrentScenario());
 }
@@ -7965,13 +6352,13 @@ function renderNpcTabBar(s) {
       <span>${esc(label)}</span>
     </div>`;
   }).join('')
-  + (_isIpadMode() && !ipadEditMode ? '' : `<div class="ch-tab-add" onclick="addNPC()" title="NPC追加">＋</div>`)
+  + `<div class="ch-tab-add" onclick="addNPC()" title="NPC追加">＋</div>`
   + `<div style="margin-left:auto;display:flex;gap:4px;padding:0 6px;align-items:center;flex-shrink:0">`
   + `  <button class="tb-btn" style="font-size:10px;padding:3px 6px" onclick="moveNpc(-1)" ${canL?'':'disabled'} title="左に移動">◀</button>`
   + `  <button class="tb-btn" style="font-size:10px;padding:3px 6px" onclick="moveNpc(1)"  ${canR?'':'disabled'} title="右に移動">▶</button>`
-  + (_isIpadMode() && !ipadEditMode ? '' : `  <div class="mode-toggle">`
-  + `    <button class="mode-btn ${entityMode==='edit'?'active':''}" onclick="setEntityMode('edit')">✏</button>`
-  + `    <button class="mode-btn ${entityMode==='view'?'active':''}" onclick="setEntityMode('view')">👁</button>`)
+  + `  <div class="mode-toggle">`
+  + `    <button class="mode-btn ${entityMode==='edit'?'active':''}" onclick="setEntityMode('edit')">✏ 編集</button>`
+  + `    <button class="mode-btn ${entityMode==='view'?'active':''}" onclick="setEntityMode('view')">👁 閲覧</button>`
   + `  </div>`
   + `</div>`;
 }
@@ -7995,8 +6382,7 @@ function renderNpcContent(s) {
   }
   const npc = s.npcs.find(n => n.id === state.currentNpc);
   if (!npc) return;
-  const effectiveEntityMode = (_isIpadMode() && !ipadEditMode) ? 'view' : entityMode;
-  if (effectiveEntityMode === 'view') {
+  if (entityMode === 'view') {
     area.innerHTML = renderEntityView(npc, 'npc');
   } else {
     area.innerHTML = renderEntityCard(npc, s.npcs.indexOf(npc), 'npc');
@@ -8056,13 +6442,13 @@ function renderCreatureTabBar(s) {
       <span>${esc(label)}</span>
     </div>`;
   }).join('')
-  + (_isIpadMode() && !ipadEditMode ? '' : `<div class="ch-tab-add" onclick="addCreature()" title="神話生物追加">＋</div>`)
+  + `<div class="ch-tab-add" onclick="addCreature()" title="神話生物追加">＋</div>`
   + `<div style="margin-left:auto;display:flex;gap:4px;padding:0 6px;align-items:center;flex-shrink:0">`
   + `  <button class="tb-btn" style="font-size:10px;padding:3px 8px;color:#90c0a0;border-color:#2a5a3a" onclick="registerToLibrary()">📚 ライブラリへ登録</button>`
   + `  <button class="tb-btn" style="font-size:10px;padding:3px 8px;color:#a0b0d0;border-color:#2a3a5a" onclick="openLibraryImport()">📥 ライブラリから追加</button>`
-  + (_isIpadMode() && !ipadEditMode ? '' : `  <div class="mode-toggle">`
-  + `    <button class="mode-btn ${entityMode==='edit'?'active':''}" onclick="setEntityMode('edit')">✏</button>`
-  + `    <button class="mode-btn ${entityMode==='view'?'active':''}" onclick="setEntityMode('view')">👁</button>`)
+  + `  <div class="mode-toggle">`
+  + `    <button class="mode-btn ${entityMode==='edit'?'active':''}" onclick="setEntityMode('edit')">✏ 編集</button>`
+  + `    <button class="mode-btn ${entityMode==='view'?'active':''}" onclick="setEntityMode('view')">👁 閲覧</button>`
   + `  </div>`
   + `</div>`;
 }
@@ -8075,7 +6461,7 @@ function renderCreatureContent(s) {
   }
   const cr = s.creatures.find(c => c.id === state.currentCreature);
   if (!cr) return;
-  if (effectiveEntityMode === 'view') {
+  if (entityMode === 'view') {
     area.innerHTML = renderEntityView(cr, 'creature');
   } else {
     area.innerHTML = renderEntityCard(cr, s.creatures.indexOf(cr), 'creature');
@@ -8090,7 +6476,6 @@ function selectCreature(id) {
 }
 
 function setEntityMode(mode) {
-  if (_isIpadMode() && !ipadEditMode) return;
   entityMode = mode;
   const s = getCurrentScenario();
   // 現在どちらのタブにいるかで再描画先を判定
@@ -8177,8 +6562,6 @@ function renderEntityView(entity, type) {
                 <div style="font-size:13px;color:var(--text2);line-height:1.9;white-space:pre-wrap">${esc(val)}</div>
               </div>`).join('')}
           </div>` : ''}
-
-        <!-- ステータス -->
         <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--text3);margin-bottom:6px">◆ STATS</div>
         <div style="display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-bottom:6px">
           ${statOrder.map(k => `
@@ -8254,86 +6637,16 @@ function switchSbTab(tab) {
   document.getElementById('sbTab-' + tab)?.classList.add('active');
   document.getElementById('sbPanel-' + tab)?.classList.add('active');
   if (tab === 'creature') renderSbCreature();
-  if (tab === 'rule')     renderSbRule();
+  if (tab === 'rule')     { renderSbSkill(); renderSbRule(); }
 }
 
-// ─── 神話生物ライブラリ（展開式） ───
-let _sbLibExpanded = new Set();
-
-function renderSbCreature() {
-  const body = document.getElementById('sbLibBody');
-  if (!body) return;
-  const lib = state.library || [];
-  const count = document.getElementById('libCount2');
-  if (count) count.textContent = lib.length;
-
-  if (lib.length === 0) {
-    body.innerHTML = `<div class="lib-empty" style="padding:16px;text-align:center">登録なし<br><span style="font-size:9px">神話生物タブの「📚 ライブラリへ」で追加できます</span></div>`;
-    return;
-  }
-
-  body.innerHTML = lib.map(cr => {
-    const expanded = _sbLibExpanded.has(cr.libId);
-    const thumb = cr.image
-      ? `<img src="${cr.image}" style="width:22px;height:22px;border-radius:2px;object-fit:cover;border:1px solid var(--border);flex-shrink:0">`
-      : `<span style="font-size:13px">👾</span>`;
-    const stats = cr.stats || {};
-    const statOrder = ['STR','CON','SIZ','DEX','INT','APP','POW','EDU'];
-    const label = cr.job || cr.name || '（種族未入力）';
-    const detailHtml = expanded ? `
-      <div class="sblib-detail open">
-        <div class="sblib-stat-grid">
-          ${statOrder.map(k => `<div class="sblib-stat-cell"><div class="sblib-stat-label">${k}</div><div class="sblib-stat-val">${stats[k]||0}</div></div>`).join('')}
-        </div>
-        ${cr.fightMelee||cr.fightDamage||cr.dodge||cr.attacksPerRound ? `
-          <div style="margin-bottom:5px;font-size:10px;color:var(--text3)">戦闘</div>
-          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px;font-size:11px">
-            ${cr.fightMelee     ? `<span><span style="color:var(--text3)">格闘</span> ${esc(cr.fightMelee)}%</span>` : ''}
-            ${cr.fightDamage    ? `<span><span style="color:var(--text3)">ダメージ</span> ${esc(cr.fightDamage)}</span>` : ''}
-            ${cr.dodge          ? `<span><span style="color:var(--text3)">回避</span> ${esc(cr.dodge)}%</span>` : ''}
-            ${cr.attacksPerRound? `<span><span style="color:var(--text3)">攻撃回数</span> ${esc(String(cr.attacksPerRound))}/R</span>` : ''}
-          </div>` : ''}
-        ${cr.otherAttacks ? `<div style="font-size:11px;margin-bottom:4px;color:var(--text2)">${esc(cr.otherAttacks)}</div>` : ''}
-        ${cr.sanLoss      ? `<div style="font-size:11px;margin-bottom:4px"><span style="color:var(--text3)">SAN喪失 </span><span style="color:#e06060">${esc(cr.sanLoss)}</span></div>` : ''}
-        <div class="sblib-actions">
-          <button class="lib-item-btn" style="font-size:10px" onclick="importFromLibrary('${cr.libId}')">＋ シナリオへ追加</button>
-          <button class="lib-item-btn" style="color:#c07060;border-color:#5a2020;font-size:10px" onclick="deleteFromLibrary('${cr.libId}')">✕ 削除</button>
-        </div>
-      </div>` : '';
-
-    return `
-      <div class="sblib-item">
-        <div class="sblib-header" onclick="sbLibToggle('${cr.libId}')">
-          <span class="sblib-chevron ${expanded?'open':''}">▶</span>
-          ${thumb}
-          <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(label)}</span>
-        </div>
-        ${detailHtml}
-      </div>`;
-  }).join('');
-}
-
-function sbLibToggle(libId) {
-  if (_sbLibExpanded.has(libId)) _sbLibExpanded.delete(libId);
-  else _sbLibExpanded.add(libId);
-  renderSbCreature();
-}
-
-// renderLibrary は後方互換のため残す
-function renderLibrary() { renderSbCreature(); }
-function toggleLibrary()  { switchSbTab('creature'); }
-
-// ─── ルールライブラリ（書籍フォルダ式） ───
-let _sbRuleBookExpanded = new Set();
-let _sbRuleItemExpanded = new Set();
+// ─── カスタム技能ライブラリ ───
+function renderSbSkill() {}
+function showCustomSkillPreview(id) {}
 
 const BUILTIN_PARENT_SKILLS = [
   '科学','近接戦闘','射撃','芸術/製作','サバイバル','操縦','伝承','ほかの言語'
 ];
-
-function renderSbSkill() {}
-function showCustomSkillPreview(id) {}
-
 
 function openSkillLibraryModal() {
   const custom = state.customSkills || [];
@@ -8657,6 +6970,78 @@ function _refreshSpecEmpty() {
   }
 }
 
+
+
+// ─── 神話生物ライブラリ（展開式） ───
+let _sbLibExpanded = new Set();
+
+function renderSbCreature() {
+  const body = document.getElementById('sbLibBody');
+  if (!body) return;
+  const lib = state.library || [];
+  const count = document.getElementById('libCount2');
+  if (count) count.textContent = lib.length;
+
+  if (lib.length === 0) {
+    body.innerHTML = `<div class="lib-empty" style="padding:16px;text-align:center">登録なし<br><span style="font-size:9px">神話生物タブの「📚 ライブラリへ」で追加できます</span></div>`;
+    return;
+  }
+
+  body.innerHTML = lib.map(cr => {
+    const expanded = _sbLibExpanded.has(cr.libId);
+    const thumb = cr.image
+      ? `<img src="${cr.image}" style="width:22px;height:22px;border-radius:2px;object-fit:cover;border:1px solid var(--border);flex-shrink:0">`
+      : `<span style="font-size:13px">👾</span>`;
+    const stats = cr.stats || {};
+    const statOrder = ['STR','CON','SIZ','DEX','INT','APP','POW','EDU'];
+    const label = cr.job || cr.name || '（種族未入力）';
+    const detailHtml = expanded ? `
+      <div class="sblib-detail open">
+        <div class="sblib-stat-grid">
+          ${statOrder.map(k => `<div class="sblib-stat-cell"><div class="sblib-stat-label">${k}</div><div class="sblib-stat-val">${stats[k]||0}</div></div>`).join('')}
+        </div>
+        ${cr.fightMelee||cr.fightDamage||cr.dodge||cr.attacksPerRound ? `
+          <div style="margin-bottom:5px;font-size:10px;color:var(--text3)">戦闘</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px;font-size:11px">
+            ${cr.fightMelee     ? `<span><span style="color:var(--text3)">格闘</span> ${esc(cr.fightMelee)}%</span>` : ''}
+            ${cr.fightDamage    ? `<span><span style="color:var(--text3)">ダメージ</span> ${esc(cr.fightDamage)}</span>` : ''}
+            ${cr.dodge          ? `<span><span style="color:var(--text3)">回避</span> ${esc(cr.dodge)}%</span>` : ''}
+            ${cr.attacksPerRound? `<span><span style="color:var(--text3)">攻撃回数</span> ${esc(String(cr.attacksPerRound))}/R</span>` : ''}
+          </div>` : ''}
+        ${cr.otherAttacks ? `<div style="font-size:11px;margin-bottom:4px;color:var(--text2)">${esc(cr.otherAttacks)}</div>` : ''}
+        ${cr.sanLoss      ? `<div style="font-size:11px;margin-bottom:4px"><span style="color:var(--text3)">SAN喪失 </span><span style="color:#e06060">${esc(cr.sanLoss)}</span></div>` : ''}
+        <div class="sblib-actions">
+          <button class="lib-item-btn" style="font-size:10px" onclick="importFromLibrary('${cr.libId}')">＋ シナリオへ追加</button>
+          <button class="lib-item-btn" style="color:#c07060;border-color:#5a2020;font-size:10px" onclick="deleteFromLibrary('${cr.libId}')">✕ 削除</button>
+        </div>
+      </div>` : '';
+
+    return `
+      <div class="sblib-item">
+        <div class="sblib-header" onclick="sbLibToggle('${cr.libId}')">
+          <span class="sblib-chevron ${expanded?'open':''}">▶</span>
+          ${thumb}
+          <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(label)}</span>
+        </div>
+        ${detailHtml}
+      </div>`;
+  }).join('');
+}
+
+function sbLibToggle(libId) {
+  if (_sbLibExpanded.has(libId)) _sbLibExpanded.delete(libId);
+  else _sbLibExpanded.add(libId);
+  renderSbCreature();
+}
+
+// renderLibrary は後方互換のため残す
+function renderLibrary() { renderSbCreature(); }
+function toggleLibrary()  { switchSbTab('creature'); }
+
+// ─── ルールライブラリ（書籍フォルダ式） ───
+let _sbRuleBookExpanded = new Set();
+let _sbRuleItemExpanded = new Set();
+
 function renderSbRule() {
   const body = document.getElementById('sbRuleBody');
   if (!body) return;
@@ -8675,7 +7060,7 @@ function renderSbRule() {
     books[book].push(r);
   });
 
-  // 各書籍内をページ順にソート
+  // 各書籍内をページ順にソート（p.123 → 123、未設定は末尾）
   const pageNum = r => {
     if (!r.page) return Infinity;
     const m = String(r.page).match(/\d+/);
@@ -9181,7 +7566,7 @@ function updateEntity(type, id, key, val) {
     renderRightSidebar();
   }
   // 閲覧モードなら再描画、編集モードはDOMが既にあるので不要
-  if (entityMode === 'view' || (_isIpadMode() && !ipadEditMode)) {
+  if (entityMode === 'view') {
     if (type === 'npc') renderNpcContent(getCurrentScenario());
     else renderCreatureContent(getCurrentScenario());
   }
@@ -9197,7 +7582,7 @@ function updateStat(type, id, st, val) {
   e.stats[st] = val;
   save();
   // 閲覧モードなら再描画（編集モードは入力中なのでスキップ）
-  if (entityMode === 'view' || (_isIpadMode() && !ipadEditMode)) {
+  if (entityMode === 'view') {
     if (type === 'npc') renderNpcContent(getCurrentScenario());
     else renderCreatureContent(getCurrentScenario());
   }
@@ -9343,7 +7728,7 @@ function renderRefsTabBar(refs) {
       <span class="ch-tab-num">${i+1}</span>
       <span>${esc(label)}</span>
     </div>`;
-  }).join('') + (_isIpadMode() && !ipadEditMode ? '' : `<div class="ch-tab-add" onclick="addRefCard()" title="資料カード追加">＋</div>`);
+  }).join('') + `<div class="ch-tab-add" onclick="addRefCard()" title="資料カード追加">＋</div>`;
 }
 
 function renderRefsContent(refs) {
@@ -9370,20 +7755,6 @@ function renderRefs() { renderRefsTab(); }
 function renderRefCard(card, i, total) {
   const imgPos = card.imgPos || 'bottom';
   const width  = card.width  || 60;
-
-  // iPad 閲覧モード時はプレビューのみ表示
-  if (_isIpadMode() && !ipadEditMode) {
-    const previewOnly = buildRefPreview(card);
-    return `
-      <div class="ref-card fade-in" id="refcard-${card.id}">
-        <div class="ref-card-header">
-          <span class="ref-card-label">◆ REFERENCE</span>
-        </div>
-        <div class="ref-preview-body" style="padding:14px 16px">
-          ${previewOnly}
-        </div>
-      </div>`;
-  }
 
   // ── 画像パーツ ──
   const imgEditHtml = card.src ? `
@@ -9650,7 +8021,7 @@ function renderInvTabBar(s) {
   if (invs.length === 0) {
     bar.innerHTML = `
       <div style="padding:8px 12px;font-size:11px;color:var(--text3)">探索者がいません</div>
-      ${_isIpadMode() && !ipadEditMode ? '' : '<div class="ch-tab-add" onclick="addInvestigator()" title="探索者を追加">＋</div>'}
+      <div class="ch-tab-add" onclick="addInvestigator()" title="探索者を追加">＋</div>
       <div style="margin-left:auto;padding:0 8px">
         <button class="tb-btn" style="font-size:10px;padding:3px 8px;color:#90c0a0;border-color:#2a5a3a" onclick="openInvImportModal()">📥 JSONインポート</button>
       </div>`;
@@ -9664,15 +8035,15 @@ function renderInvTabBar(s) {
       <span>${inv.name ? inv.name.replace(/</g,'&lt;') : `探索者${i+1}`}</span>
     </div>`;
   }).join('')
-  + (_isIpadMode() && !ipadEditMode ? '' : `<div class="ch-tab-add" onclick="addInvestigator()" title="探索者を追加">＋</div>`)
+  + `<div class="ch-tab-add" onclick="addInvestigator()" title="探索者を追加">＋</div>`
   + `<div style="margin-left:auto;display:flex;gap:4px;padding:0 6px;align-items:center;flex-shrink:0">`
   + `  <button class="tb-btn" style="font-size:10px;padding:3px 6px" onclick="moveInvestigator(-1)" ${canL?'':'disabled'} title="左に移動">◀</button>`
   + `  <button class="tb-btn" style="font-size:10px;padding:3px 6px" onclick="moveInvestigator(1)"  ${canR?'':'disabled'} title="右に移動">▶</button>`
   + `  <div class="ch-toolbar-sep"></div>`
   + `  <button class="tb-btn" style="font-size:10px;padding:3px 8px;color:#90c0a0;border-color:#2a5a3a" onclick="openInvImportModal()">📥 JSONインポート</button>`
-  + (_isIpadMode() && !ipadEditMode ? '' : `  <div class="mode-toggle">`
-  + `    <button class="mode-btn ${entityMode==='edit'?'active':''}" onclick="setEntityMode('edit')">✏</button>`
-  + `    <button class="mode-btn ${entityMode==='view'?'active':''}" onclick="setEntityMode('view')">👁</button>`)
+  + `  <div class="mode-toggle">`
+  + `    <button class="mode-btn ${entityMode==='edit'?'active':''}" onclick="setEntityMode('edit')">✏ 編集</button>`
+  + `    <button class="mode-btn ${entityMode==='view'?'active':''}" onclick="setEntityMode('view')">👁 閲覧</button>`
   + `  </div>`
   + `</div>`;
 }
@@ -9687,8 +8058,7 @@ function renderInvContent(s) {
   }
   const inv = invs.find(i => i.id === state.currentInvestigator);
   if (!inv) return;
-  const effectiveInvMode = (_isIpadMode() && !ipadEditMode) ? 'view' : entityMode;
-  if (effectiveInvMode === 'view') {
+  if (entityMode === 'view') {
     area.innerHTML = renderInvView(inv);
   } else {
     area.innerHTML = renderInvEdit(inv, invs.indexOf(inv));
@@ -9716,9 +8086,16 @@ function renderInvView(inv) {
           <div style="font-family:'Share Tech Mono',monospace;font-size:15px;color:var(--accent3)">${stats[k]||0}</div>
         </div>`).join('')}
     </div>
-    ${(stats['幸運']||stats['知識']) ? `<div style="display:flex;gap:4px;margin-bottom:14px">
+    ${(stats['幸運']||stats['知識']) ? `<div style="display:flex;gap:4px;margin-bottom:6px">
       ${stats['幸運'] ? `<div style="background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:4px 8px;text-align:center;min-width:60px"><div style="font-size:9px;color:var(--text3)">幸運</div><div style="font-family:'Share Tech Mono',monospace;font-size:15px;color:var(--accent3)">${stats['幸運']}</div></div>` : ''}
       ${stats['知識'] ? `<div style="background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:4px 8px;text-align:center;min-width:60px"><div style="font-size:9px;color:var(--text3)">知識</div><div style="font-family:'Share Tech Mono',monospace;font-size:15px;color:var(--accent3)">${stats['知識']}</div></div>` : ''}
+    </div>` : ''}
+    ${(stats['HP']||stats['MP']||stats['SAN']||stats['MOV']||stats['DB']||stats['build']) ? `
+    <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:14px">
+      ${[['HP','耐久力'],['MP','MP'],['SAN','正気度'],['MOV','MOV']].filter(([k])=>stats[k]).map(([k,l])=>
+        `<div style="background:var(--bg3);border:1px solid var(--border2);border-radius:3px;padding:4px 8px;text-align:center;min-width:56px"><div style="font-size:9px;color:var(--text3)">${l}</div><div style="font-family:'Share Tech Mono',monospace;font-size:14px;color:var(--accent2)">${stats[k]}</div></div>`).join('')}
+      ${stats['DB']    ? `<div style="background:var(--bg3);border:1px solid var(--border2);border-radius:3px;padding:4px 8px;text-align:center;min-width:56px"><div style="font-size:9px;color:var(--text3)">DB</div><div style="font-family:'Share Tech Mono',monospace;font-size:14px;color:var(--accent2)">${stats['DB']}</div></div>` : ''}
+      ${stats['build'] ? `<div style="background:var(--bg3);border:1px solid var(--border2);border-radius:3px;padding:4px 8px;text-align:center;min-width:56px"><div style="font-size:9px;color:var(--text3)">ビルド</div><div style="font-family:'Share Tech Mono',monospace;font-size:14px;color:var(--accent2)">${stats['build']}</div></div>` : ''}
     </div>` : '<div style="margin-bottom:14px"></div>'}
     ` : '';
   return `
@@ -9743,20 +8120,6 @@ function renderInvView(inv) {
         </div>
         ${statsHtml}
         ${skillsHtml}
-        ${(inv.appearance||inv.ideology||inv.significant||inv.places||inv.treasures||inv.traits) ? `
-          <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--text3);margin-bottom:10px">◆ BACKSTORY</div>
-          ${[
-            ['容姿の描写',        inv.appearance],
-            ['イデオロギー / 信念', inv.ideology],
-            ['重要な人々',         inv.significant],
-            ['意味のある場所',     inv.places],
-            ['秘蔵の品',           inv.treasures],
-            ['特徴',               inv.traits],
-          ].filter(([,v]) => v).map(([label, val]) => `
-            <div style="margin-bottom:10px">
-              <div style="font-size:10px;color:var(--text3);margin-bottom:3px">${label}</div>
-              <div style="font-size:13px;color:var(--text2);line-height:1.9;white-space:pre-wrap">${esc(val)}</div>
-            </div>`).join('')}` : ''}
         ${(inv.appearance||inv.ideology||inv.significant||inv.places||inv.treasures||inv.traits||inv.phobias||inv.keyConnection) ? `
           <div style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--text3);margin-bottom:10px">◆ BACKSTORY</div>
           ${[
@@ -9865,6 +8228,25 @@ function renderInvEdit(inv, idx) {
           </div>
           <div style="flex:6"></div>
         </div>
+        <div class="field-label" style="margin-bottom:6px;margin-top:2px">◇ 派生値</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+          ${[['HP','耐久力'],['MP','MP'],['SAN','正気度'],['MOV','MOV']].map(([key,label]) =>
+            `<div class="stat-cell" style="flex:1;min-width:60px">
+              <div class="stat-cell-label">${label}</div>
+              <input type="number" value="${stats[key]||''}" min="0" max="999" placeholder="—"
+                oninput="updateInvStat('${inv.id}','${key}',this.value)">
+            </div>`).join('')}
+          <div class="stat-cell" style="flex:1;min-width:60px">
+            <div class="stat-cell-label">DB</div>
+            <input type="text" value="${esc(stats['DB']||'')}" placeholder="—" style="width:100%"
+              oninput="updateInvStat('${inv.id}','DB',this.value)">
+          </div>
+          <div class="stat-cell" style="flex:1;min-width:60px">
+            <div class="stat-cell-label">ビルド</div>
+            <input type="text" value="${esc(stats['build']||'')}" placeholder="—" style="width:100%"
+              oninput="updateInvStat('${inv.id}','build',this.value)">
+          </div>
+        </div>
         <div style="display:flex;align-items:center;justify-content:space-between;margin:10px 0 6px">
           <div class="field-label">◇ 技能</div>
           <button class="btn-sm" onclick="addInvSkill('${inv.id}')">＋ 技能追加</button>
@@ -9905,6 +8287,13 @@ function renderInvEdit(inv, idx) {
           <textarea rows="2" oninput="updateInvestigator('${inv.id}','${key}',this.value)" placeholder="${ph}">${esc(inv[key]||'')}</textarea>
         </div></div>`;
         }).join('')}
+        <div class="field-row" style="margin-top:8px">
+          <div class="field-group">
+            <div class="field-label">◇ キャラクターメモ（背景・設定など）</div>
+            <textarea rows="4" placeholder="キャラクターの背景、設定、GMメモなど..."
+              oninput="updateInvestigator('${inv.id}','charaMemo',this.value)">${esc(inv.charaMemo||'')}</textarea>
+          </div>
+        </div>
         <div class="field-row" style="margin-top:8px">
           <div class="field-group">
             <div class="field-label">◇ キャラクターメモ（背景設定・自由記述など）</div>
@@ -9952,13 +8341,22 @@ function moveInvestigator(dir) {
   renderInvTabBar(s);
 }
 
+function updateInvKeyConnection(id, key, checked) {
+  const s = getCurrentScenario();
+  const inv = (s.investigators||[]).find(i => i.id === id);
+  if (!inv) return;
+  if (!inv.keyConnection) inv.keyConnection = {};
+  inv.keyConnection[key] = checked;
+  save();
+}
+
 function updateInvestigator(id, key, val) {
   const inv = getInvestigators().find(i => i.id === id);
   if (!inv) return;
   inv[key] = val;
   save();
   if (key === 'name') { renderInvTabBar(getCurrentScenario()); renderRsList(getCurrentScenario()); }
-  if (entityMode === 'view' || (_isIpadMode() && !ipadEditMode)) renderInvContent(getCurrentScenario());
+  if (entityMode === 'view') renderInvContent(getCurrentScenario());
 }
 
 function updateInvStat(id, st, val) {
@@ -10663,7 +9061,6 @@ function showSkillTooltip(event, skillName) {
   _positionTooltip(event);
 }
 
-
 function _positionTooltip(event) {
   const tooltip = document.getElementById('skillTooltip');
   if (!tooltip) return;
@@ -10676,48 +9073,17 @@ function _positionTooltip(event) {
   tooltip.style.top  = y + 'px';
 }
 
-
 function hideSkillTooltip() {
   const tooltip = document.getElementById('skillTooltip');
   if (tooltip) tooltip.classList.remove('visible');
 }
 
-// iPad用2段階タップ：1回目でツールチップ、2回目でプレビュー
-let _skillTapActive = null;
-
-function _skillTap(event, skillName) {
-  const tooltip = document.getElementById('skillTooltip');
-  const isTouch = navigator.maxTouchPoints > 1;
-
-  if (!isTouch) {
-    showSkillDetail(skillName);
-    return;
-  }
-
-  if (_skillTapActive === skillName && tooltip?.classList.contains('visible')) {
-    hideSkillTooltip();
-    _skillTapActive = null;
-    showSkillDetail(skillName);
-  } else {
-    _skillTapActive = skillName;
-    showSkillTooltip(event, skillName);
-  }
-}
-
-document.addEventListener('touchstart', e => {
-  const tooltip = document.getElementById('skillTooltip');
-  if (!tooltip?.classList.contains('visible')) return;
-  if (!tooltip.contains(e.target) && !e.target.classList.contains('ch-skill')) {
-    hideSkillTooltip();
-    _skillTapActive = null;
-  }
-}, { passive: true });
-
 function showSkillDetail(skillName) {
   const preview = document.getElementById('rsPreview');
   if (!preview) return;
 
-  openRightSidebar();
+  // フロータブなら一覧タブに切替・サイドバーが閉じていれば開く
+  document.getElementById('rightSidebar')?.classList.remove('collapsed');
   switchRsTab('list');
 
   // 技能グループ判定
@@ -11029,13 +9395,6 @@ function deleteEvent(id) {
 }
 
 // ═══════════════════════════════════════════════
-// EVENTS TAB
-// ═══════════════════════════════════════════════
-
-
-
-
-// ═══════════════════════════════════════════════
 // MEMO TAB
 // ═══════════════════════════════════════════════
 function renderMemo(area) {
@@ -11105,6 +9464,8 @@ function exportText() {
       if (bl.type === 'heading') txt += `【${bl.body||''}】\n\n`;
       if (bl.type === 'bold')    txt += `★${bl.body||''}★\n\n`;
       if (bl.type === 'info')    txt += `◆情報[${bl.title||''}]\n${bl.body||''}\n\n`;
+      if (bl.type === 'event')   txt += `⚡イベント[${bl.title||''}]\n${bl.body||''}\n\n`;
+      if (bl.type === 'event')   txt += `⚡イベント[${bl.title||''}]\n${bl.body||''}\n\n`;
       if (bl.type === 'explore') txt += `◇探索[${bl.title||''}]\n${bl.body||''}\n\n`;
       if (bl.type === 'scene')   txt += `◆演出\n${bl.body||''}\n\n`;
       if (bl.type === 'image')   txt += `[画像${bl.caption?'：'+bl.caption:''}]\n\n`;
@@ -11358,7 +9719,6 @@ function handleImportAll(event) {
         }
       }
 
-
       save();
       renderScenarioList();
       renderSbCreature();
@@ -11452,9 +9812,7 @@ function handleImportRule(event) {
 let diceVisible = false;
 function toggleDice() {
   diceVisible = !diceVisible;
-  const panel = document.getElementById('dicePanel');
-  panel.style.display = diceVisible ? 'block' : 'none';
-  if (diceVisible) _updateDicePosition();
+  document.getElementById('dicePanel').style.display = diceVisible ? 'block' : 'none';
 }
 function rollDice(sides) {
   const count = parseInt(document.getElementById('diceCount').value) || 1;
@@ -11486,6 +9844,75 @@ function closeLightbox() {
 // Escキーで閉じる
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeLightbox();
+
+  // ─── フローチャート ショートカット ───
+  // フロータブが表示中かつ編集モード時のみ（テキスト入力中は除外）
+  const tag = document.activeElement?.tagName;
+  const inInput = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+  const flowVisible = document.getElementById('rsPane-flow')?.style.display !== 'none' || fcModalOpen;
+
+  if (flowVisible && !inInput) {
+    const ctrl = e.ctrlKey || e.metaKey;
+
+    // Ctrl+Z: Undo
+    if (ctrl && e.key === 'z' && !e.shiftKey) {
+      e.preventDefault();
+      if (fcEditMode) fcUndo();
+      return;
+    }
+    // Ctrl+Shift+Z / Ctrl+Y: Redo
+    if (ctrl && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
+      e.preventDefault();
+      if (fcEditMode) fcRedo();
+      return;
+    }
+    // Ctrl+C: コピー
+    if (ctrl && e.key === 'c') {
+      if (fcEditMode && (fcSelectedItems.size > 0 || fcSelectedItem?.type === 'node')) {
+        e.preventDefault();
+        fcCopy();
+      }
+      return;
+    }
+    // Ctrl+V: ペースト
+    if (ctrl && e.key === 'v') {
+      if (fcEditMode && fcClipboard) {
+        e.preventDefault();
+        fcPaste();
+      }
+      return;
+    }
+    // Delete / Backspace: 選択ノード削除
+    if ((e.key === 'Delete' || e.key === 'Backspace') && fcEditMode) {
+      if (fcSelectedItems.size > 0) {
+        e.preventDefault();
+        const isModal = fcModalOpen;
+        fcPushHistory();
+        const fc = getFcData(); if (!fc) return;
+        const ids = [...fcSelectedItems];
+        fc.nodes = fc.nodes.filter(n => !ids.includes(n.id));
+        fc.edges = fc.edges.filter(e => !ids.includes(e.fromId) && !ids.includes(e.toId));
+        save();
+        fcSelectedItems.clear();
+        renderFlowchart(isModal);
+        if (isModal) renderFlowchart(false);
+      } else if (fcSelectedItem?.type === 'node') {
+        e.preventDefault();
+        fcDeleteNode(fcSelectedItem.id, fcModalOpen);
+      } else if (fcSelectedItem?.type === 'edge') {
+        e.preventDefault();
+        fcDeleteEdge(fcSelectedItem.id, fcModalOpen);
+      }
+    }
+    // Escape: 選択解除・モード解除
+    if (e.key === 'Escape') {
+      if (fcEdgeMode) { fcEdgeMode = false; fcEdgeFrom = null; renderFlowchart(fcModalOpen); }
+      if (fcSelectedItems.size > 0) fcClearSelection(fcModalOpen);
+      if (fcSelectedItem) {
+        if (!fcModalOpen) fcCloseBp(); else fcCloseEditPanel(true);
+      }
+    }
+  }
 });
 
 function showModal(title, body, buttons=[]) {
@@ -11512,6 +9939,7 @@ function esc(str) {
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+// ═══════════════════════════════════════════════
 // RIGHT SIDEBAR TABS
 // ═══════════════════════════════════════════════
 
@@ -11523,10 +9951,7 @@ function switchRsTab(tab) {
     if (btn)  { btn.classList.toggle('active', t === tab); }
     if (pane) { pane.style.display = t === tab ? 'flex' : 'none'; }
   });
-  if (tab === 'flow') {
-    renderFlowchart();
-    fcInitTouch(false); // タッチイベントを初期化（1回のみ）
-  }
+  if (tab === 'flow') renderFlowchart();
 }
 
 // ═══════════════════════════════════════════════
@@ -11821,6 +10246,7 @@ function fcNodeSvg(node, isModal) {
   const lines = fcTextLines(label, nW * 0.88, fontSize);
   const totalH = lines.length * lineH;
   const textY = y - totalH/2 + lineH/2;
+  // チェック済みの場合: 半透明グリーンオーバーレイ + ✓バッジ
   const checkOverlay = isChecked ? `
     <rect x="${x-nW/2}" y="${y-nH/2}" width="${nW}" height="${nH}" rx="${rx}" fill="rgba(40,160,80,0.18)" style="pointer-events:none"/>
     <text x="${x+nW/2-6}" y="${y-nH/2+8}" style="font-size:${fontSize+2}px;fill:#50d080;dominant-baseline:middle;text-anchor:middle;pointer-events:none;font-weight:bold">✓</text>` : '';
@@ -11838,9 +10264,10 @@ function fcNodeEdgePoint(node, dx, dy, scale) {
   const len = Math.sqrt(dx*dx + dy*dy) || 1;
   const nx = dx/len, ny = dy/len;
   if (node.type === 'group') {
-    const cx = node.x + (node.w||def.w)*scale/2;
-    const cy = node.y + (node.h||def.h)*scale/2;
-    const hw = (node.w||def.w)*scale/2, hh = (node.h||def.h)*scale/2;
+    // グループはデータ座標（scaleなし）で処理
+    const cx = node.x + (node.w||def.w)/2;
+    const cy = node.y + (node.h||def.h)/2;
+    const hw = (node.w||def.w)/2, hh = (node.h||def.h)/2;
     const t = Math.min(Math.abs(hw/(nx||0.001)), Math.abs(hh/(ny||0.001)));
     return { x: cx + nx*Math.min(t,hw), y: cy + ny*Math.min(t,hh) };
   }
@@ -11856,9 +10283,11 @@ function fcNodeEdgePoint(node, dx, dy, scale) {
 }
 
 // グループノードの中心座標
-function fcNodeCenter(node) {
+function fcNodeCenter(node, scale) {
+  const sc = scale || 1;
   const def = FC_NODE_TYPES[node.type] || FC_NODE_TYPES.rect;
   if (node.type === 'group') {
+    // グループ: x,yが左上頂点、実座標（データ）はscaleなし
     return { x: node.x + (node.w||def.w)/2, y: node.y + (node.h||def.h)/2 };
   }
   return { x: node.x, y: node.y };
@@ -11870,8 +10299,14 @@ function fcNodeCenter(node) {
 function fcSidePoint(node, side, scale) {
   const def = FC_NODE_TYPES[node.type] || FC_NODE_TYPES.rect;
   const fc = fcNodeCenter(node);
-  const hw = (node.w || def.w || FC_NODE_W) * scale / 2;
-  const hh = (node.h || def.h || FC_NODE_H) * scale / 2;
+  // グループはデータ座標（scaleなし）で中心計算済み、hw/hhもscaleなし
+  const isGroup = node.type === 'group';
+  const hw = isGroup
+    ? (node.w || def.w) / 2
+    : (node.w || def.w || FC_NODE_W) * scale / 2;
+  const hh = isGroup
+    ? (node.h || def.h) / 2
+    : (node.h || def.h || FC_NODE_H) * scale / 2;
   if (side === 'right')  return { x: fc.x + hw, y: fc.y };
   if (side === 'left')   return { x: fc.x - hw, y: fc.y };
   if (side === 'bottom') return { x: fc.x, y: fc.y + hh };
@@ -12082,7 +10517,8 @@ function renderFlowchart(isModal) {
 
   const nodes = fc.nodes.filter(n => !n.hidden);
   const edges = fc.edges;
-  const nonGroupNodes = nodes.filter(n => n.type !== 'group');
+  // サブノード(parentId持ち)はgroupLayerで描画するのでnodeLayerから除外
+  const nonGroupNodes = nodes.filter(n => n.type !== 'group' && !n.parentId);
 
   if (nonGroupNodes.length === 0 && nodes.filter(n=>n.type==='group').length === 0) {
     if (empty) empty.style.display = 'block';
@@ -12162,111 +10598,6 @@ function fcResetView(isModal) {
   renderFlowchart(isModal);
 }
 
-// ─── タッチ操作（iPad向け：1本指パン・2本指ピンチズーム） ───
-function fcInitTouch(isModal) {
-  const wrapId = isModal ? 'fcModalBody' : 'fcCanvasWrap';
-  const wrap = document.getElementById(wrapId);
-  if (!wrap || wrap._fcTouchInited) return;
-  wrap._fcTouchInited = true;
-
-  const viewportId = isModal ? 'fcViewportModal' : 'fcViewport';
-
-  let lastTouches = null;
-  let lastDist = null;
-
-  const getTouchPos = (touch) => {
-    const rect = wrap.getBoundingClientRect();
-    return { x: touch.clientX - rect.left, y: touch.clientY - rect.top };
-  };
-  const getDist = (t1, t2) => {
-    const dx = t1.clientX - t2.clientX, dy = t1.clientY - t2.clientY;
-    return Math.sqrt(dx*dx + dy*dy);
-  };
-  const getMidpoint = (t1, t2) => {
-    const rect = wrap.getBoundingClientRect();
-    return {
-      x: (t1.clientX + t2.clientX) / 2 - rect.left,
-      y: (t1.clientY + t2.clientY) / 2 - rect.top,
-    };
-  };
-
-  wrap.addEventListener('touchstart', e => {
-    // 編集モードでノードタッチは無視（ノードドラッグに任せる）
-    lastTouches = e.touches;
-    if (e.touches.length === 2) {
-      lastDist = getDist(e.touches[0], e.touches[1]);
-    }
-  }, { passive: true });
-
-  wrap.addEventListener('touchmove', e => {
-    e.preventDefault();
-    const v = fcGetView(isModal);
-    const viewport = document.getElementById(viewportId);
-
-    if (e.touches.length === 2) {
-      // 2本指: ピンチズーム + パン
-      const dist = getDist(e.touches[0], e.touches[1]);
-      const mid  = getMidpoint(e.touches[0], e.touches[1]);
-
-      if (lastDist !== null) {
-        const scale = dist / lastDist;
-        const newZoom = Math.max(FC_ZOOM_MIN, Math.min(FC_ZOOM_MAX, v.zoom * scale));
-        const zoomScale = newZoom / v.zoom;
-        v.panX = mid.x - zoomScale * (mid.x - v.panX);
-        v.panY = mid.y - zoomScale * (mid.y - v.panY);
-        v.zoom = newZoom;
-      }
-      lastDist = dist;
-
-      // 2本指パン
-      if (lastTouches && lastTouches.length === 2) {
-        const prevMid = getMidpoint(lastTouches[0], lastTouches[1]);
-        v.panX += mid.x - prevMid.x;
-        v.panY += mid.y - prevMid.y;
-      }
-    } else if (e.touches.length === 1 && !fcEditMode) {
-      // 1本指: パン（閲覧モードのみ）
-      if (lastTouches && lastTouches.length === 1) {
-        const rect = wrap.getBoundingClientRect();
-        const dx = e.touches[0].clientX - lastTouches[0].clientX;
-        const dy = e.touches[0].clientY - lastTouches[0].clientY;
-        v.panX += dx;
-        v.panY += dy;
-      }
-    }
-
-    lastTouches = Array.from(e.touches).map(t => ({clientX: t.clientX, clientY: t.clientY}));
-
-    if (viewport) viewport.setAttribute('transform', `translate(${v.panX},${v.panY}) scale(${v.zoom})`);
-    fcUpdateZoomLabel(isModal);
-  }, { passive: false });
-
-  wrap.addEventListener('touchend', e => {
-    lastTouches = e.touches.length > 0 ? e.touches : null;
-    lastDist = e.touches.length === 2 ? getDist(e.touches[0], e.touches[1]) : null;
-  }, { passive: true });
-}
-
-// ─── ズームボタン（iPad向け：ピンチが難しい場合のUI補助） ───
-function fcZoomIn(isModal)  { fcZoomStep(1.25, isModal); }
-function fcZoomOut(isModal) { fcZoomStep(0.8,  isModal); }
-function fcZoomStep(factor, isModal) {
-  const v = fcGetView(isModal);
-  const wrapId = isModal ? 'fcModalBody' : 'fcCanvasWrap';
-  const wrap = document.getElementById(wrapId);
-  const cx = (wrap?.clientWidth  || 280) / 2;
-  const cy = (wrap?.clientHeight || 300) / 2;
-  const newZoom = Math.max(FC_ZOOM_MIN, Math.min(FC_ZOOM_MAX, v.zoom * factor));
-  const scale = newZoom / v.zoom;
-  v.panX = cx - scale * (cx - v.panX);
-  v.panY = cy - scale * (cy - v.panY);
-  v.zoom = newZoom;
-  const viewportId = isModal ? 'fcViewportModal' : 'fcViewport';
-  const viewport = document.getElementById(viewportId);
-  if (viewport) viewport.setAttribute('transform', `translate(${v.panX},${v.panY}) scale(${v.zoom})`);
-  fcUpdateZoomLabel(isModal);
-}
-
 function fcOnWheel(e, isModal) {
   e.preventDefault();
   const v = fcGetView(isModal);
@@ -12344,27 +10675,191 @@ function fcSvgToCanvas(e, isModal) {
 }
 
 // ─── グループ枠描画 ───
+// ─── グループ内サブノードの自動整列・サイズ計算 ───
+const FC_SUB_PADDING   = 12; // グループ内余白
+const FC_SUB_ITEM_H    = 28; // サブノードの高さ
+const FC_SUB_ITEM_GAP  = 6;  // サブノード間隔
+const FC_HEADER_H      = 22; // グループタイトル行の高さ
+
+function fcGetSubNodes(groupId) {
+  const fc = getFcData(); if (!fc) return [];
+  return fc.nodes.filter(n => n.parentId === groupId && !n.hidden);
+}
+
+function fcAutoResizeGroup(groupId) {
+  const fc = getFcData(); if (!fc) return;
+  const group = fc.nodes.find(n => n.id === groupId); if (!group) return;
+  const subs = fcGetSubNodes(groupId);
+  const cols = Math.max(1, group.columns || 1);
+  const minW = 160;
+  const colGap = FC_SUB_PADDING;
+
+  // 行数と各行の高さ
+  const rows = Math.ceil(subs.length / cols);
+  let totalSubH = 0;
+  for (let r = 0; r < rows; r++) {
+    let rowMaxH = 0;
+    for (let c = 0; c < cols; c++) {
+      const sub = subs[r * cols + c];
+      if (sub) rowMaxH = Math.max(rowMaxH, sub.h || FC_SUB_ITEM_H);
+    }
+    if (rowMaxH === 0) rowMaxH = FC_SUB_ITEM_H;
+    totalSubH += rowMaxH + FC_SUB_ITEM_GAP;
+  }
+  const totalH = FC_HEADER_H + FC_SUB_PADDING + totalSubH + FC_SUB_PADDING;
+
+  // 幅: 現在値を維持（未設定時のみ自動計算）
+  if (!group.w || group.w < minW) {
+    const maxLabelW = subs.reduce((m, n) => {
+      const lbl = fcNodeLabel(n);
+      return Math.max(m, lbl.length * 7 + 40);
+    }, minW);
+    const autoW = maxLabelW * cols + colGap * (cols - 1) + FC_SUB_PADDING * 2;
+    group.w = Math.max(minW, autoW);
+  }
+  group.h = Math.max(FC_HEADER_H + FC_SUB_PADDING * 2, totalH);
+}
+
+// ─── グループ枠描画（サブノード込み） ───
 function fcGroupSvg(node, isModal) {
   const def = FC_NODE_TYPES.group;
   const scale = isModal ? 1 : 0.88;
-  const nW = (node.w || def.w) * scale;
-  const nH = (node.h || def.h) * scale;
-  const x = node.x, y = node.y; // x,yは左上頂点
-  const rx = def.rx * scale;
+
+  // グループは常にscaleなしの実座標で描画（viewportのtransformで拡縮）
+  const nW = (node.w || def.w);
+  const nH = (node.h || def.h);
+  const x = node.x, y = node.y;
+  const rx = def.rx;
+
+  const fc = getFcData();
+  const isChecked  = !!(fc?.nodeChecks?.[node.id]);
   const isSelected = fcSelectedItem?.id === node.id || fcSelectedItems.has(node.id);
   const isEdgeFrom = fcEdgeFrom === node.id;
-  const stroke = isEdgeFrom ? '#60d0ff' : isSelected ? '#e8c56a' : (node.color || def.stroke);
-  const strokeW = (isEdgeFrom || isSelected) ? 2 : 1;
+  const stroke = isEdgeFrom ? '#60d0ff' : isSelected ? '#e8c56a' : isChecked ? '#40b060' : (node.color || def.stroke);
+  const strokeW = (isEdgeFrom || isSelected || isChecked) ? 2 : 1;
   const label = node.label || 'グループ';
   const fontSize = isModal ? 10 : 9;
-  const clickFn = `fcNodeClick(event,'${node.id}',${isModal})`;
-  const ctxFn   = `fcNodeRightClick(event,'${node.id}',${isModal})`;
-  const dragFn  = `fcGroupDragStart(event,'${node.id}',${isModal})`;
+  const labelFill = isChecked ? '#50d080' : '#8a8a50';
+
+  const clickFn = `if(event.target.closest('[data-subnode]'))return; fcNodeClick(event,'${node.id}',${isModal})`;
+  const ctxFn   = `if(event.target.closest('[data-subnode]'))return; fcNodeRightClick(event,'${node.id}',${isModal})`;
+  const dragFn  = `if(event.target.closest('[data-subnode]'))return; fcGroupDragStart(event,'${node.id}',${isModal})`;
+
+  // チェックバッジ
+  const checkBadge = isChecked
+    ? `<text x="${x+nW-8}" y="${y+12}" style="font-size:12px;fill:#50d080;dominant-baseline:middle;text-anchor:middle;pointer-events:none;font-weight:bold">✓</text>` : '';
+
+  // サブノード描画（列数対応）
+  const subs = fcGetSubNodes(node.id);
+  const cols = Math.max(1, node.columns || 1);
+  const colGap = FC_SUB_PADDING;
+  const colW = (nW - FC_SUB_PADDING * 2 - colGap * (cols - 1)) / cols;
+  let subsHtml = '';
+  let rowOffsetY = FC_HEADER_H + FC_SUB_PADDING;
+  const rows = Math.ceil(subs.length / cols);
+  for (let r = 0; r < rows; r++) {
+    let rowMaxH = 0;
+    for (let c = 0; c < cols; c++) {
+      const sub = subs[r * cols + c];
+      if (sub) rowMaxH = Math.max(rowMaxH, sub.h || FC_SUB_ITEM_H);
+    }
+    if (rowMaxH === 0) rowMaxH = FC_SUB_ITEM_H;
+    for (let c = 0; c < cols; c++) {
+      const sub = subs[r * cols + c];
+      if (!sub) continue;
+      const sh = rowMaxH;
+      const sy = y + rowOffsetY;
+      const sx = x + FC_SUB_PADDING + c * (colW + colGap);
+      const sw = colW;
+      const subChecked = !!(fc?.nodeChecks?.[sub.id]);
+      const hasJump = !!(sub.jumpTarget?.chapterId);
+      const subLbl = fcNodeLabel(sub);
+      const maxChars = Math.floor(sw / 7) - 2;
+      const shortLbl = subLbl.length > maxChars ? subLbl.slice(0, maxChars - 1) + '…' : subLbl;
+      const subFill      = subChecked ? 'rgba(40,160,80,0.25)' : 'rgba(255,255,255,0.05)';
+      const subStroke    = subChecked ? '#40b060' : '#3a3a50';
+      const subTextFill  = subChecked ? '#80e090' : '#c8c0a8';
+      const subClickFn   = `fcNodeClick(event,'${sub.id}',${isModal})`;
+      const subCtxFn     = `fcNodeRightClick(event,'${sub.id}',${isModal})`;
+      const checkMark = subChecked
+        ? `<text x="${sx+sw-8}" y="${sy+sh/2}" style="font-size:10px;fill:#50d080;dominant-baseline:middle;text-anchor:middle;pointer-events:none">✓</text>` : '';
+      const jumpMark = hasJump && !subChecked
+        ? `<text x="${sx+sw-8}" y="${sy+sh/2}" style="font-size:9px;fill:#6080b0;dominant-baseline:middle;text-anchor:middle;pointer-events:none">→</text>` : '';
+      subsHtml += `<g class="fc-node" data-id="${sub.id}" data-subnode="1" onclick="${subClickFn}" oncontextmenu="${subCtxFn}" style="cursor:pointer">
+        <rect x="${sx}" y="${sy}" width="${sw}" height="${sh}" rx="3" fill="${subFill}" stroke="${subStroke}" stroke-width="1"/>
+        <text x="${sx+6}" y="${sy+sh/2}" style="font-size:${fontSize}px;fill:${subTextFill};dominant-baseline:middle;pointer-events:none">${esc(shortLbl)}</text>
+        ${checkMark}${jumpMark}
+      </g>`;
+    }
+    rowOffsetY += rowMaxH + FC_SUB_ITEM_GAP;
+  }
+
+  // サブノード追加ボタン（編集モード時のみ、グループ枠の外下に表示）
+  const addBtn = fcEditMode ? `<g onclick="fcAddSubNode('${node.id}',${isModal})" style="cursor:pointer">
+    <rect x="${x+FC_SUB_PADDING}" y="${y+nH+2}" width="${nW-FC_SUB_PADDING*2}" height="14" rx="3" fill="rgba(80,80,100,0.3)" stroke="#4a4a60" stroke-width="1"/>
+    <text x="${x+nW/2}" y="${y+nH+9}" style="font-size:9px;fill:#8888a0;dominant-baseline:middle;text-anchor:middle;pointer-events:none">＋ サブノード追加</text>
+  </g>` : '';
+
+  // リサイズハンドル（編集モード時のみ）
+  const resizeHandle = fcEditMode ? `
+    <rect x="${x+nW-6}" y="${y+4}" width="6" height="${nH-8}" rx="2"
+      fill="rgba(100,100,160,0.3)" stroke="#6060a0" stroke-width="1"
+      style="cursor:ew-resize"
+      onmousedown="fcGroupResizeDragStart(event,'${node.id}',${isModal})"
+      onclick="event.stopPropagation()"/>
+    <rect x="${x+4}" y="${y+nH-6}" width="${nW-8}" height="6" rx="2"
+      fill="rgba(100,100,160,0.3)" stroke="#6060a0" stroke-width="1"
+      style="cursor:ns-resize"
+      onmousedown="fcGroupResizeHeightDragStart(event,'${node.id}',${isModal})"
+      onclick="event.stopPropagation()"/>` : '';
+
   return `<g class="fc-node" data-id="${node.id}" onclick="${clickFn}" oncontextmenu="${ctxFn}" onmousedown="${dragFn}" style="cursor:move">
     <rect x="${x}" y="${y}" width="${nW}" height="${nH}" rx="${rx}"
-      fill="${node.color||'rgba(60,60,30,0.12)'}" stroke="${stroke}" stroke-width="${strokeW}" stroke-dasharray="6,3"/>
-    <text x="${x+8}" y="${y+fontSize+4}" style="font-size:${fontSize}px;fill:#8a8a50;pointer-events:none;font-family:'Cinzel',serif;letter-spacing:1px">${esc(label)}</text>
+      fill="${node.color||'rgba(40,40,60,0.25)'}" stroke="${stroke}" stroke-width="${strokeW}" stroke-dasharray="6,3"/>
+    <text x="${x+8}" y="${y+FC_HEADER_H/2+2}" style="font-size:${fontSize}px;fill:${labelFill};pointer-events:none;font-family:'Cinzel',serif;letter-spacing:1px;dominant-baseline:middle">${esc(label)}</text>
+    ${subs.length > 0 ? `<line x1="${x+4}" y1="${y+FC_HEADER_H}" x2="${x+nW-4}" y2="${y+FC_HEADER_H}" stroke="#3a3a50" stroke-width="1"/>` : ''}
+    ${subsHtml}
+    ${checkBadge}
+    ${resizeHandle}
+    ${addBtn}
   </g>`;
+}
+
+// ─── サブノード追加 ───
+function fcAddSubNode(groupId, isModal) {
+  const fc = getFcData(); if (!fc) return;
+  fcPushHistory();
+  const id = 'sn_' + uid();
+  // 既存サブノードの高さに合わせる（なければデフォルト）
+  const existingSubs = fcGetSubNodes(groupId);
+  const refH = existingSubs.length > 0 ? (existingSubs[0].h || FC_SUB_ITEM_H) : FC_SUB_ITEM_H;
+  fc.nodes.push({
+    id, parentId: groupId,
+    type: 'text', x: 0, y: 0,
+    label: '', color: '', h: refH,
+  });
+  // グループ高さのみ再計算（幅・サブノード高さは変えない）
+  const group = fc.nodes.find(n => n.id === groupId);
+  if (group) {
+    const subs = fc.nodes.filter(n => n.parentId === groupId && !n.hidden);
+    const cols = Math.max(1, group.columns || 1);
+    const rows = Math.ceil(subs.length / cols);
+    let totalSubH = 0;
+    for (let r = 0; r < rows; r++) {
+      let rowMaxH = 0;
+      for (let c = 0; c < cols; c++) {
+        const sub = subs[r * cols + c];
+        if (sub) rowMaxH = Math.max(rowMaxH, sub.h || FC_SUB_ITEM_H);
+      }
+      if (rowMaxH === 0) rowMaxH = FC_SUB_ITEM_H;
+      totalSubH += rowMaxH + FC_SUB_ITEM_GAP;
+    }
+    const needH = FC_HEADER_H + FC_SUB_PADDING + totalSubH + FC_SUB_PADDING;
+    group.h = Math.max(group.h || 0, needH);
+  }
+  save();
+  renderFlowchart(isModal);
+  if (isModal) renderFlowchart(false);
 }
 
 // ─── グループ追加 ───
@@ -12373,7 +10868,7 @@ function fcAddGroup() {
   fcPushHistory();
   const id = 'g_' + uid();
   const cx = 60, cy = 60;
-  fc.nodes.push({ id, type: 'group', x: cx, y: cy, w: 200, h: 140, label: 'グループ', color: '' });
+  fc.nodes.push({ id, type: 'group', x: cx, y: cy, w: 200, h: 140, label: '', color: '' });
   save();
   if (fcModalOpen) renderFlowchart(true);
   renderFlowchart(false);
@@ -12466,6 +10961,83 @@ function fcGroupDragStart(e, nodeId, isModal) {
   document.addEventListener('mouseup', onUp);
 }
 
+// ─── グループ幅リサイズ（右辺ドラッグ） ───
+function fcGroupResizeDragStart(e, nodeId, isModal) {
+  e.stopPropagation();
+  e.preventDefault();
+  if (!fcEditMode) return;
+  const fc = getFcData(); if (!fc) return;
+  const node = fc.nodes.find(n => n.id === nodeId); if (!node) return;
+  const origW = node.w || FC_NODE_TYPES.group.w;
+  const startPos = fcSvgToCanvas(e, isModal);
+  let dragging = false;
+  const onMove = ev => {
+    const dx = fcSvgToCanvas(ev, isModal).x - startPos.x;
+    if (!dragging && Math.abs(dx) < 3) return;
+    if (!dragging) fcPushHistory();
+    dragging = true;
+    document.body.classList.add('fc-dragging');
+    node.w = Math.max(80, origW + dx);
+    renderFlowchart(isModal);
+  };
+  const onUp = () => {
+    document.body.classList.remove('fc-dragging');
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseup', onUp);
+    if (dragging) {
+      if (fcSnapGrid) node.w = Math.round(node.w / FC_GRID) * FC_GRID;
+      save();
+      renderFlowchart(isModal);
+    }
+  };
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('mouseup', onUp);
+}
+
+// ─── グループ高さリサイズ（下辺ドラッグ）→ サブノードを等分割 ───
+function fcGroupResizeHeightDragStart(e, nodeId, isModal) {
+  e.stopPropagation();
+  e.preventDefault();
+  if (!fcEditMode) return;
+  const fc = getFcData(); if (!fc) return;
+  const node = fc.nodes.find(n => n.id === nodeId); if (!node) return;
+  const origH = node.h || FC_NODE_TYPES.group.h;
+  const startPos = fcSvgToCanvas(e, isModal);
+  let dragging = false;
+  const onMove = ev => {
+    const dy = fcSvgToCanvas(ev, isModal).y - startPos.y;
+    if (!dragging && Math.abs(dy) < 3) return;
+    if (!dragging) fcPushHistory();
+    dragging = true;
+    document.body.classList.add('fc-dragging');
+    const subs = fcGetSubNodes(nodeId);
+    const cols = Math.max(1, node.columns || 1);
+    const rows = Math.ceil(subs.length / cols);
+    const newH = Math.max(FC_HEADER_H + FC_SUB_PADDING * 2 + 20, origH + dy);
+    node.h = newH;
+    // サブノードを内部高さで等分割
+    if (rows > 0) {
+      const innerH = newH - FC_HEADER_H - FC_SUB_PADDING * 2;
+      const rowH = Math.max(8, Math.floor((innerH - FC_SUB_ITEM_GAP * (rows - 1)) / rows));
+      const snappedH = fcSnapGrid ? Math.max(8, Math.round(rowH / 4) * 4) : rowH;
+      subs.forEach(sub => { sub.h = snappedH; });
+    }
+    renderFlowchart(isModal);
+  };
+  const onUp = () => {
+    document.body.classList.remove('fc-dragging');
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseup', onUp);
+    if (dragging) {
+      if (fcSnapGrid) node.h = Math.round(node.h / FC_GRID) * FC_GRID;
+      save();
+      renderFlowchart(isModal);
+    }
+  };
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('mouseup', onUp);
+}
+
 // ─── 章へジャンプ ───
 // ─── ジャンプ実行 ───
 function fcJumpToChapter(chapterId, headingId) {
@@ -12517,36 +11089,66 @@ function fcNodeClick(e, nodeId, isModal) {
   }
 }
 
-
 // ─── 閲覧モード: ノードクリック小メニュー ───
 function fcShowNodeMenu(e, node, isModal) {
+  // 既存メニューを閉じる
   document.getElementById('fcNodeMenu')?.remove();
+
   const fc = getFcData(); if (!fc) return;
   const isChecked = !!(fc.nodeChecks?.[node.id]);
   const hasJump   = !!(node.jumpTarget?.chapterId);
+
   const menu = document.createElement('div');
   menu.id = 'fcNodeMenu';
-  menu.style.cssText = `position:fixed;z-index:9000;background:var(--panel);border:1px solid var(--border2);border-radius:6px;box-shadow:0 4px 16px rgba(0,0,0,0.6);min-width:130px;overflow:hidden;font-size:12px;`;
+  menu.style.cssText = `
+    position:fixed; z-index:9000;
+    background:var(--panel); border:1px solid var(--border2);
+    border-radius:6px; box-shadow:0 4px 16px rgba(0,0,0,0.6);
+    min-width:130px; overflow:hidden; font-size:12px;
+  `;
+
   const checkLabel = isChecked ? '✓ チェックを外す' : '✓ チェックする';
   const items = [
-    { label: checkLabel, color: isChecked ? '#e07070' : '#50d080', action: () => fcToggleCheck(node.id, isModal) },
-    ...(hasJump ? [{ label: '→ 章にジャンプ', color: '#8b9fd0', action: () => fcJumpToChapter(node.jumpTarget.chapterId, node.jumpTarget.headingId) }] : []),
+    { label: checkLabel, color: isChecked ? '#e07070' : '#50d080',
+      action: () => fcToggleCheck(node.id, isModal) },
+    ...(hasJump ? [{ label: '→ 章にジャンプ', color: '#8b9fd0',
+      action: () => fcJumpToChapter(node.jumpTarget.chapterId, node.jumpTarget.headingId) }] : []),
     { label: '✕ 閉じる', color: 'var(--text3)', action: () => menu.remove() },
   ];
-  menu.innerHTML = items.map((item, i) => `<div data-idx="${i}" style="padding:8px 14px;cursor:pointer;color:${item.color};border-bottom:${i < items.length-1 ? '1px solid var(--border)' : 'none'};transition:background 0.1s;" onmouseenter="this.style.background='var(--bg3)'" onmouseleave="this.style.background=''" onclick="document.getElementById('fcNodeMenu')?.remove();window._fcMenuActions[${i}]()">${item.label}</div>`).join('');
+
+  menu.innerHTML = items.map((item, i) => `
+    <div data-idx="${i}" style="
+      padding:8px 14px; cursor:pointer; color:${item.color};
+      border-bottom:${i < items.length-1 ? '1px solid var(--border)' : 'none'};
+      transition:background 0.1s;
+    " onmouseenter="this.style.background='var(--bg3)'"
+       onmouseleave="this.style.background=''"
+       onclick="document.getElementById('fcNodeMenu')?.remove(); window._fcMenuActions[${i}]()">
+      ${item.label}
+    </div>`).join('');
+
+  // アクションを一時保存（クロージャのsafe渡し）
   window._fcMenuActions = items.map(item => item.action);
+
   document.body.appendChild(menu);
-  const mx = e.clientX || (e.touches?.[0]?.clientX) || 0;
-  const my = e.clientY || (e.touches?.[0]?.clientY) || 0;
+
+  // 表示位置: クリック位置付近（画面端に合わせて調整）
+  const mx = e.clientX, my = e.clientY;
   const mw = menu.offsetWidth || 140, mh = menu.offsetHeight || 100;
   menu.style.left = Math.min(mx, window.innerWidth  - mw - 8) + 'px';
   menu.style.top  = Math.min(my, window.innerHeight - mh - 8) + 'px';
+
+  // 外クリックで閉じる
   const closeMenu = (ev) => {
     if (!menu.contains(ev.target)) { menu.remove(); document.removeEventListener('mousedown', closeMenu); document.removeEventListener('touchstart', closeMenu); }
   };
-  setTimeout(() => { document.addEventListener('mousedown', closeMenu); document.addEventListener('touchstart', closeMenu); }, 0);
+  setTimeout(() => {
+    document.addEventListener('mousedown', closeMenu);
+    document.addEventListener('touchstart', closeMenu);
+  }, 0);
 }
 
+// ─── チェックトグル ───
 function fcToggleCheck(nodeId, isModal) {
   const fc = getFcData(); if (!fc) return;
   if (!fc.nodeChecks) fc.nodeChecks = {};
@@ -12556,12 +11158,14 @@ function fcToggleCheck(nodeId, isModal) {
   if (isModal) renderFlowchart(false);
 }
 
+// ─── チェックリセット ───
 function fcResetChecks() {
   const fc = getFcData(); if (!fc) return;
   fc.nodeChecks = {};
   save();
   renderFlowchart(false);
   if (fcModalOpen) renderFlowchart(true);
+  // フィードバック
   const ib = document.getElementById('fcInfoBar');
   if (ib) {
     const orig = ib.innerHTML;
@@ -12569,7 +11173,6 @@ function fcResetChecks() {
     setTimeout(() => { ib.innerHTML = orig; }, 1500);
   }
 }
-
 function fcSelectNode(nodeId, isModal) {
   const fc = getFcData(); if (!fc) return;
   if (fcEdgeMode) {
@@ -12631,13 +11234,14 @@ function showFcEditPanel(isModal) {
   // ── パネルHTML生成ヘルパー ──
   function nodeHtml(node, modal) {
     const M = modal;
-    const isGroup = node.type === 'group';
+    const isGroup  = node.type === 'group';
+    const isSubNode = !!node.parentId;
     const def = FC_NODE_TYPES[node.type] || FC_NODE_TYPES.rect;
     const s = getCurrentScenario();
 
-    // ── 種別セレクト（グループ以外全て変更可）
+    // ── 種別セレクト（グループ・サブノード以外変更可）
     let typeRow = '';
-    if (!isGroup) {
+    if (!isGroup && !isSubNode) {
       const allTypes = ['rect','rounded','diamond','event','heading','subheading','text'];
       const typeOptions = allTypes.map(k =>
         `<option value="${k}" ${node.type===k?'selected':''}>${FC_NODE_TYPES[k].label}</option>`
@@ -12667,29 +11271,34 @@ function showFcEditPanel(isModal) {
     chapters.forEach(ch => {
       const sel = currentJump === ch.id ? 'selected' : '';
       jumpOptions += `<option value="${ch.id}" ${sel}>📖 ${esc(ch.title||'（無題）')}</option>`;
-      // 見出しブロック
-      (ch.blocks||[]).filter(b=>b.type==='heading'||b.type==='subheading').forEach(bl => {
+      // 見出し・イベントブロック
+      (ch.blocks||[]).filter(b=>b.type==='heading'||b.type==='subheading'||b.type==='event').forEach(bl => {
         const val = `${ch.id}::${bl.id}`;
         const s2 = currentJump === val ? 'selected' : '';
-        const icon = bl.type === 'heading' ? '├' : '└';
-        const blLabel = bl.title || bl.body?.slice(0,20) || '（見出し）';
+        const icon = bl.type === 'heading' ? '├' : bl.type === 'event' ? '⚡' : '└';
+        const blLabel = bl.title || bl.body?.slice(0,20) || (bl.type==='event'?'（イベント）':'（見出し）');
         jumpOptions += `<option value="${val}" ${s2}>${icon} ${esc(blLabel)}</option>`;
       });
     });
-    const jumpRow = !isGroup ? `<div class="fc-bp-row">
+    const jumpRow = `<div class="fc-bp-row">
       <label>ジャンプ先 <span style="color:var(--text3);font-size:9px">クリック時に移動</span></label>
-      <select onchange="fcSetJumpTarget('${node.id}',this.value,${M})">${jumpOptions}</select></div>` : '';
+      <select onchange="fcSetJumpTarget('${node.id}',this.value,${M})">${jumpOptions}</select></div>`;
 
     // ── サイズ
     const defW = def.w || FC_NODE_W, defH = def.h || FC_NODE_H;
-    const sizeRow = `<div class="fc-bp-row" style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
-      <div><label>幅</label>
-        <input type="number" value="${node.w||defW}" min="40" max="800" step="8"
-          oninput="fcUpdateNode('${node.id}','w',+this.value,${M})"></div>
-      <div><label>高さ</label>
-        <input type="number" value="${node.h||defH}" min="20" max="600" step="8"
-          oninput="fcUpdateNode('${node.id}','h',+this.value,${M})"></div>
-    </div>`;
+    const sizeRow = isGroup
+      ? `<div class="fc-bp-row"><label>列数</label>
+          <select onchange="fcUpdateGroupColumns('${node.id}',+this.value,${M})">
+            ${[1,2,3,4].map(n=>`<option value="${n}" ${(node.columns||1)==n?'selected':''}>${n}列</option>`).join('')}
+          </select></div>`
+      : `<div class="fc-bp-row" style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+        <div><label>幅</label>
+          <input type="number" value="${node.w||defW}" min="40" max="800" step="8"
+            oninput="fcUpdateNode('${node.id}','w',+this.value,${M})"></div>
+        <div><label>高さ</label>
+          <input type="number" value="${node.h||defH}" min="20" max="600" step="8"
+            oninput="fcUpdateNode('${node.id}','h',+this.value,${M})"></div>
+      </div>`;
 
     // ── 背景色
     const colorOptions = [
@@ -12699,15 +11308,20 @@ function showFcEditPanel(isModal) {
     const colorRow = `<div class="fc-bp-row"><label>背景色</label>
       <select onchange="fcUpdateNode('${node.id}','color',this.value,${M})">${colorOptions}</select></div>`;
 
+    // ── サブノード専用：高さのみ変更可（変更後グループを自動リサイズ）
+    const subSizeRow = isSubNode ? `<div class="fc-bp-row"><label>高さ</label>
+      <input type="number" value="${node.h||FC_SUB_ITEM_H}" min="20" max="200" step="4"
+        oninput="fcUpdateSubNodeH('${node.id}',+this.value,${M})"></div>` : '';
+
     // ── 削除（全ノード削除可能）
     const delRow = `<button class="fc-bp-del" onclick="fcDeleteNode('${node.id}',${M})">🗑 削除</button>`;
 
-    const title = isGroup ? '⬜ グループ編集' : '✏ ノード編集';
+    const title = isGroup ? '⬜ グループ編集' : isSubNode ? '✏ サブノード編集' : '✏ ノード編集';
     const closeCall = M ? `fcCloseEditPanel(true)` : `fcCloseBp()`;
 
     return `<div class="fc-bp-title">${title}
         <button class="fc-bp-close" onclick="${closeCall}">✕</button></div>
-      ${typeRow}${labelRow}${jumpRow}${sizeRow}${colorRow}
+      ${typeRow}${labelRow}${jumpRow}${isSubNode ? subSizeRow : sizeRow}${colorRow}
       <div class="fc-bp-btns">${delRow}</div>`;
   }
 
@@ -12837,6 +11451,13 @@ function fcSetJumpTarget(nodeId, val, isModal) {
   } else {
     node.jumpTarget = { chapterId: val, headingId: null };
   }
+  // ラベルが未設定の場合、ジャンプ先タイトルを自動セット
+  if (!node.label && node.jumpTarget) {
+    const autoLabel = fcNodeLabel(node);
+    if (autoLabel && autoLabel !== '（ノード）' && autoLabel !== '（無題）' && autoLabel !== 'グループ') {
+      node.label = autoLabel;
+    }
+  }
   save();
   renderFlowchart(isModal);
   if (isModal) renderFlowchart(false);
@@ -12849,9 +11470,37 @@ function fcUpdateNode(nodeId, key, val, isModal) {
   if (!node) return;
   fcPushHistory();
   node[key] = val;
+  // グループの幅変更時は高さを自動再計算
+  if (node.type === 'group') fcAutoResizeGroup(nodeId);
   save();
   renderFlowchart(isModal);
   if (isModal) renderFlowchart(false);
+}
+
+// ─── サブノードの高さ変更 → 親グループ自動リサイズ ───
+function fcUpdateSubNodeH(nodeId, val, isModal) {
+  const fc = getFcData(); if (!fc) return;
+  const node = fc.nodes.find(n => n.id === nodeId);
+  if (!node) return;
+  node.h = Math.max(8, val);
+  if (node.parentId) fcAutoResizeGroup(node.parentId);
+  save();
+  renderFlowchart(isModal);
+  if (isModal) renderFlowchart(false);
+}
+
+// ─── グループ列数変更 → 自動リサイズ ───
+function fcUpdateGroupColumns(nodeId, val, isModal) {
+  const fc = getFcData(); if (!fc) return;
+  const node = fc.nodes.find(n => n.id === nodeId);
+  if (!node) return;
+  node.columns = Math.max(1, Math.min(4, val));
+  // 列数変更時は高さだけ再計算（幅は維持）
+  fcAutoResizeGroup(nodeId);
+  save();
+  renderFlowchart(isModal);
+  if (isModal) renderFlowchart(false);
+  showFcEditPanel(isModal);
 }
 
 function fcUpdateEdge(edgeId, key, val, isModal) {
@@ -12903,8 +11552,18 @@ function fcSetEdgeLength(edgeId, targetLen, isModal) {
 function fcDeleteNode(nodeId, isModal) {
   const fc = getFcData(); if (!fc) return;
   fcPushHistory();
+  const node = fc.nodes.find(n => n.id === nodeId);
+  const parentId = node?.parentId; // サブノードの場合、親グループを記憶
   fc.nodes = fc.nodes.filter(n => n.id !== nodeId);
-  fc.edges = fc.edges.filter(e => e.fromId !== nodeId && e.toId !== nodeId);
+  // グループ削除時はサブノードも削除
+  if (node?.type === 'group') {
+    fc.nodes = fc.nodes.filter(n => n.parentId !== nodeId);
+    fc.edges = fc.edges.filter(e => e.fromId !== nodeId && e.toId !== nodeId);
+  } else {
+    fc.edges = fc.edges.filter(e => e.fromId !== nodeId && e.toId !== nodeId);
+  }
+  // サブノード削除後に親グループをリサイズ
+  if (parentId) fcAutoResizeGroup(parentId);
   save();
   fcSelectedItem = null;
   if (!isModal) { fcCloseBp(); } else { const p = document.getElementById('fcEditPanelModal'); if (p) p.remove(); }
@@ -12929,7 +11588,7 @@ function fcAddNode() {
   fcPushHistory();
   const id = 'n_' + uid();
   const maxY = fc.nodes.length > 0 ? Math.max(...fc.nodes.map(n=>n.y)) : 40;
-  fc.nodes.push({ id, type: 'rect', x: 120, y: maxY + 80, label: '新規ノード', color: '' });
+  fc.nodes.push({ id, type: 'rect', x: 120, y: maxY + 80, label: '', color: '' });
   save();
   if (fcModalOpen) renderFlowchart(true);
   renderFlowchart(false);
@@ -12957,6 +11616,45 @@ function fcAddEdge() {
 }
 
 // ─── 自動整列 ───
+// ─── 接続線整理：繋がっているノードのX座標を揃えて縦一本に ───
+function fcStraightenEdges(isModal) {
+  const fc = getFcData(); if (!fc) return;
+  fcPushHistory();
+
+  const targetEdges = fcSelectedItem?.type === 'edge'
+    ? fc.edges.filter(e => e.id === fcSelectedItem.id)
+    : fc.edges;
+
+  // ノードの中心Xを設定するヘルパー（グループのx=左上頂点に対応）
+  const setCenterX = (node, cx) => {
+    if (node.type === 'group') {
+      const def = FC_NODE_TYPES.group;
+      node.x = cx - (node.w || def.w) / 2;
+    } else {
+      node.x = cx;
+    }
+    if (fcSnapGrid) fcSnapNode(node);
+  };
+
+  targetEdges.forEach(e => {
+    const from = fc.nodes.find(n => n.id === e.fromId);
+    const to   = fc.nodes.find(n => n.id === e.toId);
+    if (!from || !to) return;
+    // fromの中心Xにtoの中心Xを揃える
+    setCenterX(to, fcNodeCenter(from).x);
+  });
+
+  save();
+  renderFlowchart(isModal);
+  if (isModal) renderFlowchart(false);
+  const ib = document.getElementById('fcInfoBar');
+  if (ib) {
+    const orig = ib.innerHTML;
+    ib.innerHTML = `<span class="fc-info-hint" style="color:#e8c56a">${targetEdges.length}本の接続線を縦に揃えました</span>`;
+    setTimeout(() => { ib.innerHTML = orig; }, 1500);
+  }
+}
+
 function fcAutoLayout() {
   const s = getCurrentScenario(); if (!s) return;
   const fc = getFcData(); if (!fc) return;
@@ -13060,6 +11758,7 @@ function openFcModal() {
           <div class="fc-toolbar-sep"></div>
           ${fcEditMode ? `
           <button class="fc-tool-btn" onclick="fcAutoLayout()" title="自動整列">⚡ 整列</button>
+          <button class="fc-tool-btn" onclick="fcStraightenEdges(true)" title="接続線を整理">↔ 線整理</button>
           <button class="fc-tool-btn" onclick="fcAddNodeModal()" title="ノード追加">＋ ノード</button>
           <button class="fc-tool-btn" onclick="fcAddGroup()" title="グループ枠追加">⬜ グループ</button>
           <button class="fc-tool-btn" onclick="fcAddEdge()" title="接続追加">↗ 接続</button>
@@ -13097,7 +11796,7 @@ function fcAddNodeModal() {
   const fc = getFcData(); if (!fc) return;
   const id = 'n_' + uid();
   const maxY = fc.nodes.length > 0 ? Math.max(...fc.nodes.map(n=>n.y)) : 40;
-  fc.nodes.push({ id, chapterId: '', type: 'rect', x: 140, y: maxY + 80, label: '新規ノード', color: '' });
+  fc.nodes.push({ id, chapterId: '', type: 'rect', x: 140, y: maxY + 80, label: '', color: '' });
   save();
   renderFlowchart(true);
   renderFlowchart(false);
