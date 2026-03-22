@@ -2461,24 +2461,21 @@
 
   @media (max-width: 1024px) {
     .right-sidebar {
-      position: fixed;
-      top: 0;
-      right: 0;
-      height: 100%;
-      z-index: 200;
-      width: 300px;
-      transform: translateX(100%);
-      transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
-      box-shadow: -4px 0 20px rgba(0,0,0,0.5);
+      position: relative;
+      height: auto;
+      z-index: auto;
+      box-shadow: none;
+      transition: width 0.25s cubic-bezier(0.4,0,0.2,1),
+                  opacity 0.2s ease;
     }
     .right-sidebar.collapsed {
-      transform: translateX(100%);
-      width: 300px;
-      opacity: 1;
-      border-left: 1px solid var(--border);
+      width: 0;
+      opacity: 0;
+      border-left: none;
     }
     .right-sidebar:not(.collapsed) {
-      transform: translateX(0);
+      width: 280px;
+      opacity: 1;
     }
   }
 
@@ -3905,18 +3902,11 @@ function getStorageUsage() {
 function toggleRightSidebar() {
   const rs = document.getElementById('rightSidebar');
   rs.classList.toggle('collapsed');
-  // iPad幅ではオーバーレイを出す
-  const overlay = document.getElementById('rsOverlay');
-  if (overlay) overlay.classList.toggle('open', !rs.classList.contains('collapsed'));
 }
 
 function openRightSidebar() {
   const rs = document.getElementById('rightSidebar');
-  if (rs) {
-    rs.classList.remove('collapsed');
-    const ov = document.getElementById('rsOverlay');
-    if (ov) ov.classList.add('open');
-  }
+  if (rs) rs.classList.remove('collapsed');
 }
 
 function renderRightSidebar() {
