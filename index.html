@@ -1712,7 +1712,10 @@
     body { height: 100dvh; overflow: hidden; }
 
     /* ヘッダー */
-    header { padding: 0 10px; height: 50px; }
+    header {
+      padding: env(safe-area-inset-top, 0px) 10px 0;
+      height: calc(50px + env(safe-area-inset-top, 0px));
+    }
     .header-title { font-size: 12px; letter-spacing: 1px; }
     .header-title span { display: none; }
     .header-actions { gap: 4px; }
@@ -1722,7 +1725,7 @@
     .sidebar {
       position: fixed;
       left: -240px;
-      top: 0;
+      top: env(safe-area-inset-top, 0px);
       bottom: 0;
       width: 240px;
       z-index: 160;
