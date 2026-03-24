@@ -5127,25 +5127,25 @@ function renderBlockEditor(bl, bi, chId, total) {
   let bodyHtml = '';
   if (bl.type === 'text') {
     bodyHtml = `<textarea rows="4" placeholder="本文を入力..."
-      oninput="updateBlock('${chId}','${bl.id}','body',this.value)">${esc(bl.body||'')}</textarea>`;
+      oninput="updateBlock('${chId}','${bl.id}','body',this.value,this)">${esc(bl.body||'')}</textarea>`;
   } else if (bl.type === 'heading') {
     bodyHtml = `<input type="text" placeholder="見出しテキスト"
       value="${esc(bl.body||'')}"
-      oninput="updateBlock('${chId}','${bl.id}','body',this.value)"
+      oninput="updateBlock('${chId}','${bl.id}','body',this.value,this)"
       style="font-size:15px;font-weight:700;color:var(--accent2);">`;
   } else if (bl.type === 'subheading') {
     bodyHtml = `<input type="text" placeholder="小見出しテキスト"
       value="${esc(bl.body||'')}"
-      oninput="updateBlock('${chId}','${bl.id}','body',this.value)"
+      oninput="updateBlock('${chId}','${bl.id}','body',this.value,this)"
       style="font-size:13px;font-weight:700;color:var(--accent3);">`;
   } else if (bl.type === 'choice') {
     bodyHtml = `<input type="text" placeholder="選択肢テキスト"
       value="${esc(bl.body||'')}"
-      oninput="updateBlock('${chId}','${bl.id}','body',this.value)"
+      oninput="updateBlock('${chId}','${bl.id}','body',this.value,this)"
       style="font-size:13px;font-weight:700;color:#90c870;">`;
   } else if (bl.type === 'bold') {
     bodyHtml = `<textarea rows="3" placeholder="強調したいテキスト..."
-      oninput="updateBlock('${chId}','${bl.id}','body',this.value)"
+      oninput="updateBlock('${chId}','${bl.id}','body',this.value,this)"
       style="font-weight:700;">${esc(bl.body||'')}</textarea>`;
   } else if (bl.type === 'info' || bl.type === 'explore') {
     bodyHtml = `
@@ -5154,12 +5154,12 @@ function renderBlockEditor(bl, bi, chId, total) {
         oninput="updateBlock('${chId}','${bl.id}','title',this.value)"
         style="margin-bottom:6px;font-weight:700;">
       <textarea rows="4" placeholder="カード本文..."
-        oninput="updateBlock('${chId}','${bl.id}','body',this.value)">${esc(bl.body||'')}</textarea>
+        oninput="updateBlock('${chId}','${bl.id}','body',this.value,this)">${esc(bl.body||'')}</textarea>
     `;
   } else if (bl.type === 'scene') {
     bodyHtml = `
       <textarea rows="5" placeholder="読み上げテキストを入力..."
-        oninput="updateBlock('${chId}','${bl.id}','body',this.value)"
+        oninput="updateBlock('${chId}','${bl.id}','body',this.value,this)"
         style="font-size:13px;line-height:2.1;color:#c8b898;">${esc(bl.body||'')}</textarea>
     `;
   } else if (bl.type === 'image') {
@@ -5218,7 +5218,7 @@ function renderBlockEditor(bl, bi, chId, total) {
         oninput="updateBlock('${chId}','${bl.id}','title',this.value)"
         style="margin-bottom:6px;font-weight:700;">
       <textarea rows="4" placeholder="イベント本文（マークアップ対応）"
-        oninput="updateBlock('${chId}','${bl.id}','body',this.value)">${esc(bl.body||'')}</textarea>
+        oninput="updateBlock('${chId}','${bl.id}','body',this.value,this)">${esc(bl.body||'')}</textarea>
       <div style="display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap">
         <span style="font-size:11px;color:var(--text3)">カラー：</span>
         ${colorPresets.map(([v,label,hex]) =>
@@ -6131,12 +6131,27 @@ function insertBlock(type) {
   }, 60);
 }
 
-function updateBlock(chId, blId, key, val) {
+function updateBlock(chId, blId, key, val, el) {
   const s = getCurrentScenario();
   const ch = s.chapters.find(c => c.id === chId);
   if (!ch) return;
   const bl = ch.blocks.find(b => b.id === blId);
-  if (bl) { bl[key] = val; save(); }
+  if (!bl) return;
+  if (key === 'body') {
+    const converted = val
+      .replace(/＜/g, '〈').replace(/＞/g, '〉')
+      .replace(/（/g, '(').replace(/）/g, ')');
+    if (converted !== val && el) {
+      const pos = el.selectionStart + (converted.length - val.length);
+      el.value = converted;
+      el.setSelectionRange(pos, pos);
+      val = converted;
+    } else {
+      val = converted;
+    }
+  }
+  bl[key] = val;
+  save();
 }
 
 function deleteBlock(chId, blId) {
@@ -9610,18 +9625,50 @@ function handleImport(event) {
   reader.onload = e => {
     try {
       const data = JSON.parse(e.target.result);
-      if (!data.id) data.id = uid();
-      data.id = uid(); // 新IDで追加
-      data.name = data.name + '（インポート）';
-      state.scenarios[data.id] = data;
-      save();
-      renderScenarioList();
-      selectScenario(data.id);
-      alert('インポートしました！');
+      const existingId = data.id && state.scenarios[data.id] ? data.id : null;
+
+      if (existingId) {
+        // 同じIDのシナリオが存在 → 上書きか新規追加か選ぶ
+        const existingName = state.scenarios[existingId].name || '（無題）';
+        showModal('📥 インポート', `
+          <div style="font-size:12px;color:var(--text2);margin-bottom:12px">
+            同名のシナリオが見つかりました：<br>
+            <span style="color:var(--accent3);font-weight:700">${esc(existingName)}</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <button class="btn-primary" onclick="doImport(${JSON.stringify(JSON.stringify(data))},true);closeModal()">🔄 上書き保存</button>
+            <button class="btn-sm" onclick="doImport(${JSON.stringify(JSON.stringify(data))},false);closeModal()">➕ 新規追加</button>
+          </div>
+        `, [{ label:'キャンセル', cls:'btn-sm', action:'closeModal()' }]);
+      } else {
+        doImport(JSON.stringify(data), false);
+        alert('インポートしました！');
+      }
     } catch { alert('JSONファイルの解析に失敗しました'); }
   };
   reader.readAsText(file);
   event.target.value = '';
+}
+
+function doImport(jsonStr, overwrite) {
+  const data = JSON.parse(jsonStr);
+  if (overwrite && data.id) {
+    // 上書き：名前はそのまま
+    state.scenarios[data.id] = data;
+    save();
+    renderScenarioList();
+    selectScenario(data.id);
+    alert('上書き保存しました！');
+  } else {
+    // 新規追加：新IDで名前に（インポート）を付ける
+    data.id = uid();
+    data.name = (data.name || 'シナリオ') + '（インポート）';
+    state.scenarios[data.id] = data;
+    save();
+    renderScenarioList();
+    selectScenario(data.id);
+    alert('インポートしました！');
+  }
 }
 
 
