@@ -2345,6 +2345,7 @@
   .rs-event-item:hover { background: var(--bg3); }
   .rs-event-item.done { opacity: 0.4; }
   .rs-event-item.done .rs-event-title { text-decoration: line-through; color: var(--text3); }
+  .rs-event-item.active { background: var(--panel2); border-left: 2px solid #c08030; }
   .rs-event-check {
     width: 14px;
     height: 14px;
@@ -3973,19 +3974,13 @@ function renderRsList(s) {
   const evItems = events.length === 0
     ? `<div class="rs-empty">イベントなし</div>`
     : events.map(ev => {
-        const expanded = rsEventExpanded.has(ev.id);
-        const detailHtml = expanded && ev.detail
-          ? `<div class="rs-event-detail">${rubyToHtml(ev.detail)}</div>` : '';
         return `
-          <div class="rs-event-item ${ev.done ? 'done' : ''}">
+          <div class="rs-event-item ${ev.done ? 'done' : ''} ${rsActiveItem?.type==='event'&&rsActiveItem?.id===ev.id?'active':''}">
             <input type="checkbox" class="rs-event-check" ${ev.done ? 'checked' : ''}
               onchange="toggleEventDone('${ev.id}',this.checked)">
-            <span class="rs-event-title" onclick="rsToggleEventDetail('${ev.id}')"
+            <span class="rs-event-title" onclick="rsSelectEvent('${ev.id}')"
               title="${esc(ev.title||'（未入力）')}">${esc(ev.title||'（未入力）')}</span>
-            <span class="rs-event-chevron ${expanded ? 'open' : ''}"
-              onclick="rsToggleEventDetail('${ev.id}')">▶</span>
-          </div>
-          ${detailHtml}`;
+          </div>`;
       }).join('');
 
   // NPC セクション
@@ -4159,7 +4154,14 @@ function rsSelectItem(type, id) {
   rsActiveItem = { type, id };
   renderRsList(getCurrentScenario());
   renderRsPreview(type, id);
-  // 右サイドバーが閉じていれば開く・フロータブなら一覧タブに切替
+  document.getElementById('rightSidebar').classList.remove('collapsed');
+  switchRsTab('list');
+}
+
+function rsSelectEvent(id) {
+  rsActiveItem = { type: 'event', id };
+  renderRsList(getCurrentScenario());
+  renderRsPreview('event', id);
   document.getElementById('rightSidebar').classList.remove('collapsed');
   switchRsTab('list');
 }
@@ -4167,6 +4169,36 @@ function rsSelectItem(type, id) {
 function renderRsPreview(type, id) {
   const s = getCurrentScenario();
   const panel = document.getElementById('rsPreview');
+
+  if (type === 'event') {
+    const ev = (s.events || []).find(e => e.id === id);
+    if (!ev || !panel) return;
+    const accent = ev.color || '#c08030';
+    const bgDark = (() => {
+      const hex = (ev.color || '#c08030').replace('#','');
+      const r = Math.round(parseInt(hex.slice(0,2),16)*0.12).toString(16).padStart(2,'0');
+      const g = Math.round(parseInt(hex.slice(2,4),16)*0.10).toString(16).padStart(2,'0');
+      const b = Math.round(parseInt(hex.slice(4,6),16)*0.10).toString(16).padStart(2,'0');
+      return `#${r}${g}${b}`;
+    })();
+    panel.innerHTML = `
+      <div class="rs-preview-header">
+        <span class="rs-preview-type" style="color:${accent}">⚡ EVENT</span>
+        <span class="rs-preview-name">${esc(ev.title||'（未入力）')}</span>
+        <button class="rs-preview-close" onclick="clearRsPreview()">✕</button>
+      </div>
+      <div class="rs-preview-body">
+        <div style="border-left:3px solid ${accent};background:${bgDark};padding:10px 14px;border-radius:0 4px 4px 0">
+          ${ev.detail ? `<div style="font-size:13px;color:#b0a080;line-height:1.9;white-space:pre-wrap">${rubyToHtml(ev.detail)}</div>` : '<div style="font-size:12px;color:var(--text3)">詳細なし</div>'}
+        </div>
+        <div style="margin-top:10px;display:flex;align-items:center;gap:8px">
+          <input type="checkbox" ${ev.done?'checked':''} onchange="toggleEventDone('${ev.id}',this.checked)">
+          <span style="font-size:11px;color:var(--text3)">完了済みにする</span>
+        </div>
+      </div>`;
+    return;
+  }
+
 
   if (type === 'npc' || type === 'creature') {
     const arr = type === 'npc' ? s.npcs : s.creatures;
